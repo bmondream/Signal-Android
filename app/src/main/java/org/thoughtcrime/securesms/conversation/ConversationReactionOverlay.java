@@ -736,6 +736,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     items.add(new ActionItem(R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete), () -> handleActionItemClicked(Action.DELETE)));
 
+    items.add(new ActionItem(R.drawable.symbol_trash_24, "Admin Delete", () -> handleActionItemClicked(Action.ADMIN_DELETE)));
+
     return items;
   }
 
@@ -916,6 +918,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     PAYMENT_DETAILS,
     VIEW_INFO,
     DELETE,
+    ADMIN_DELETE,
     END_POLL,
     PIN_MESSAGE,
     UNPIN_MESSAGE

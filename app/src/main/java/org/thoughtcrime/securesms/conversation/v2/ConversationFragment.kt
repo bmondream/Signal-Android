@@ -2434,7 +2434,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowDeleteAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete)) {
+        ActionItem(R.drawable.symbol_trash_24, "DelBtn2") {
           handleDeleteMessages(selectedParts)
           finishActionMode()
         }
@@ -2787,7 +2787,8 @@ class ConversationFragment :
 
     disposables += DeleteDialog.show(
       context = requireContext(),
-      messageRecords = records
+      messageRecords = records,
+      isSelfAdmin = false
     ).observeOn(AndroidSchedulers.mainThread())
       .subscribe { (deleted: Boolean, _: Boolean) ->
         if (!deleted) return@subscribe
@@ -4074,6 +4075,7 @@ class ConversationFragment :
         ConversationReactionOverlay.Action.PAYMENT_DETAILS -> handleViewPaymentDetails(conversationMessage)
         ConversationReactionOverlay.Action.VIEW_INFO -> handleDisplayDetails(conversationMessage)
         ConversationReactionOverlay.Action.DELETE -> handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
+        ConversationReactionOverlay.Action.ADMIN_DELETE -> handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
         ConversationReactionOverlay.Action.END_POLL -> handleEndPoll(conversationMessage.messageRecord.getPoll()?.id)
         ConversationReactionOverlay.Action.PIN_MESSAGE -> handlePinMessage(conversationMessage)
         ConversationReactionOverlay.Action.UNPIN_MESSAGE -> handleUnpinMessage(conversationMessage.messageRecord.id)

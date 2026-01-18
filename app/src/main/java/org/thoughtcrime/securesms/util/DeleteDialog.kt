@@ -32,7 +32,8 @@ object DeleteDialog {
     messageRecords: Set<MessageRecord>,
     title: CharSequence? = null,
     message: CharSequence = context.resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageRecords.size, messageRecords.size),
-    forceRemoteDelete: Boolean = false
+    forceRemoteDelete: Boolean = false,
+    isSelfAdmin: Boolean = false
   ): Single<Pair<Boolean, Boolean>> = Single.create { emitter ->
     val builder = MaterialAlertDialogBuilder(context)
 
@@ -57,7 +58,7 @@ object DeleteDialog {
         }.executeOnExecutor(SignalExecutors.BOUNDED)
       }
 
-      if (MessageConstraintsUtil.isValidRemoteDeleteSend(messageRecords, System.currentTimeMillis()) && !isNoteToSelfDelete) {
+      if (isSelfAdmin || (MessageConstraintsUtil.isValidRemoteDeleteSend(messageRecords, System.currentTimeMillis()) && !isNoteToSelfDelete)) {
         builder.setNeutralButton(R.string.ConversationFragment_delete_for_everyone) { _, _ -> handleDeleteForEveryone(context, messageRecords, emitter) }
       }
     }

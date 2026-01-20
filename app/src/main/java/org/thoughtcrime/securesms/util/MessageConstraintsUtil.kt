@@ -1,9 +1,12 @@
 package org.thoughtcrime.securesms.util
 
+import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.groups.GroupId
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
+import java.util.Optional
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -17,23 +20,29 @@ object MessageConstraintsUtil {
 
   const val MAX_EDIT_COUNT = 10
 
+  private val TAG = Log.tag(MessageConstraintsUtil.javaClass)
   @JvmStatic
-  fun isValidRemoteDeleteReceive(targetMessage: MessageRecord, deleteSenderId: RecipientId, deleteServerTimestamp: Long): Boolean {
-    val selfIsDeleteSender = isSelf(deleteSenderId)
+  fun isValidRemoteDeleteReceive(targetMessage: MessageRecord, deleteSender: Recipient, deleteServerTimestamp: Long): Boolean {
+    val selfIsDeleteSender = isSelf(deleteSender.id)
 
-    val isValidIncomingOutgoing = selfIsDeleteSender && targetMessage.isOutgoing || !selfIsDeleteSender && !targetMessage.isOutgoing
-    val isValidSender = targetMessage.fromRecipient.id == deleteSenderId || selfIsDeleteSender && targetMessage.isOutgoing
+    val targetMessageGroupId: Optional<GroupId> = targetMessage.toRecipient.groupId
+    val deleteSentByGroupAdmin: Boolean = if (targetMessageGroupId.isPresent) SignalDatabase.groups.getGroup(targetMessageGroupId.get()).get().admins.contains(deleteSender) else false
+    Log.d(TAG, "delete sent by group admin: $deleteSentByGroupAdmin")
+
+    Log.d(TAG, "selfIsDeleteSender: $selfIsDeleteSender, isOutgoing: ${targetMessage.isOutgoing}")
+    val isValidIncomingOutgoing = selfIsDeleteSender && targetMessage.isOutgoing || !selfIsDeleteSender && !targetMessage.isOutgoing || deleteSentByGroupAdmin && targetMessage.isOutgoing
+    val isValidSender = targetMessage.fromRecipient.id == deleteSender.id || selfIsDeleteSender && targetMessage.isOutgoing || deleteSentByGroupAdmin
 
     val messageTimestamp = if (selfIsDeleteSender && targetMessage.isOutgoing) targetMessage.dateSent else targetMessage.serverTimestamp
 
-    return isValidIncomingOutgoing &&
-      isValidSender &&
-      ((deleteServerTimestamp - messageTimestamp < RECEIVE_THRESHOLD) || (selfIsDeleteSender && targetMessage.isOutgoing))
+    val bool = (deleteServerTimestamp - messageTimestamp < RECEIVE_THRESHOLD) || (selfIsDeleteSender && targetMessage.isOutgoing) || (!selfIsDeleteSender && deleteSentByGroupAdmin)
+    Log.d(TAG, "valid I/O: $isValidIncomingOutgoing, valid sender: $isValidSender, other: $bool")
+    return isValidIncomingOutgoing && isValidSender && bool
   }
 
   @JvmStatic
   fun isValidEditMessageReceive(targetMessage: MessageRecord, editSender: Recipient, editServerTimestamp: Long): Boolean {
-    return isValidRemoteDeleteReceive(targetMessage, editSender.id, editServerTimestamp)
+    return isValidRemoteDeleteReceive(targetMessage, editSender, editServerTimestamp)
   }
 
   @JvmStatic

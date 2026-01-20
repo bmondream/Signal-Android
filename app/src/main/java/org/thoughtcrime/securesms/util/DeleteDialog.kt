@@ -5,6 +5,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
 import org.signal.core.util.concurrent.SignalExecutors
+import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -14,6 +15,7 @@ import org.thoughtcrime.securesms.sms.MessageSender
 import org.thoughtcrime.securesms.util.task.ProgressDialogAsyncTask
 
 object DeleteDialog {
+  val TAG = Log.tag(DeleteDialog.javaClass)
 
   /**
    * Displays a deletion dialog for the given set of message records.
@@ -58,6 +60,8 @@ object DeleteDialog {
           emitter.onSuccess(Pair(true, it))
         }.executeOnExecutor(SignalExecutors.BOUNDED)
       }
+
+      Log.i(TAG, "isSelfAdmin=$isSelfAdmin")
 
       if (isSelfAdmin || (MessageConstraintsUtil.isValidRemoteDeleteSend(messageRecords, System.currentTimeMillis()) && !isNoteToSelfDelete)) {
         builder.setNeutralButton(R.string.ConversationFragment_delete_for_everyone) { _, _ -> handleDeleteForEveryone(context, messageRecords, emitter) }

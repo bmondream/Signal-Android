@@ -5194,6 +5194,22 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
   }
 
   /**
+   * Finds a message by timestamp.
+   * Does *not* include attachments.
+   */
+  fun getMessageFor(timestamp: Long): List<MessageRecord> {
+    val cursor = readableDatabase
+      .select(*MMS_PROJECTION)
+      .from(TABLE_NAME)
+      .where("$DATE_SENT = ?", timestamp)
+      .run()
+
+    return mmsReaderFor(cursor).use { reader ->
+      reader.toList()
+    }
+  }
+
+  /**
    * A cursor containing all of the messages in a given thread, in the proper order.
    * This does *not* have attachments in it.
    */

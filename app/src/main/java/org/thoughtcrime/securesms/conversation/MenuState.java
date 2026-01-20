@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.conversation;
 
 import androidx.annotation.NonNull;
 
+import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.conversation.mutiselect.MultiselectPart;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -15,7 +16,8 @@ import java.util.stream.Collectors;
 
 public final class MenuState {
 
-  private static final int MAX_FORWARDABLE_COUNT = 32;
+  private static final int    MAX_FORWARDABLE_COUNT = 32;
+  private static final String TAG                   = Log.tag(MenuState.class);
 
   private final boolean forward;
   private final boolean reply;
@@ -237,6 +239,8 @@ public final class MenuState {
                              !hasPoll &&
                              MessageConstraintsUtil.isValidEditMessageSend(multiSelectRecord.getConversationMessage().getOriginalMessage(), System.currentTimeMillis()));
     }
+
+    Log.i(TAG, "Called getMenuState with canDeleteAnyMessage=" + canDeleteAnyMessage);
 
     return builder.shouldShowCopyAction(!actionMessage && !remoteDelete && hasText && !hasGift && !hasPayment && !hasPoll)
                   .shouldShowDeleteAction(!hasInMemory && onlyContainsCompleteMessages(selectedParts))

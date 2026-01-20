@@ -33,6 +33,7 @@ import org.thoughtcrime.securesms.database.MessageType
 import org.thoughtcrime.securesms.database.NoSuchMessageException
 import org.thoughtcrime.securesms.database.PaymentTable.PublicKeyConflictException
 import org.thoughtcrime.securesms.database.SignalDatabase
+import org.thoughtcrime.securesms.database.SignalDatabase.Companion.recipients
 import org.thoughtcrime.securesms.database.model.GroupRecord
 import org.thoughtcrime.securesms.database.model.Mention
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -171,7 +172,7 @@ object DataMessageProcessor {
       message.isExpirationUpdate -> insertResult = handleExpirationUpdate(envelope, metadata, senderRecipient, threadRecipient.id, groupId, message.expireTimerDuration, message.expireTimerVersion, receivedTime, false)
       message.isStoryReaction -> insertResult = handleStoryReaction(context, envelope, metadata, message, senderRecipient.id, groupId)
       message.reaction != null -> messageId = handleReaction(context, envelope, message, senderRecipient.id, earlyMessageCacheEntry)
-      message.hasRemoteDelete -> messageId = handleRemoteDelete(context, envelope, message, senderRecipient.id, earlyMessageCacheEntry)
+      message.hasRemoteDelete -> messageId = handleRemoteDelete(context, envelope, message, senderRecipient, earlyMessageCacheEntry)
       message.isPaymentActivationRequest -> insertResult = handlePaymentActivation(envelope, metadata, message, senderRecipient.id, receivedTime, isActivatePaymentsRequest = true, isPaymentsActivated = false)
       message.isPaymentActivated -> insertResult = handlePaymentActivation(envelope, metadata, message, senderRecipient.id, receivedTime, isActivatePaymentsRequest = false, isPaymentsActivated = true)
       message.payment != null -> insertResult = handlePayment(context, envelope, metadata, message, senderRecipient.id, receivedTime)
@@ -589,15 +590,29 @@ object DataMessageProcessor {
     return targetMessageId
   }
 
-  fun handleRemoteDelete(context: Context, envelope: Envelope, message: DataMessage, senderRecipientId: RecipientId, earlyMessageCacheEntry: EarlyMessageCacheEntry?): MessageId? {
+
+  private val TAG = Log.tag(DataMessageProcessor.javaClass)
+
+  fun handleRemoteDelete(context: Context, envelope: Envelope, message: DataMessage, senderRecipient: Recipient, earlyMessageCacheEntry: EarlyMessageCacheEntry?): MessageId? {
     val delete = message.delete!!
+
+    log(envelope.timestamp!!, "received orig msg sender service ID: ${delete.authorServiceId}")
+    val originalMessageSender: RecipientId = RecipientId.from(ServiceId.parseOrThrow(delete.authorServiceId))
 
     log(envelope.timestamp!!, "Remote delete for message ${delete.targetSentTimestamp}")
 
     val targetSentTimestamp: Long = delete.targetSentTimestamp!!
-    val targetMessage: MessageRecord? = SignalDatabase.messages.getMessageFor(targetSentTimestamp, senderRecipientId)
 
-    return if (targetMessage != null && MessageConstraintsUtil.isValidRemoteDeleteReceive(targetMessage, senderRecipientId, envelope.serverTimestamp!!)) {
+    val targetMessage: MessageRecord? = SignalDatabase.messages.getMessageFor(targetSentTimestamp, originalMessageSender)
+
+    val sameStampMessages: List<MessageRecord> = SignalDatabase.messages.getMessageFor(targetSentTimestamp)
+    sameStampMessages.forEach { Log.d(TAG, "[sameStamp] id: ${it.id}, from: ${it.fromRecipient.id}, to: ${it.toRecipient.id}, body: ${it.body}, from group: ${it.fromRecipient.isGroup}, to group: ${it.toRecipient.isGroup}, participants: ${it.toRecipient.participantIds}") }
+
+    Log.d(TAG, "[handleRemoteDelete] senderRecipient: ${senderRecipient.id}, targetMsg: ${targetMessage?.id}")
+    if (targetMessage != null)
+      Log.d(TAG, "[handleRemoteDelete] msg from: ${targetMessage.fromRecipient.id} to: ${targetMessage.toRecipient.id}")
+
+    return if (targetMessage != null && MessageConstraintsUtil.isValidRemoteDeleteReceive(targetMessage, senderRecipient, envelope.serverTimestamp!!)) {
       SignalDatabase.messages.markAsRemoteDelete(targetMessage)
       if (targetMessage.isStory()) {
         SignalDatabase.messages.deleteRemotelyDeletedStory(targetMessage.id)
@@ -607,15 +622,15 @@ object DataMessageProcessor {
 
       MessageId(targetMessage.id)
     } else if (targetMessage == null) {
-      warn(envelope.timestamp!!, "[handleRemoteDelete] Could not find matching message! timestamp: $targetSentTimestamp  author: $senderRecipientId")
+      warn(envelope.timestamp!!, "[handleRemoteDelete] Could not find matching message! timestamp: $targetSentTimestamp  author: ${senderRecipient.id}")
       if (earlyMessageCacheEntry != null) {
-        AppDependencies.earlyMessageCache.store(senderRecipientId, targetSentTimestamp, earlyMessageCacheEntry)
+        AppDependencies.earlyMessageCache.store(senderRecipient.id, targetSentTimestamp, earlyMessageCacheEntry)
         PushProcessEarlyMessagesJob.enqueue()
       }
 
       null
     } else {
-      warn(envelope.timestamp!!, "[handleRemoteDelete] Invalid remote delete! deleteTime: ${envelope.serverTimestamp!!}, targetTime: ${targetMessage.serverTimestamp}, deleteAuthor: $senderRecipientId, targetAuthor: ${targetMessage.fromRecipient.id}")
+      warn(envelope.timestamp!!, "[handleRemoteDelete] Invalid remote delete! deleteTime: ${envelope.serverTimestamp!!}, targetTime: ${targetMessage.serverTimestamp}, deleteAuthor: ${senderRecipient.id}, targetAuthor: ${targetMessage.fromRecipient.id}")
       null
     }
   }

@@ -324,7 +324,7 @@ class SignalServiceDataMessage private constructor(
   }
   class Sticker(val packId: ByteArray?, val packKey: ByteArray?, val stickerId: Int, val emoji: String?, val attachment: SignalServiceAttachment?)
   data class Reaction(val emoji: String, val isRemove: Boolean, val targetAuthor: ServiceId, val targetSentTimestamp: Long)
-  data class RemoteDelete(val targetSentTimestamp: Long)
+  data class RemoteDelete(val targetSentTimestamp: Long, val originalMessageSenderServiceId: ServiceId)
   data class Mention(val serviceId: ServiceId, val start: Int, val length: Int)
   data class GroupCallUpdate(val eraId: String?)
   class PaymentNotification(val receipt: ByteArray, val note: String)

@@ -2812,6 +2812,7 @@ class ConversationFragment :
   }
 
   private fun handleAdminDeleteMessages(messageParts: Set<MultiselectPart>) {
+    Log.i(TAG, "handleAdminDeleteMessages()")
     val records = messageParts.map(MultiselectPart::getMessageRecord).toSet()
 
     disposables += DeleteDialog.show(

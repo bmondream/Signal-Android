@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread;
 
 import com.annimon.stream.Stream;
 
+import org.signal.core.models.ServiceId;
 import org.signal.core.util.SetUtil;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.database.MessageTable;
@@ -58,6 +59,10 @@ public class RemoteDeleteSendJob extends BaseJob {
       throws NoSuchMessageException
   {
     MessageRecord message = SignalDatabase.messages().getMessageRecord(messageId);
+    RecipientId originalMessageSender          = message.getFromRecipient().getId();
+    ServiceId   originalMessageSenderServiceId = message.getFromRecipient().requireServiceId();
+
+    Log.d(TAG, "xyz; orig msg sender: " + originalMessageSender + ", orig msg service ID: " + originalMessageSenderServiceId);
 
     Recipient conversationRecipient = SignalDatabase.threads().getRecipientForThreadId(message.getThreadId());
 
@@ -72,11 +77,16 @@ public class RemoteDeleteSendJob extends BaseJob {
         return AppDependencies.getJobManager().startChain(MultiDeviceStorySendSyncJob.create(message.getDateSent(), messageId));
       }
     } else {
+      Log.d(TAG, "xyz; recipient is group: " + conversationRecipient.isGroup());
       recipients = conversationRecipient.isGroup() ? Stream.of(conversationRecipient.getParticipantIds()).toList()
                                                    : Stream.of(conversationRecipient.getId()).toList();
     }
+    Log.d(TAG, "xyz; recipient: " + conversationRecipient.getId());
+    Log.d(TAG, "xyz; recipients before: " + recipients);
 
     recipients.remove(Recipient.self().getId());
+
+    Log.d(TAG, "xyz; recipients after: " + recipients);
 
     RemoteDeleteSendJob sendJob = new RemoteDeleteSendJob(messageId,
                                                           recipients,
@@ -127,8 +137,9 @@ public class RemoteDeleteSendJob extends BaseJob {
       throw new NotPushRegisteredException();
     }
 
-    MessageTable  db      = SignalDatabase.messages();
-    MessageRecord message = SignalDatabase.messages().getMessageRecord(messageId);
+    MessageTable  db                             = SignalDatabase.messages();
+    MessageRecord message                        = SignalDatabase.messages().getMessageRecord(messageId);
+    ServiceId     originalMessageSenderServiceId = message.getFromRecipient().requireServiceId();
 
     long      targetSentTimestamp   = message.getDateSent();
     Recipient conversationRecipient = SignalDatabase.threads().getRecipientForThreadId(message.getThreadId());
@@ -137,7 +148,29 @@ public class RemoteDeleteSendJob extends BaseJob {
       throw new AssertionError("We have a message, but couldn't find the thread!");
     }
 
-    if (!message.isOutgoing()) {
+    Log.d(TAG, "[onRun] isOutgoing: " + message.isOutgoing());
+    Log.d(TAG, "[onRun] is sender group: " + message.getFromRecipient().isGroup());
+    Log.d(TAG, "[onRun] self ID: " + Recipient.self().getId());
+    Log.d(TAG, "[onRun] self group ID: " + (Recipient.self().getGroupId().isPresent() ? Recipient.self().requireGroupId() : "empty"));
+    Log.d(TAG, "[onRun] msg from: " + message.getFromRecipient().getId());
+    Log.d(TAG, "[onRun] msg to: " + message.getToRecipient().getId());
+    Log.d(TAG, "[onRun] msg from isGroup: " + message.getFromRecipient().isGroup());
+    Log.d(TAG, "[onRun] msg to isGroup: " + message.getToRecipient().isGroup());
+    Log.d(TAG, "[onRun] conv isGroup: " + conversationRecipient.isGroup());
+
+    boolean isSelfAdmin;
+    if (conversationRecipient.isGroup()) {
+      isSelfAdmin = SignalDatabase.groups().getGroup(conversationRecipient.requireGroupId()).get().isAdmin(Recipient.self());
+      Log.d(TAG, "[onRun] isSelfAdmin: " + isSelfAdmin);
+      isSelfAdmin = SignalDatabase.groups().getGroup(conversationRecipient.requireGroupId()).get().isAdmin(Recipient.resolved(Recipient.self().getId()));
+      Log.d(TAG, "[onRun] isSelfAdmin: " + isSelfAdmin);
+    } else {
+      isSelfAdmin = false;
+    }
+
+    Log.d(TAG, "[onRun] isSelfAdmin: " + isSelfAdmin);
+
+    if (!message.isOutgoing() && !isSelfAdmin) {
       throw new IllegalStateException("Cannot delete a message that isn't yours!");
     }
 
@@ -158,7 +191,7 @@ public class RemoteDeleteSendJob extends BaseJob {
     boolean            isForStory         = message.isMms() && (((MmsMessageRecord) message).getStoryType().isStory() || ((MmsMessageRecord) message).getParentStoryId() != null);
     DistributionListId distributionListId = isForStory ? message.getToRecipient().getDistributionListId().orElse(null) : null;
 
-    GroupSendJobHelper.SendResult sendResult = deliver(conversationRecipient, eligible, targetSentTimestamp, isForStory, distributionListId);
+    GroupSendJobHelper.SendResult sendResult = deliver(conversationRecipient, eligible, targetSentTimestamp, originalMessageSenderServiceId, isForStory, distributionListId);
 
     for (Recipient completion : sendResult.completed) {
       recipients.remove(completion.getId());
@@ -204,13 +237,14 @@ public class RemoteDeleteSendJob extends BaseJob {
   private @NonNull GroupSendJobHelper.SendResult deliver(@NonNull Recipient conversationRecipient,
                                                          @NonNull List<Recipient> destinations,
                                                          long targetSentTimestamp,
+                                                         ServiceId originalMessageSenderServiceId,
                                                          boolean isForStory,
                                                          @Nullable DistributionListId distributionListId)
       throws IOException, UntrustedIdentityException
   {
     SignalServiceDataMessage.Builder dataMessageBuilder = SignalServiceDataMessage.newBuilder()
                                                                                   .withTimestamp(System.currentTimeMillis())
-                                                                                  .withRemoteDelete(new SignalServiceDataMessage.RemoteDelete(targetSentTimestamp));
+                                                                                  .withRemoteDelete(new SignalServiceDataMessage.RemoteDelete(targetSentTimestamp, originalMessageSenderServiceId));
 
     if (conversationRecipient.isGroup()) {
       GroupUtil.setDataMessageGroupContext(context, dataMessageBuilder, conversationRecipient.requireGroupId().requirePush());

@@ -1197,6 +1197,7 @@ public class SignalServiceMessageSender {
     if (message.getRemoteDelete().isPresent()) {
       DataMessage.Delete delete = new DataMessage.Delete.Builder()
                                                         .targetSentTimestamp(message.getRemoteDelete().get().getTargetSentTimestamp())
+                                                        .authorServiceId(message.getRemoteDelete().get().getOriginalMessageSenderServiceId().toString())
                                                         .build();
       builder.delete(delete);
     }

@@ -70,6 +70,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private OverlayState              overlayState = OverlayState.HIDDEN;
   private boolean                   isNonAdminInAnnouncementGroup;
   private boolean                   canEditGroupInfo;
+  private boolean                   canDeleteAnyMessage;
 
   private boolean downIsOurs;
   private int     selected = -1;
@@ -146,7 +147,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
                    @NonNull PointF lastSeenDownPoint,
                    boolean isNonAdminInAnnouncementGroup,
                    @NonNull SelectedConversationModel selectedConversationModel,
-                   boolean canEditGroupInfo)
+                   boolean canEditGroupInfo,
+                   boolean canDeleteAnyMessage)
   {
     if (overlayState != OverlayState.HIDDEN) {
       return;
@@ -157,6 +159,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     this.selectedConversationModel     = selectedConversationModel;
     this.isNonAdminInAnnouncementGroup = isNonAdminInAnnouncementGroup;
     this.canEditGroupInfo              = canEditGroupInfo;
+    this.canDeleteAnyMessage           = canDeleteAnyMessage;
     overlayState                       = OverlayState.UNINITAILIZED;
     selected                           = -1;
 
@@ -681,7 +684,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   private @NonNull List<ActionItem> getMenuActionItems(@NonNull ConversationMessage conversationMessage) {
-    MenuState menuState = MenuState.getMenuState(conversationRecipient, conversationMessage.getMultiselectCollection().toSet(), false, isNonAdminInAnnouncementGroup, canEditGroupInfo);
+    MenuState menuState = MenuState.getMenuState(conversationRecipient, conversationMessage.getMultiselectCollection().toSet(), false, isNonAdminInAnnouncementGroup, canEditGroupInfo, canDeleteAnyMessage);
 
     List<ActionItem> items = new ArrayList<>();
 
@@ -736,7 +739,9 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     items.add(new ActionItem(R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete), () -> handleActionItemClicked(Action.DELETE)));
 
-    items.add(new ActionItem(R.drawable.symbol_trash_24, "Admin Delete", () -> handleActionItemClicked(Action.ADMIN_DELETE)));
+    if (menuState.shouldShowAdminDeleteAction()) {
+      items.add(new ActionItem(R.drawable.symbol_trash_24, "Admin Delete", () -> handleActionItemClicked(Action.ADMIN_DELETE)));
+    }
 
     return items;
   }

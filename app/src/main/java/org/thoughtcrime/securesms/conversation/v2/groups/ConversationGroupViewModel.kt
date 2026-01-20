@@ -72,6 +72,11 @@ class ConversationGroupViewModel(
     return memberLevel.groupTableMemberLevel == GroupTable.MemberLevel.ADMINISTRATOR || memberLevel.allMembersCanEditGroupInfo
   }
 
+  fun canDeleteAnyMessage(): Boolean {
+    val memberLevel = _memberLevel.value ?: return true
+    return memberLevel.groupTableMemberLevel == GroupTable.MemberLevel.ADMINISTRATOR
+  }
+
   fun blockJoinRequests(recipient: Recipient): Single<GroupBlockJoinRequestResult> {
     return _groupRecord
       .firstOrError()

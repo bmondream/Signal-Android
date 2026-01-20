@@ -24,6 +24,7 @@ public final class MenuState {
   private final boolean resend;
   private final boolean copy;
   private final boolean delete;
+  private final boolean adminDelete;
   private final boolean reactions;
   private final boolean paymentDetails;
   private final boolean edit;
@@ -39,6 +40,7 @@ public final class MenuState {
     resend         = builder.resend;
     copy           = builder.copy;
     delete         = builder.delete;
+    adminDelete    = builder.adminDelete;
     reactions      = builder.reactions;
     paymentDetails = builder.paymentDetails;
     edit           = builder.edit;
@@ -75,6 +77,10 @@ public final class MenuState {
     return delete;
   }
 
+  public boolean shouldShowAdminDeleteAction() {
+    return adminDelete;
+  }
+
   public boolean shouldShowReactions() {
     return reactions;
   }
@@ -103,7 +109,8 @@ public final class MenuState {
                                        @NonNull Set<MultiselectPart> selectedParts,
                                        boolean shouldShowMessageRequest,
                                        boolean isNonAdminInAnnouncementGroup,
-                                       boolean canEditGroupInfo)
+                                       boolean canEditGroupInfo,
+                                       boolean canDeleteAnyMessage)
   {
     
     Builder builder          = new Builder();
@@ -233,6 +240,7 @@ public final class MenuState {
 
     return builder.shouldShowCopyAction(!actionMessage && !remoteDelete && hasText && !hasGift && !hasPayment && !hasPoll)
                   .shouldShowDeleteAction(!hasInMemory && onlyContainsCompleteMessages(selectedParts))
+                  .shouldShowAdminDeleteAction(!hasInMemory && onlyContainsCompleteMessages(selectedParts) && canDeleteAnyMessage)
                   .shouldShowReactions(!conversationRecipient.isReleaseNotes())
                   .shouldShowPaymentDetails(hasPayment)
                   .shouldShowPollTerminate(hasPollTerminate)
@@ -279,6 +287,7 @@ public final class MenuState {
     private boolean resend;
     private boolean copy;
     private boolean delete;
+    private boolean adminDelete;
     private boolean reactions;
     private boolean paymentDetails;
     private boolean edit;
@@ -318,6 +327,11 @@ public final class MenuState {
 
     @NonNull Builder shouldShowDeleteAction(boolean delete) {
       this.delete = delete;
+      return this;
+    }
+
+    @NonNull Builder shouldShowAdminDeleteAction(boolean adminDelete) {
+      this.adminDelete = adminDelete;
       return this;
     }
 

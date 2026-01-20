@@ -23,6 +23,7 @@ object DeleteDialog {
    * @param title             The dialog title
    * @param message           The dialog message, or null
    * @param forceRemoteDelete Allow remote deletion, even if it would normally be disallowed
+   * @param isSelfAdmin       Whether the local user can delete any message
    *
    * @return a Single, who's value is a pair that notes whether or not a deletion attempt
    * happened at all, as well as if a thread deletion occurred.

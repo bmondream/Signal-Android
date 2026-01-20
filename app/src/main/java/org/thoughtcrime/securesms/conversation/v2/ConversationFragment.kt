@@ -2373,7 +2373,8 @@ class ConversationFragment :
       selectedParts,
       viewModel.hasMessageRequestState,
       conversationGroupViewModel.isNonAdminInAnnouncementGroup(),
-      conversationGroupViewModel.canEditGroupInfo()
+      conversationGroupViewModel.canEditGroupInfo(),
+      conversationGroupViewModel.canDeleteAnyMessage()
     )
 
     val items = arrayListOf<ActionItem>()
@@ -2433,9 +2434,20 @@ class ConversationFragment :
     }
 
     if (menuState.shouldShowDeleteAction()) {
+      // Delete button when selecting multiple messages
       items.add(
         ActionItem(R.drawable.symbol_trash_24, "DelBtn2") {
           handleDeleteMessages(selectedParts)
+          finishActionMode()
+        }
+      )
+    }
+
+    if (menuState.shouldShowAdminDeleteAction()) {
+      // Admin delete button when selecting multiple messages
+      items.add(
+        ActionItem(R.drawable.symbol_trash_24, "Admin Delete") {
+          handleAdminDeleteMessages(selectedParts)
           finishActionMode()
         }
       )
@@ -2520,7 +2532,7 @@ class ConversationFragment :
   ) {
     reactionDelegate.setOnActionSelectedListener(onActionSelectedListener)
     reactionDelegate.setOnHideListener(onHideListener)
-    reactionDelegate.show(requireActivity(), viewModel.recipientSnapshot!!, conversationMessage, conversationGroupViewModel.isNonAdminInAnnouncementGroup(), selectedConversationModel, conversationGroupViewModel.canEditGroupInfo())
+    reactionDelegate.show(requireActivity(), viewModel.recipientSnapshot!!, conversationMessage, conversationGroupViewModel.isNonAdminInAnnouncementGroup(), selectedConversationModel, conversationGroupViewModel.canEditGroupInfo(), conversationGroupViewModel.canDeleteAnyMessage())
     viewModel.setIsReactionDelegateShowing(true)
     composeText.clearFocus()
   }
@@ -2789,6 +2801,23 @@ class ConversationFragment :
       context = requireContext(),
       messageRecords = records,
       isSelfAdmin = false
+    ).observeOn(AndroidSchedulers.mainThread())
+      .subscribe { (deleted: Boolean, _: Boolean) ->
+        if (!deleted) return@subscribe
+        val editMessageId = inputPanel.editMessageId?.id
+        if (editMessageId != null && records.any { it.id == editMessageId }) {
+          inputPanel.exitEditMessageMode()
+        }
+      }
+  }
+
+  private fun handleAdminDeleteMessages(messageParts: Set<MultiselectPart>) {
+    val records = messageParts.map(MultiselectPart::getMessageRecord).toSet()
+
+    disposables += DeleteDialog.show(
+      context = requireContext(),
+      messageRecords = records,
+      isSelfAdmin = true
     ).observeOn(AndroidSchedulers.mainThread())
       .subscribe { (deleted: Boolean, _: Boolean) ->
         if (!deleted) return@subscribe
@@ -4075,7 +4104,7 @@ class ConversationFragment :
         ConversationReactionOverlay.Action.PAYMENT_DETAILS -> handleViewPaymentDetails(conversationMessage)
         ConversationReactionOverlay.Action.VIEW_INFO -> handleDisplayDetails(conversationMessage)
         ConversationReactionOverlay.Action.DELETE -> handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
-        ConversationReactionOverlay.Action.ADMIN_DELETE -> handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
+        ConversationReactionOverlay.Action.ADMIN_DELETE -> handleAdminDeleteMessages(conversationMessage.multiselectCollection.toSet())
         ConversationReactionOverlay.Action.END_POLL -> handleEndPoll(conversationMessage.messageRecord.getPoll()?.id)
         ConversationReactionOverlay.Action.PIN_MESSAGE -> handlePinMessage(conversationMessage)
         ConversationReactionOverlay.Action.UNPIN_MESSAGE -> handleUnpinMessage(conversationMessage.messageRecord.id)

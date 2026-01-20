@@ -40,9 +40,10 @@ public final class ConversationReactionDelegate {
                    @NonNull ConversationMessage conversationMessage,
                    boolean isNonAdminInAnnouncementGroup,
                    @NonNull SelectedConversationModel selectedConversationModel,
-                   boolean canEditGroupInfo)
+                   boolean canEditGroupInfo,
+                   boolean canDeleteAnyMessage)
   {
-    resolveOverlay().show(activity, conversationRecipient, conversationMessage, lastSeenDownPoint, isNonAdminInAnnouncementGroup, selectedConversationModel, canEditGroupInfo);
+    resolveOverlay().show(activity, conversationRecipient, conversationMessage, lastSeenDownPoint, isNonAdminInAnnouncementGroup, selectedConversationModel, canEditGroupInfo, canDeleteAnyMessage);
   }
 
   public void hide() {

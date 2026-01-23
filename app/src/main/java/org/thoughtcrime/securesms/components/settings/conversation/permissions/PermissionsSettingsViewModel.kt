@@ -37,6 +37,10 @@ class PermissionsSettingsViewModel(
     store.update(liveGroup.isAnnouncementGroup) { isAnnouncementGroup, state ->
       state.copy(announcementGroup = isAnnouncementGroup)
     }
+
+    store.update(liveGroup.anyMessageDeletionAccessControl) { anyMessageDeletionAccessControl, state ->
+      state.copy(adminCanDeleteAnyMessages = anyMessageDeletionAccessControl == GroupAccessControl.ONLY_ADMINS)
+    }
   }
 
   fun setNonAdminCanAddMembers(nonAdminCanAddMembers: Boolean) {
@@ -57,11 +61,25 @@ class PermissionsSettingsViewModel(
     }
   }
 
+  fun setAdminCanDeleteAnyMessages(adminCanDeleteAnyMessages: Boolean) {
+    repository.applyMessageDeletionRightsChange(groupId, adminCanDeleteAnyMessages.asMessageDeletionGroupAccessControl()) { reason ->
+      internalEvents.postValue(PermissionsSettingsEvents.GroupChangeError(reason))
+    }
+  }
+
   private fun Boolean.asGroupAccessControl(): GroupAccessControl {
     return if (this) {
       GroupAccessControl.ALL_MEMBERS
     } else {
       GroupAccessControl.ONLY_ADMINS
+    }
+  }
+
+  private fun Boolean.asMessageDeletionGroupAccessControl(): GroupAccessControl {
+    return if (this) {
+      GroupAccessControl.ONLY_ADMINS
+    } else {
+      GroupAccessControl.NO_ONE
     }
   }
 

@@ -59,9 +59,10 @@ message AccessControl {
     UNSATISFIABLE = 4;
   }
 
-  AccessRequired attributes        = 1;
-  AccessRequired members           = 2;
-  AccessRequired addFromInviteLink = 3;
+  AccessRequired attributes         = 1;
+  AccessRequired members            = 2;
+  AccessRequired addFromInviteLink  = 3;
+  AccessRequired anyMessageDeletion = 4;
 }
 
 message Group {
@@ -174,6 +175,10 @@ message GroupChange {
       AccessControl.AccessRequired addFromInviteLinkAccess = 1;
     }
 
+    message ModifyMessageDeletionAccessControlAction {
+      AccessControl.AccessRequired deleteAnyMessagesAccess = 1;
+    }
+
     message ModifyInviteLinkPasswordAction {
       bytes inviteLinkPassword = 1;
     }
@@ -207,6 +212,7 @@ message GroupChange {
     repeated AddBannedMemberAction                      addBannedMembers                = 22;
     repeated DeleteBannedMemberAction                   deleteBannedMembers             = 23;
     repeated PromotePendingPniAciMemberProfileKeyAction promotePendingPniAciMembers     = 24;
+             ModifyMessageDeletionAccessControlAction   modifyMessageDeletionAccess     = 26;
   }
 
   bytes  actions         = 1;

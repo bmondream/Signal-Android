@@ -387,6 +387,11 @@
         <item>@string/PermissionsSettingsFragment__all_members</item>
     </string-array>
 
+    <string-array name="PermissionsSettingsFragment__message_deletion_labels">
+        <item>@string/PermissionsSettingsFragment__only_admins</item>
+        <item>@string/PermissionsSettingsFragment__no_one</item>
+    </string-array>
+
     <string-array name="SoundsAndNotificationsSettingsFragment__mention_labels">
         <item>@string/SoundsAndNotificationsSettingsFragment__always_notify</item>
         <item>@string/SoundsAndNotificationsSettingsFragment__do_not_notify</item>

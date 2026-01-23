@@ -347,6 +347,12 @@ public final class GroupsV2Operations {
       );
     }
 
+    public GroupChange.Actions.Builder createChangeMessageDeletionRights(AccessControl.AccessRequired newRights) {
+      return new GroupChange.Actions.Builder().modifyMessageDeletionAccess(
+          new GroupChange.Actions.ModifyMessageDeletionAccessControlAction.Builder().deleteAnyMessagesAccess(newRights).build()
+      );
+    }
+
     /** Note that this can only ban ACIs. */
     public GroupChange.Actions.Builder createBanServiceIdsChange(Set<? extends ServiceId> banServiceIds, boolean rejectJoinRequest, List<DecryptedBannedMember> bannedMembersList) {
       GroupChange.Actions.Builder builder = rejectJoinRequest ? createRefuseGroupJoinRequest(banServiceIds, false, Collections.emptyList())

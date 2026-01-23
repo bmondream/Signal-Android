@@ -20,6 +20,10 @@ class PermissionsSettingsFragment : DSLSettingsFragment(
     resources.getStringArray(R.array.PermissionsSettingsFragment__editor_labels)
   }
 
+  private val messageDeletionPermissionsOptions: Array<String> by lazy {
+    resources.getStringArray(R.array.PermissionsSettingsFragment__message_deletion_labels)
+  }
+
   private val viewModel: PermissionsSettingsViewModel by viewModels(
     factoryProducer = {
       val args = PermissionsSettingsFragmentArgs.fromBundle(requireArguments())
@@ -83,6 +87,18 @@ class PermissionsSettingsFragment : DSLSettingsFragment(
           viewModel.setAnnouncementGroup(it == 0)
         }
       )
+
+      radioListPref(
+        title = DSLSettingsText.from(R.string.PermissionsSettingsFragment__delete_any_messages),
+        isEnabled = state.selfCanEditSettings,
+        listItems = messageDeletionPermissionsOptions,
+        dialogTitle = DSLSettingsText.from(R.string.PermissionsSettingsFragment__who_can_delete_any_messages),
+        selected = getMessageDeletionSelected(state.adminCanDeleteAnyMessages),
+        confirmAction = true,
+        onSelected = {
+          viewModel.setAdminCanDeleteAnyMessages(it == 0)
+        }
+      )
     }
   }
 
@@ -92,6 +108,15 @@ class PermissionsSettingsFragment : DSLSettingsFragment(
       1
     } else {
       0
+    }
+  }
+
+  @StringRes
+  private fun getMessageDeletionSelected(isAdminAllowed: Boolean): Int {
+    return if (isAdminAllowed) {
+      0
+    } else {
+      1
     }
   }
 }

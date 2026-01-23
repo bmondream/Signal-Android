@@ -5944,11 +5944,14 @@
     <string name="PermissionsSettingsFragment__add_members">Add members</string>
     <string name="PermissionsSettingsFragment__edit_group_info">Edit group info</string>
     <string name="PermissionsSettingsFragment__send_messages">Send messages</string>
+    <string name="PermissionsSettingsFragment__delete_any_messages">Delete any messages</string>
     <string name="PermissionsSettingsFragment__all_members">All members</string>
     <string name="PermissionsSettingsFragment__only_admins">Only admins</string>
+    <string name="PermissionsSettingsFragment__no_one">No one</string>
     <string name="PermissionsSettingsFragment__who_can_add_new_members">Who can add new members?</string>
     <string name="PermissionsSettingsFragment__who_can_edit_this_groups_info">Who can edit this group\'s info?</string>
     <string name="PermissionsSettingsFragment__who_can_send_messages">Who can send messages and start calls?</string>
+    <string name="PermissionsSettingsFragment__who_can_delete_any_messages">Who can delete anyone\'s messages?</string>
 
     <!-- SoundsAndNotificationsSettingsFragment -->
     <string name="SoundsAndNotificationsSettingsFragment__mute_notifications">Mute notifications</string>

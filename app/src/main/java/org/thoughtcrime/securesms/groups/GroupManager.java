@@ -298,6 +298,17 @@ public final class GroupManager {
   }
 
   @WorkerThread
+  public static void applyMessageDeletionRightsChange(@NonNull Context context,
+                                                      @NonNull GroupId.V2 groupId,
+                                                      @NonNull GroupAccessControl newRights)
+      throws GroupChangeFailedException, GroupInsufficientRightsException, IOException, GroupNotAMemberException, GroupChangeBusyException
+  {
+    try (GroupManagerV2.GroupEditor editor = new GroupManagerV2(context).edit(groupId.requireV2())) {
+      editor.updateMessageDeletionRights(newRights);
+    }
+  }
+
+  @WorkerThread
   public static void cycleGroupLinkPassword(@NonNull Context context,
                                             @NonNull GroupId.V2 groupId)
       throws GroupChangeFailedException, GroupInsufficientRightsException, IOException, GroupNotAMemberException, GroupChangeBusyException

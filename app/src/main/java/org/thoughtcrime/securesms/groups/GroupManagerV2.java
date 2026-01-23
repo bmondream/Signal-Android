@@ -328,6 +328,13 @@ final class GroupManagerV2 {
     }
 
     @WorkerThread
+    @NonNull GroupManager.GroupActionResult updateMessageDeletionRights(@NonNull GroupAccessControl newRights)
+        throws GroupChangeFailedException, GroupInsufficientRightsException, IOException, GroupNotAMemberException
+    {
+      return commitChangeWithConflictResolution(selfAci, groupOperations.createChangeMessageDeletionRights(rightsToAccessControl(newRights)));
+    }
+
+    @WorkerThread
     @NonNull GroupManager.GroupActionResult updateGroupTitleDescriptionAndAvatar(@Nullable String title, @Nullable String description, @Nullable byte[] avatarBytes, boolean avatarChanged)
       throws GroupChangeFailedException, GroupInsufficientRightsException, IOException, GroupNotAMemberException
     {

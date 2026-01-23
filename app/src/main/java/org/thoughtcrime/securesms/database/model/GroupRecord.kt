@@ -118,6 +118,20 @@ class GroupRecord(
       }
     }
 
+  /** Who is allowed to delete any participant's messages in this group. */
+  val anyMessageDeletionAccessControl: GroupAccessControl
+    get() {
+      return if (isV2Group) {
+        if ((requireV2GroupProperties().decryptedGroup.accessControl ?: AccessControl()).anyMessageDeletion == AccessControl.AccessRequired.ADMINISTRATOR) {
+          GroupAccessControl.ONLY_ADMINS
+        } else {
+          GroupAccessControl.NO_ONE
+        }
+      } else {
+        GroupAccessControl.NO_ONE
+      }
+    }
+
   val actionableRequestingMembersCount: Int by lazy {
     if (isV2Group && memberLevel(Recipient.self()) == GroupTable.MemberLevel.ADMINISTRATOR) {
       requireV2GroupProperties()

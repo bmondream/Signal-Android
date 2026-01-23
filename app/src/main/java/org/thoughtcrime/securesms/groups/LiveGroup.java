@@ -182,6 +182,10 @@ public final class LiveGroup {
     return Transformations.map(groupRecord, GroupRecord::getAttributesAccessControl);
   }
 
+  public LiveData<GroupAccessControl> getAnyMessageDeletionAccessControl() {
+    return Transformations.map(groupRecord, GroupRecord::getAnyMessageDeletionAccessControl);
+  }
+
   public LiveData<List<GroupMemberEntry.FullMember>> getNonAdminFullMembers() {
     return Transformations.map(fullMembers,
                                members -> Stream.of(members)

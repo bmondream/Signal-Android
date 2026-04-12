@@ -71,6 +71,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.preferences.G
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.InternalPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.LargeIconClickPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.LegacyGroupPreference
+import org.thoughtcrime.securesms.components.settings.conversation.preferences.MessageCountPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.RecipientPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.SharedMediaPreference
 import org.thoughtcrime.securesms.components.settings.conversation.preferences.Utils.formatMutedUntil
@@ -299,6 +300,7 @@ class ConversationSettingsFragment :
     RecipientPreference.register(adapter)
     InternalPreference.register(adapter)
     GroupDescriptionPreference.register(adapter)
+    MessageCountPreference.register(adapter)
     LegacyGroupPreference.register(adapter)
     CallPreference.register(adapter)
 
@@ -450,6 +452,12 @@ class ConversationSettingsFragment :
           )
         }
       }
+
+      customPref(
+        MessageCountPreference.Model(
+          threadId = state.threadId
+        )
+      )
 
       if (state.displayInternalRecipientDetails) {
         customPref(

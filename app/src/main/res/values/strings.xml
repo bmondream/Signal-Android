@@ -4440,6 +4440,8 @@
     <string name="preferences__internal_details" translatable="false">Internal Details</string>
     <string name="preferences__internal_stories_dialog_launcher" translatable="false">Stories dialog launcher</string>
 
+    <!-- Conversation message count visible in chat preferences -->
+    <string name="preferences__s_messages">Messages: %1$d</string>
 
     <!-- Payments -->
     <string name="PaymentsActivityFragment__all_activity">All activity</string>

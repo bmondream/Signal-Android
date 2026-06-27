@@ -21,6 +21,7 @@ import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationFlowState
 import org.signal.registration.RegistrationRepository
 import org.signal.registration.RegistrationRoute
+import org.signal.registration.proto.RestoreDecision
 import org.signal.registration.screens.EventDrivenViewModel
 import org.signal.registration.screens.util.navigateTo
 
@@ -115,8 +116,9 @@ class PinEntryForSvrRestoreViewModel(
       is RequestResult.Success -> {
         Log.i(TAG, "[PinEntered] Successfully restored master key from SVR.")
         repository.enqueueSvrResetGuessCountJob()
+        repository.setRestoreDecision(RestoreDecision.COMPLETED)
         parentEventEmitter(RegistrationFlowEvent.MasterKeyRestoredFromSvr(result.result.masterKey))
-        parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
+        repository.finishRegistrationOrCreateProfile(parentEventEmitter)
         state
       }
       is RequestResult.NonSuccess -> {
@@ -143,9 +145,11 @@ class PinEntryForSvrRestoreViewModel(
     }
   }
 
-  private fun handleSkip() {
-    // TODO [registration] - Handle skip
-    throw NotImplementedError("Handle skip")
+  private suspend fun handleSkip() {
+    Log.i(TAG, "[Skip] User opted out of restoring data and creating a PIN. Recording choice and completing registration.")
+    repository.setPinOptedOut()
+    repository.setRestoreDecision(RestoreDecision.SKIPPED)
+    parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
   }
 
   class Factory(

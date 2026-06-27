@@ -34,6 +34,10 @@ message RegistrationData {
   bytes  temporaryMasterKey = 17;
   bool   registrationLockEnabled = 18;
 
+  // Whether the user chose not to create a PIN during registration. The app is responsible for applying the
+  // actual opt-out (clearing PIN/registration lock state, refreshing attributes, etc.) when it commits this data.
+  bool   pinOptedOut = 24;
+
   // SVR credentials (from appendSvrCredentials / getRestoredSvrCredentials)
   repeated SvrCredential svrCredentials = 19;
 
@@ -48,6 +52,20 @@ message RegistrationData {
 
   // JSON-serialized flow state snapshot (from saveFlowState/restoreFlowState)
   string flowStateJson = 21;
+
+  // The terminal restore decision the user reached during this flow. The app translates this into its own
+  // RestoreDecisionState when committing, so the rest of the app knows whether we're a fresh account, skipped a
+  // restore, or successfully restored data.
+  RestoreDecision restoreDecision = 25;
+}
+
+// Mirrors the terminal states of the app's RestoreDecisionState. We intentionally do not model the transient
+// pending states (START / INTEND_TO_RESTORE) here, as the new flow performs any restore inline before completing.
+enum RestoreDecision {
+  UNSET = 0;
+  NEW_ACCOUNT = 1;
+  SKIPPED = 2;
+  COMPLETED = 3;
 }
 
 message SvrCredential {

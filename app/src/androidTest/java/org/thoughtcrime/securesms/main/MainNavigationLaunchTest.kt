@@ -32,8 +32,8 @@ import org.thoughtcrime.securesms.conversation.ConversationIntents
 import org.thoughtcrime.securesms.conversation.v2.ConversationFragment
 import org.thoughtcrime.securesms.conversationlist.ConversationListArchiveFragment
 import org.thoughtcrime.securesms.conversationlist.ConversationListFragment
+import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionActivity
-import org.thoughtcrime.securesms.providers.BlobProvider
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.stories.landing.StoriesLandingFragment
@@ -348,11 +348,13 @@ class MainNavigationLaunchTest {
       await(description = "no new ConversationFragment after Empty detail intent") {
         recorder.createdArgs.size == baseline
       }
-      // The user-visible signal that we're "back on the list" is the chat list fragment
-      // being attached, not just the VM saying CHATS.
-      awaitListFragment(launched, MainNavigationListLocation.CHATS)
 
       val vm = runOnMainSync { launched.activity.mainNavigationViewModel() }
+
+      await(description = "conversation cleared from chats back stack after Empty detail intent") {
+        vm.chatsBackStackEntries.none { it is MainNavigationDetailLocation.Conversation }
+      }
+
       check(vm.mainNavigationState.value.currentListLocation == MainNavigationListLocation.CHATS) {
         "Expected CHATS, got ${vm.mainNavigationState.value.currentListLocation}"
       }
@@ -569,7 +571,7 @@ class MainNavigationLaunchTest {
   }
 
   private fun realBlob(bytes: ByteArray, mimeType: String): Uri {
-    return BlobProvider.getInstance()
+    return AppDependencies.blobs
       .forData(bytes)
       .withMimeType(mimeType)
       .createForSingleSessionInMemory()

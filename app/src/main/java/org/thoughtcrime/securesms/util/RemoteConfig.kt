@@ -841,13 +841,6 @@ object RemoteConfig {
     hotSwappable = true
   )
 
-  /** A comma-separated list of manufacturers that should *not* use CameraX.  */
-  val cameraXModelBlocklist: String by remoteString(
-    key = "android.cameraXModelBlockList.3",
-    defaultValue = "",
-    hotSwappable = true
-  )
-
   /** A comma-separated list of manufacturers that should *not* use CameraX mixed mode.  */
   val cameraXMixedModelBlocklist: String by remoteString(
     key = "android.cameraXMixedModelBlockList.3",
@@ -1181,6 +1174,19 @@ object RemoteConfig {
   )
 
   /**
+   * When true, individual 1:1 sends are routed through [IndividualSendJobV2], which uses the
+   * network-module [org.signal.network.service.MessageService] instead of the legacy
+   * [SignalServiceMessageSender] send path.
+   */
+  @JvmStatic
+  @get:JvmName("useIndividualSendJobV2")
+  val useIndividualSendJobV2: Boolean by remoteBoolean(
+    key = "android.useIndividualSendJobV2.4",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /**
    * Also determines how long an unregistered/deleted record should remain in storage service
    */
   val messageQueueTime: Long by remoteValue(
@@ -1277,7 +1283,7 @@ object RemoteConfig {
   @JvmStatic
   @get:JvmName("sendAdminDelete")
   val sendAdminDelete: Boolean by remoteBoolean(
-    key = "android.sendAdminDelete",
+    key = "android.sendAdminDelete.2",
     defaultValue = false,
     hotSwappable = true
   )
@@ -1390,17 +1396,6 @@ object RemoteConfig {
   )
 
   /**
-   * Whether to use our custom [org.signal.core.util.Linkifier] for web URL detection.
-   */
-  @JvmStatic
-  @get:JvmName("useNewLinkifier")
-  val useNewLinkifier: Boolean by remoteBoolean(
-    key = "android.useNewLinkifier",
-    defaultValue = false,
-    hotSwappable = true
-  )
-
-  /**
    * Whether screen sharing is available during calls.
    */
   @JvmStatic
@@ -1430,6 +1425,14 @@ object RemoteConfig {
   val requirePqRatio: Double by remoteDouble(
     key = "android.requirePqRatio",
     defaultValue = 0.0,
+    hotSwappable = true
+  )
+
+  @JvmStatic
+  @get:JvmName("disappearMore")
+  val disappearMore: Boolean by remoteBoolean(
+    key = "android.disappearMore",
+    defaultValue = false,
     hotSwappable = true
   )
 

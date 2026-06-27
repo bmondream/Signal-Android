@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.keyvalue
 import org.signal.archive.proto.BackupDebugInfo
 import org.signal.ringrtc.CallManager.DataMode
 import org.thoughtcrime.securesms.BuildConfig
+import org.thoughtcrime.securesms.database.model.IssuePriority
 import org.thoughtcrime.securesms.util.Environment.Calling.defaultSfuUrl
 import org.thoughtcrime.securesms.util.RemoteConfig
 
@@ -26,7 +27,6 @@ class InternalValues internal constructor(store: KeyValueStore) : SignalStoreVal
     const val CALLING_USE_INPUT_VOICE_COMM: String = "internal.calling_use_input_voice_comm"
     const val SHAKE_TO_REPORT: String = "internal.shake_to_report"
     const val DISABLE_STORAGE_SERVICE: String = "internal.disable_storage_service"
-    const val FORCE_WEBSOCKET_MODE: String = "internal.force_websocket_mode"
     const val LAST_SCROLL_POSITION: String = "internal.last_scroll_position"
     const val CONVERSATION_ITEM_V2_MEDIA: String = "internal.conversation_item_v2_media"
     const val WEB_SOCKET_SHADOWING_STATS: String = "internal.web_socket_shadowing_stats"
@@ -38,6 +38,7 @@ class InternalValues internal constructor(store: KeyValueStore) : SignalStoreVal
     const val IMPORTED_BACKUP_DEBUG_INFO: String = "internal.imported_backup_debug_info"
     const val USE_NEW_MEDIA_ACTIVITY: String = "internal.use_new_media_activity"
     const val ANR_DETECTION_CRASH: String = "internal.anr_detection_crash"
+    const val ISSUE_NOTIFICATION_PRIORITY: String = "internal.issue_notification_priority"
   }
 
   public override fun onFirstEverAppLaunch() = Unit
@@ -170,11 +171,6 @@ class InternalValues internal constructor(store: KeyValueStore) : SignalStoreVal
    */
   var callingUseInputVoiceComm by booleanValue(CALLING_USE_INPUT_VOICE_COMM, true).defaultForExternalUsers()
 
-  /**
-   * Whether or not the system is forced to be in 'websocket mode', where FCM is ignored and we use a foreground service to keep the app alive.
-   */
-  var isWebsocketModeForced: Boolean by booleanValue(FORCE_WEBSOCKET_MODE, false).defaultForExternalUsers()
-
   var hevcEncoding by booleanValue(ENCODE_HEVC, false).defaultForExternalUsers()
 
   var lastScrollPosition: Int by integerValue(LAST_SCROLL_POSITION, 0).defaultForExternalUsers()
@@ -182,6 +178,14 @@ class InternalValues internal constructor(store: KeyValueStore) : SignalStoreVal
   var useConversationItemV2Media by booleanValue(CONVERSATION_ITEM_V2_MEDIA, false).defaultForExternalUsers()
 
   var forceSsre2Capability by booleanValue("internal.force_ssre2_capability", false).defaultForExternalUsers()
+
+  /**
+   * The minimum [IssuePriority] that an issue recorded by [org.thoughtcrime.securesms.database.IssueReporter] must have
+   * in order to raise a user notification.
+   */
+  var issueNotificationPriority: IssuePriority
+    get() = IssuePriority.fromValue(getInteger(ISSUE_NOTIFICATION_PRIORITY, IssuePriority.HIGH.value))
+    set(value) = putInteger(ISSUE_NOTIFICATION_PRIORITY, value.value)
 
   var showArchiveStateHint by booleanValue(SHOW_ARCHIVE_STATE_HINT, false).defaultForExternalUsers()
 

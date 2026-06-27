@@ -5,6 +5,7 @@
 
 package org.signal.registration.screens.pinentry
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
@@ -12,6 +13,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.prop
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -80,10 +82,10 @@ class PinEntryForRegistrationLockViewModelTest {
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.PinEntered("123456"), parentEventEmitter, stateEmitter)
 
-    assertThat(emittedParentEvents).hasSize(3)
+    assertThat(emittedParentEvents).hasSize(2)
     assertThat(emittedParentEvents[0]).isInstanceOf<RegistrationFlowEvent.MasterKeyRestoredFromSvr>()
     assertThat(emittedParentEvents[1]).isInstanceOf<RegistrationFlowEvent.Registered>()
-    assertThat(emittedParentEvents[2]).isInstanceOf<RegistrationFlowEvent.RegistrationComplete>()
+    coVerify { mockRepository.finishRegistrationOrCreateProfile(parentEventEmitter, any()) }
   }
 
   @Test
@@ -303,6 +305,17 @@ class PinEntryForRegistrationLockViewModelTest {
     assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents[0]).isInstanceOf<RegistrationFlowEvent.MasterKeyRestoredFromSvr>()
     assertThat(emittedStates.last().oneTimeEvent).isEqualTo(PinEntryState.OneTimeEvent.UnknownError)
+  }
+
+  // ==================== Skip Tests ====================
+
+  @Test
+  fun `Skip throws because skipping is not valid during registration lock`() = runTest {
+    val initialState = PinEntryState(mode = PinEntryState.Mode.RegistrationLock)
+
+    assertFailure {
+      viewModel.applyEvent(initialState, PinEntryScreenEvents.Skip, parentEventEmitter, stateEmitter)
+    }.isInstanceOf<NotImplementedError>()
   }
 
   // ==================== ToggleKeyboard Tests ====================

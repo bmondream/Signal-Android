@@ -11,8 +11,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.serialization.saved
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.serialization.NavBackStackSerializer
+import androidx.navigation3.runtime.serialization.NavKeySerializer
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -37,7 +42,10 @@ import org.signal.core.util.StringUtil
 import org.signal.imageeditor.core.model.EditorElement
 import org.signal.imageeditor.core.model.EditorModel
 import org.signal.imageeditor.core.renderers.UriGlideRenderer
+import org.signal.mediasend.edit.MediaEditScreenEvent
+import org.signal.mediasend.edit.video.VideoTrimData
 import org.signal.mediasend.preupload.PreUploadController
+import org.signal.mediasend.select.MediaSelectScreenEvent
 import java.util.Collections
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -52,7 +60,7 @@ class MediaSendViewModel(
   private val repository: MediaSendRepository,
   private val preUploadController: PreUploadController,
   isMeteredFlow: Flow<Boolean>
-) : ViewModel(), MediaSendCallback {
+) : ViewModel(), MediaSendEventHandler {
 
   private val args: MediaSendActivityContract.Args = savedStateHandle[KEY_ARGS]
     ?: throw IllegalStateException("MediaSendViewModel requires args in SavedStateHandle. Use Factory to create.")
@@ -72,6 +80,13 @@ class MediaSendViewModel(
     isContactSelectionRequired = args.mode == MediaSendActivityContract.Mode.ChooseAfterMediaSelection,
     sendType = args.sendType
   )
+
+  val backStack: NavBackStack<NavKey> by savedStateHandle.saved(
+    serializer = NavBackStackSerializer(NavKeySerializer()),
+    key = KEY_BACK_STACK
+  ) {
+    NavBackStack(if (args.isCameraFirst) MediaSendNavKey.Capture.Camera else MediaSendNavKey.Select.Folders)
+  }
 
   /**
    * Main UI state. Backed by [SavedStateHandle] for automatic process death survival.
@@ -148,7 +163,52 @@ class MediaSendViewModel(
     }
   }
 
-  override fun onFolderClick(mediaFolder: MediaFolder?) {
+  override fun onMediaSelectScreenEvent(mediaSelectScreenEvent: MediaSelectScreenEvent) {
+    when (mediaSelectScreenEvent) {
+      is MediaSelectScreenEvent.FolderClick -> onFolderClick(mediaSelectScreenEvent.mediaFolder)
+      is MediaSelectScreenEvent.MediaClick -> onMediaClick(mediaSelectScreenEvent.media)
+      is MediaSelectScreenEvent.SetFocusedMedia -> setFocusedMedia(mediaSelectScreenEvent.media)
+      MediaSelectScreenEvent.NavigateToEdit -> backStack.goToEdit()
+    }
+  }
+
+  override fun onMediaCaptureScreenEvent(mediaCaptureScreenEvent: MediaCaptureScreenEvent) {
+    when (mediaCaptureScreenEvent) {
+      MediaCaptureScreenEvent.ShowCamera -> backStack.goToCamera()
+      MediaCaptureScreenEvent.ShowTextStory -> backStack.goToTextStory()
+    }
+  }
+
+  override fun onMediaEditScreenEvent(mediaEditScreenEvent: MediaEditScreenEvent) {
+    when (mediaEditScreenEvent) {
+      is MediaEditScreenEvent.FocusedMediaChanged -> setFocusedMedia(mediaEditScreenEvent.media)
+      MediaEditScreenEvent.NavigateToSend -> backStack.goToSend()
+      is MediaEditScreenEvent.VideoTrimChanged -> onEditVideoDuration(
+        totalDurationUs = mediaEditScreenEvent.videoTrimData.totalInputDurationUs,
+        startTimeUs = mediaEditScreenEvent.videoTrimData.startTimeUs,
+        endTimeUs = mediaEditScreenEvent.videoTrimData.endTimeUs,
+        touchEnabled = mediaEditScreenEvent.editingComplete
+      )
+      is MediaEditScreenEvent.VideoSeek -> error("VideoSeek is routed to the video player bus by MediaEditScreen and must not reach the view-model.")
+      is MediaEditScreenEvent.AddMessageClick -> {
+        val snapshot: MediaSendState = state.value
+
+        sendHudCommand(
+          HudCommand.ShowAddAMessageDialog(
+            message = snapshot.message ?: "",
+            startWithEmojiKeyboard = mediaEditScreenEvent.startWithEmojiKeyboard,
+            isViewOnceAvailable = snapshot.selectedMedia.size == 1 && !snapshot.isStory && !ContentTypeUtil.isDocumentType(snapshot.focusedMedia?.contentType)
+          )
+        )
+      }
+    }
+  }
+
+  private fun onFolderClick(mediaFolder: MediaFolder?) {
+    if (mediaFolder != null) {
+      backStack.goToFiles(mediaFolder)
+    }
+
     viewModelScope.launch {
       if (mediaFolder != null) {
         val media = repository.getMedia(mediaFolder.bucketId)
@@ -159,11 +219,17 @@ class MediaSendViewModel(
     }
   }
 
-  override fun onMediaClick(media: Media) {
+  private fun onMediaClick(media: Media) {
     if (media.uri in internalState.value.selectedMedia.map { it.uri }) {
       removeMedia(media)
     } else {
       addMedia(media)
+    }
+  }
+
+  private fun sendHudCommand(hudCommand: HudCommand) {
+    viewModelScope.launch {
+      hudCommandChannel.send(hudCommand)
     }
   }
 
@@ -367,7 +433,7 @@ class MediaSendViewModel(
    *
    * Cancels all pre-uploads and re-initializes video trim data.
    */
-  fun setSentMediaQuality(sentMediaQuality: Int) {
+  fun setSentMediaQuality(sentMediaQuality: SentMediaQuality) {
     val snapshot = state.value
     if (snapshot.sentMediaQuality == sentMediaQuality) return
 
@@ -381,9 +447,9 @@ class MediaSendViewModel(
         val existingData = snapshot.editorStateMap[mediaItem.uri] as? EditorState.VideoTrim
         if (existingData != null) {
           onEditVideoDuration(
-            totalDurationUs = existingData.totalInputDurationUs,
-            startTimeUs = existingData.startTimeUs,
-            endTimeUs = existingData.endTimeUs,
+            totalDurationUs = existingData.videoTrimData.totalInputDurationUs,
+            startTimeUs = existingData.videoTrimData.startTimeUs,
+            endTimeUs = existingData.videoTrimData.endTimeUs,
             touchEnabled = true,
             uri = mediaItem.uri
           )
@@ -399,7 +465,7 @@ class MediaSendViewModel(
   /**
    * Notifies the view-model that a video's trim/duration has been edited.
    */
-  override fun onVideoEdited(uri: Uri, isEdited: Boolean) {
+  private fun onVideoEdited(uri: Uri, isEdited: Boolean) {
     if (!isEdited) return
     if (!editedVideoUris.add(uri)) return
 
@@ -425,22 +491,22 @@ class MediaSendViewModel(
 
     val snapshot = state.value
     val existingData = snapshot.editorStateMap[uri] as? EditorState.VideoTrim
-      ?: EditorState.VideoTrim(totalInputDurationUs = totalDurationUs)
+      ?: EditorState.VideoTrim(VideoTrimData(totalInputDurationUs = totalDurationUs))
 
     val clampedStartTime = maxOf(startTimeUs, 0)
-    val unedited = !existingData.isDurationEdited
+    val unedited = !existingData.videoTrimData.isDurationEdited
     val durationEdited = clampedStartTime > 0 || endTimeUs < totalDurationUs
     val isEntireDuration = startTimeUs == 0L && endTimeUs == totalDurationUs
-    val endMoved = !isEntireDuration && existingData.endTimeUs != endTimeUs
+    val endMoved = !isEntireDuration && existingData.videoTrimData.endTimeUs != endTimeUs
     val maxVideoDurationUs = getMaxVideoDurationUs()
     val preserveStartTime = unedited || !endMoved
 
-    val newData = EditorState.VideoTrim(
+    val newData = VideoTrimData(
       isDurationEdited = durationEdited,
       totalInputDurationUs = totalDurationUs,
       startTimeUs = clampedStartTime,
       endTimeUs = endTimeUs
-    ).clampToMaxDuration(maxVideoDurationUs, preserveStartTime)
+    ).let { EditorState.VideoTrim(it) }.clampToMaxDuration(maxVideoDurationUs, preserveStartTime)
 
     // Cancel upload on first edit
     if (unedited && durationEdited) {
@@ -474,11 +540,11 @@ class MediaSendViewModel(
 
   //region Page/Focus Management
 
-  override fun setFocusedMedia(media: Media) {
+  private fun setFocusedMedia(media: Media) {
     updateState { copy(focusedMedia = media) }
   }
 
-  override fun onPageChanged(position: Int) {
+  private fun onPageChanged(position: Int) {
     val snapshot = state.value
     val focused = if (position >= snapshot.selectedMedia.size) null else snapshot.selectedMedia[position]
     updateState { copy(focusedMedia = focused) }
@@ -572,7 +638,7 @@ class MediaSendViewModel(
     updateState { copy(message = text) }
   }
 
-  override fun onMessageChange(message: String) {
+  private fun onMessageChange(message: String) {
     setMessage(message)
   }
 
@@ -720,6 +786,7 @@ class MediaSendViewModel(
     private const val KEY_IDENTITY_CHANGES_SINCE = "media_send_vm_identity_changes_since"
     private const val KEY_STATE = "media_send_vm_state"
     private const val KEY_EDITED_VIDEO_URIS = "media_send_vm_edited_video_uris"
+    private const val KEY_BACK_STACK = "media_send_vm_back_stack"
   }
 
   /**

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,6 +57,7 @@ import org.signal.registration.R
 import org.signal.registration.screens.OnePaneRegistrationScaffold
 import org.signal.registration.screens.RegistrationScaffold
 import org.signal.registration.screens.TwoPaneRegistrationScaffold
+import org.signal.registration.screens.attachDebugLogHelper
 import org.signal.registration.test.TestTags
 import kotlin.time.Duration.Companion.seconds
 
@@ -100,21 +102,27 @@ fun VerificationCodeScreen(
         focusRequesters[0].requestFocus()
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__incorrect_code))
       }
+
       VerificationCodeState.OneTimeEvent.NetworkError -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__network_error))
       }
+
       is VerificationCodeState.OneTimeEvent.RateLimited -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__too_many_attempts_try_again_in_s, event.retryAfter.toString()))
       }
+
       VerificationCodeState.OneTimeEvent.UnableToSendSms -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__unable_to_send_sms))
       }
+
       VerificationCodeState.OneTimeEvent.CouldNotRequestCodeWithSelectedTransport -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__could_not_send_code_via_selected_method))
       }
+
       VerificationCodeState.OneTimeEvent.UnknownError -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__an_unexpected_error_occurred))
       }
+
       VerificationCodeState.OneTimeEvent.RegistrationError -> {
         snackbarHostState.showSnackbar(resources.getString(R.string.VerificationCodeScreen__registration_error))
       }
@@ -169,15 +177,15 @@ private fun OnePaneLayout(
   OnePaneRegistrationScaffold(
     modifier = Modifier
       .fillMaxSize()
-      .padding(innerPadding),
+      .padding(innerPadding)
+      .consumeWindowInsets(innerPadding),
     params = params,
     content = { paddingValues ->
       Column(
         modifier = Modifier
           .fillMaxSize()
           .verticalScroll(scrollState)
-          .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally
+          .padding(paddingValues)
       ) {
         Description(state, onEvent)
 
@@ -198,14 +206,17 @@ private fun OnePaneLayout(
       }
     },
     footer = {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 16.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.Bottom
+      RegistrationScaffold.FooterSurface(
+        isElevated = scrollState.canScrollForward
       ) {
-        AlternateCodeOptions(state, onEvent)
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(params.footerPadding),
+          horizontalArrangement = Arrangement.SpaceAround
+        ) {
+          AlternateCodeOptions(state, onEvent)
+        }
       }
     }
   )
@@ -221,17 +232,20 @@ private fun TwoPaneLayout(
   onEvent: (VerificationCodeScreenEvents) -> Unit,
   onDigitsChanged: (List<String>) -> Unit
 ) {
-  val scrollState = rememberScrollState()
+  val firstPaneScrollState = rememberScrollState()
+  val secondPaneScrollState = rememberScrollState()
+
   TwoPaneRegistrationScaffold(
     modifier = Modifier
       .fillMaxSize()
-      .padding(innerPadding),
+      .padding(innerPadding)
+      .consumeWindowInsets(innerPadding),
     params = params,
     firstPane = { paddingValues ->
       Column(
         modifier = Modifier
           .weight(1f)
-          .verticalScroll(scrollState)
+          .verticalScroll(firstPaneScrollState)
           .padding(paddingValues)
       ) {
         Description(state, onEvent)
@@ -241,7 +255,7 @@ private fun TwoPaneLayout(
       Column(
         modifier = Modifier
           .weight(1f)
-          .verticalScroll(scrollState)
+          .verticalScroll(secondPaneScrollState)
           .padding(paddingValues)
       ) {
         CodeField(
@@ -259,14 +273,17 @@ private fun TwoPaneLayout(
       }
     },
     footer = {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 16.dp, start = 24.dp, end = 24.dp),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.Bottom
+      RegistrationScaffold.FooterSurface(
+        isElevated = firstPaneScrollState.canScrollForward || secondPaneScrollState.canScrollForward
       ) {
-        AlternateCodeOptions(state, onEvent)
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(params.footerPadding),
+          horizontalArrangement = Arrangement.End
+        ) {
+          AlternateCodeOptions(state, onEvent)
+        }
       }
     }
   )
@@ -430,16 +447,16 @@ private fun Description(state: VerificationCodeState, onEvent: (VerificationCode
   Text(
     text = stringResource(R.string.VerificationCodeScreen__verification_code),
     style = MaterialTheme.typography.headlineMedium,
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier
+      .fillMaxWidth()
+      .attachDebugLogHelper()
   )
-
-  Spacer(modifier = Modifier.height(16.dp))
 
   Text(
     text = stringResource(R.string.VerificationCodeScreen__enter_the_code_we_sent_to_s, state.e164),
-    style = MaterialTheme.typography.bodyMedium,
+    style = MaterialTheme.typography.bodyLarge,
     color = MaterialTheme.colorScheme.onSurfaceVariant,
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier.padding(top = 16.dp)
   )
 
   Spacer(modifier = Modifier.height(8.dp))

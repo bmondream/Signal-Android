@@ -4,6 +4,7 @@ plugins {
   id("com.squareup.wire")
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlinx.serialization)
+  alias(testLibs.plugins.compose.screenshot)
 }
 
 android {
@@ -23,6 +24,13 @@ android {
       isIncludeAndroidResources = true
     }
   }
+
+  experimentalProperties["android.experimental.enableScreenshotTest"] = true
+}
+
+screenshotTests {
+  // Fraction of differing pixels tolerated before a screenshot test fails (0.0001 = 0.01%).
+  imageDifferenceThreshold = 0.0001f
 }
 
 wire {
@@ -36,7 +44,6 @@ wire {
 }
 
 dependencies {
-  implementation(libs.androidx.ui.test.junit4)
   lintChecks(project(":lintchecks"))
 
   // Project dependencies
@@ -45,6 +52,7 @@ dependencies {
   implementation(project(":core:util"))
   implementation(project(":core:models-jvm"))
   implementation(project(":core:serialization"))
+  implementation(project(":lib:device-transfer"))
   implementation(libs.libsignal.android)
 
   // Compose BOM
@@ -76,6 +84,9 @@ dependencies {
   // Phone number formatting
   implementation(libs.google.libphonenumber)
 
+  // Phone number hint
+  implementation(libs.google.play.services.auth)
+
   // Testing
   testImplementation(testFixtures(project(":core:ui")))
   testImplementation(testLibs.junit.junit)
@@ -86,6 +97,10 @@ dependencies {
   testImplementation(libs.androidx.compose.ui.test.junit4)
   androidTestImplementation(testLibs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-  implementation(libs.androidx.compose.ui.test.manifest)
   debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+  // Compose screenshot testing
+  screenshotTestImplementation(testLibs.compose.screenshot.validation.api)
+  screenshotTestImplementation(libs.androidx.compose.ui.tooling.core)
+  screenshotTestImplementation(libs.androidx.compose.ui.tooling.preview)
 }

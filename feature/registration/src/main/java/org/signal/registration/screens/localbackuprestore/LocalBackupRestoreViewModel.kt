@@ -23,6 +23,7 @@ import org.signal.core.util.logging.Log
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationRepository
 import org.signal.registration.RegistrationRoute
+import org.signal.registration.proto.RestoreDecision
 import org.signal.registration.screens.EventDrivenViewModel
 import org.signal.registration.screens.util.navigateBack
 import org.signal.registration.screens.util.navigateTo
@@ -109,7 +110,7 @@ class LocalBackupRestoreViewModel(
     startRestore(backup, state.selectedFolderUri, credential, aep)
   }
 
-  private fun onRestoreComplete(state: LocalBackupRestoreState) {
+  private suspend fun onRestoreComplete(state: LocalBackupRestoreState) {
     if (state.aep != null) {
       parentEventEmitter(RegistrationFlowEvent.UserSuppliedAepVerified(state.aep))
     }
@@ -118,7 +119,8 @@ class LocalBackupRestoreViewModel(
       resultBus.sendResult(resultKey, LocalBackupRestoreResult.Success(state.aep))
       parentEventEmitter.navigateBack()
     } else {
-      parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
+      repository.setRestoreDecision(RestoreDecision.COMPLETED)
+      repository.finishRegistrationOrCreateProfile(parentEventEmitter)
     }
   }
 

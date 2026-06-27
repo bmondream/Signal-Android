@@ -7,6 +7,8 @@
 
 package org.signal.registration.screens.welcome
 
+import android.content.pm.PackageManager
+import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,22 +37,26 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.window.layout.WindowMetricsCalculator
 import kotlinx.coroutines.CoroutineScope
 import org.signal.core.ui.WindowBreakpoint
 import org.signal.core.ui.compose.AllDevicePreviews
@@ -65,7 +71,10 @@ import org.signal.core.ui.isWidthExpanded
 import org.signal.core.ui.rememberWindowBreakpoint
 import org.signal.registration.R
 import org.signal.registration.screens.RegistrationScaffold
+import org.signal.registration.screens.attachDebugLogHelper
 import org.signal.registration.test.TestTags
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * Welcome screen for the registration flow.
@@ -74,15 +83,17 @@ import org.signal.registration.test.TestTags
 @Composable
 fun WelcomeScreen(
   onEvent: (WelcomeScreenEvents) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  isLinkAndSyncAvailable: Boolean = false
 ) {
   var showBottomSheet by remember { mutableStateOf(false) }
   val windowBreakpoint = rememberWindowBreakpoint()
   val onRestoreOrTransferClick = { showBottomSheet = true }
   val onTermsAndPrivacyClick = { onEvent(WelcomeScreenEvents.ViewTermsAndPrivacy) }
+  val displayLinkAsPrimaryOption by rememberDisplayLinkAndSyncAsPrimaryPath(isLinkAndSyncAvailable)
 
   when (windowBreakpoint) {
-    WindowBreakpoint.SMALL -> {
+    is WindowBreakpoint.Small -> {
       CompactLayout(
         onEvent = onEvent,
         onRestoreOrTransferClick = onRestoreOrTransferClick,
@@ -91,7 +102,7 @@ fun WelcomeScreen(
       )
     }
 
-    WindowBreakpoint.MEDIUM -> {
+    is WindowBreakpoint.Medium -> {
       MediumLayout(
         onEvent = onEvent,
         onRestoreOrTransferClick = onRestoreOrTransferClick,
@@ -100,8 +111,9 @@ fun WelcomeScreen(
       )
     }
 
-    WindowBreakpoint.LARGE_WIDTH, WindowBreakpoint.LARGE_HEIGHT -> {
+    is WindowBreakpoint.Large -> {
       LargeLayout(
+        displayLinkAsPrimaryOption = displayLinkAsPrimaryOption,
         onEvent = onEvent,
         onTermsAndPrivacyClick = onTermsAndPrivacyClick,
         onRestoreOrTransferClick = onRestoreOrTransferClick,
@@ -237,6 +249,7 @@ private fun MediumLayout(
 
 @Composable
 private fun LargeLayout(
+  displayLinkAsPrimaryOption: Boolean,
   onEvent: (WelcomeScreenEvents) -> Unit,
   onTermsAndPrivacyClick: () -> Unit,
   onRestoreOrTransferClick: () -> Unit,
@@ -281,10 +294,16 @@ private fun LargeLayout(
                 .padding(bottom = 8.dp)
             )
 
-            PrimaryDeviceCallToActionButtons(
-              onEvent = onEvent,
-              onRestoreOrTransferClick = onRestoreOrTransferClick
-            )
+            if (displayLinkAsPrimaryOption) {
+              SecondaryDeviceCallToActionButtons(
+                onEvent = onEvent
+              )
+            } else {
+              PrimaryDeviceCallToActionButtons(
+                onEvent = onEvent,
+                onRestoreOrTransferClick = onRestoreOrTransferClick
+              )
+            }
           }
         }
       }
@@ -299,7 +318,7 @@ private fun HeroImage(
   Image(
     painter = painterResource(R.drawable.welcome),
     contentDescription = null,
-    modifier = modifier,
+    modifier = modifier.attachDebugLogHelper(),
     contentScale = ContentScale.Fit
   )
 }
@@ -316,6 +335,7 @@ private fun Headline(
     textAlign = textAlign,
     modifier = modifier
       .testTag(TestTags.WELCOME_HEADLINE)
+      .attachDebugLogHelper()
   )
 }
 
@@ -506,6 +526,29 @@ private fun RestoreActionRow(
       )
     }
   }
+}
+
+private const val TABLET_MIN_DIAGONAL_INCHES = 7f
+
+@Composable
+private fun rememberDisplayLinkAndSyncAsPrimaryPath(isLinkAndSyncAvailable: Boolean): State<Boolean> {
+  val context = LocalContext.current
+  val hasHinge = currentWindowAdaptiveInfo().windowPosture.hingeList.isNotEmpty()
+
+  val supportsTelephony = remember(context) {
+    context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+  }
+
+  val isLargeDevice = remember(context) {
+    val metrics = WindowMetricsCalculator.getOrCreate().computeMaximumWindowMetrics(context)
+    val dpi = metrics.density * DisplayMetrics.DENSITY_DEFAULT
+    val widthInches = metrics.bounds.width() / dpi
+    val heightInches = metrics.bounds.height() / dpi
+    sqrt(widthInches.pow(2) + heightInches.pow(2)) >= TABLET_MIN_DIAGONAL_INCHES
+  }
+
+  // A hinge means a foldable, which counts as a phone rather than a tablet.
+  return rememberUpdatedState(isLinkAndSyncAvailable && (!supportsTelephony || (isLargeDevice && !hasHinge)))
 }
 
 @AllDevicePreviews

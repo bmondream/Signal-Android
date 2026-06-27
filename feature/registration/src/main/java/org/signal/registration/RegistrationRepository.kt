@@ -41,6 +41,7 @@ import org.signal.registration.NetworkController.SessionMetadata
 import org.signal.registration.NetworkController.SvrCredentials
 import org.signal.registration.NetworkController.UpdateSessionError
 import org.signal.registration.proto.ProvisioningData
+import org.signal.registration.proto.RestoreDecision
 import org.signal.registration.proto.SvrCredential
 import org.signal.registration.screens.localbackuprestore.LocalBackupInfo
 import org.signal.registration.screens.remotebackuprestore.RemoteBackupRestoreProgress
@@ -50,8 +51,10 @@ import java.util.Locale
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-class RegistrationRepository(val context: Context, val networkController: NetworkController, val storageController: StorageController) {
+class RegistrationRepository(val context: Context, val networkController: NetworkController, val storageController: StorageController, val isLinkAndSyncAvailable: Boolean) {
 
   companion object {
     private val TAG = Log.tag(RegistrationRepository::class)
@@ -174,10 +177,10 @@ class RegistrationRepository(val context: Context, val networkController: Networ
   }
 
   /**
-   * See [NetworkController.enqueueSvrGuessResetJob]
+   * See [NetworkController.enqueueSvrGuessResetJobIfPossible]
    */
   suspend fun enqueueSvrResetGuessCountJob() {
-    networkController.enqueueSvrGuessResetJob()
+    check(networkController.enqueueSvrGuessResetJobIfPossible()) { "Failed to enqueue SVR guess! Should not happen in this flow." }
   }
 
   /**
@@ -245,6 +248,17 @@ class RegistrationRepository(val context: Context, val networkController: Networ
    */
   fun startProvisioning(): Flow<ProvisioningEvent> {
     return networkController.startProvisioning()
+  }
+
+  /**
+   * Reports the user's chosen restore method to the server so the old (quick-restore) device's UI can update.
+   * See [NetworkController.setRestoreMethod].
+   */
+  suspend fun setRestoreMethod(
+    token: String,
+    method: NetworkController.RestoreMethod
+  ): RequestResult<Unit, NetworkController.SetRestoreMethodError> = withContext(Dispatchers.IO) {
+    networkController.setRestoreMethod(token, method)
   }
 
   /**
@@ -369,7 +383,8 @@ class RegistrationRepository(val context: Context, val networkController: Networ
         storage = true, // True initially -- can turn off later if users opt-out
         versionedExpirationTimer = true,
         attachmentBackfill = true,
-        spqr = true
+        spqr = true,
+        usernameChangeSyncMessage = true
       ),
       name = null,
       pniRegistrationId = keyMaterial.pniRegistrationId,
@@ -414,6 +429,70 @@ class RegistrationRepository(val context: Context, val networkController: Networ
     result.map { it to keyMaterial }
   }
 
+  /**
+   * Reads any locally-cached profile data (given/family name, avatar) so the create-profile screen
+   * can pre-seed itself or skip outright when the user is re-registering with profile data still on
+   * disk. See [StorageController.getStoredProfileData].
+   */
+  suspend fun getStoredProfileData(): StoredProfileData = withContext(Dispatchers.IO) {
+    storageController.getStoredProfileData()
+  }
+
+  /**
+   * Best-effort restore of the AccountRecord from the storage service, with a timeout for the UI.
+   * The work continues in the background even if [timeout] elapses. See [NetworkController.restoreAccountRecord].
+   */
+  suspend fun restoreAccountRecord(
+    timeout: Duration
+  ): RequestResult<Unit, NetworkController.RestoreAccountRecordError> = withContext(Dispatchers.IO) {
+    networkController.restoreAccountRecord(timeout)
+  }
+
+  /**
+   * Best-effort restore the AccountRecord (when local profile data is incomplete) and then signal
+   * registration completion on [parentEventEmitter]. The Profile screen is intentionally not
+   * routed to from here for now — even when the restore doesn't fully populate profile data, we
+   * emit [RegistrationFlowEvent.RegistrationComplete].
+   *
+   * Intended for any screen that, in the legacy flow, would have signalled "we're done". Pre-
+   * existing-data callers (re-registration, device transfer, backup restore) won't pay the
+   * restore-record cost.
+   */
+  suspend fun finishRegistrationOrCreateProfile(
+    parentEventEmitter: (RegistrationFlowEvent) -> Unit,
+    restoreTimeout: Duration = 10.seconds
+  ) {
+    if (hasProfileNameAndAvatar()) {
+      Log.i(TAG, "[finishRegistrationOrCreateProfile] Profile name + avatar already on disk; finishing.")
+      parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
+      return
+    }
+
+    Log.i(TAG, "[finishRegistrationOrCreateProfile] Profile data incomplete; attempting best-effort account-record restore (timeout=${restoreTimeout.inWholeSeconds}s).")
+    restoreAccountRecord(restoreTimeout)
+
+    Log.i(TAG, "[finishRegistrationOrCreateProfile] Account-record restore finished; finishing without routing to Profile screen.")
+    parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
+  }
+
+  private suspend fun hasProfileNameAndAvatar(): Boolean {
+    val stored = getStoredProfileData()
+    return stored.givenName.isNotEmpty() && stored.avatar != null
+  }
+
+  /**
+   * Persists the freshly-created profile to local storage and arranges for it to be uploaded.
+   * See [NetworkController.setProfile].
+   */
+  suspend fun setProfile(
+    givenName: String,
+    familyName: String,
+    avatar: ByteArray?,
+    discoverableByPhoneNumber: Boolean
+  ): RequestResult<Unit, NetworkController.SetProfileError> = withContext(Dispatchers.IO) {
+    networkController.setProfile(givenName, familyName, avatar, discoverableByPhoneNumber)
+  }
+
   suspend fun setNewlyCreatedPin(
     pin: String,
     isAlphanumeric: Boolean,
@@ -433,6 +512,39 @@ class RegistrationRepository(val context: Context, val networkController: Networ
     }
 
     result
+  }
+
+  /**
+   * Records that the user has chosen not to create a PIN.
+   *
+   * This does not perform the opt-out itself -- it simply notes the user's choice in the in-progress
+   * registration data and commits it. The app applies the actual opt-out (clearing PIN/registration lock
+   * state, refreshing attributes, etc.) when it persists the committed [org.signal.registration.proto.RegistrationData].
+   *
+   * Any previously-recorded PIN state is cleared so the persisted blob stays internally consistent.
+   */
+  suspend fun setPinOptedOut(): Unit = withContext(Dispatchers.IO) {
+    Log.i(TAG, "[setPinOptedOut] Recording PIN opt-out in registration data.")
+    storageController.updateInProgressRegistrationData {
+      this.pinOptedOut = true
+      this.pin = ""
+      this.pinIsAlphanumeric = false
+      this.registrationLockEnabled = false
+    }
+    storageController.commitRegistrationData()
+  }
+
+  /**
+   * Records the terminal restore decision the user reached (new account, skipped a restore, or successfully restored)
+   * and commits it. The app translates this into its own restore-decision state so the rest of the app knows what
+   * happened during registration.
+   */
+  suspend fun setRestoreDecision(decision: RestoreDecision): Unit = withContext(Dispatchers.IO) {
+    Log.i(TAG, "[setRestoreDecision] Recording restore decision: $decision")
+    storageController.updateInProgressRegistrationData {
+      this.restoreDecision = decision
+    }
+    storageController.commitRegistrationData()
   }
 
   suspend fun getPreExistingRegistrationData(): PreExistingRegistrationData? {
@@ -548,7 +660,7 @@ class RegistrationRepository(val context: Context, val networkController: Networ
   suspend fun commitFinalRegistrationData(): Unit = withContext(Dispatchers.IO) {
     storageController.commitRegistrationData()
     networkController.enqueueAccountAttributesSyncJob()
-    networkController.enqueueSvrGuessResetJob()
+    networkController.enqueueSvrGuessResetJobIfPossible()
   }
 
   private fun generateKeyMaterial(

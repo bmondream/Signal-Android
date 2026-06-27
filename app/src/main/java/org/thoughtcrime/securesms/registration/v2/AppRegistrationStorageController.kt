@@ -23,10 +23,14 @@ import org.greenrobot.eventbus.ThreadMode
 import org.signal.archive.LocalBackupRestoreProgress
 import org.signal.core.models.AccountEntropyPool
 import org.signal.core.models.MasterKey
+import org.signal.core.util.StreamUtil
+import org.signal.core.util.crypto.AttachmentSecretProvider
 import org.signal.core.util.logging.Log
 import org.signal.registration.PreExistingRegistrationData
 import org.signal.registration.StorageController
+import org.signal.registration.StoredProfileData
 import org.signal.registration.proto.RegistrationData
+import org.signal.registration.proto.RestoreDecision
 import org.signal.registration.screens.localbackuprestore.LocalBackupInfo
 import org.signal.registration.screens.remotebackuprestore.RemoteBackupRestoreProgress
 import org.thoughtcrime.securesms.backup.FullBackupImporter
@@ -35,12 +39,19 @@ import org.thoughtcrime.securesms.backup.v2.RemoteRestoreResult
 import org.thoughtcrime.securesms.backup.v2.RestoreV2Event
 import org.thoughtcrime.securesms.backup.v2.local.LocalArchiver
 import org.thoughtcrime.securesms.backup.v2.local.SnapshotFileSystem
-import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
+import org.thoughtcrime.securesms.crypto.AppAttachmentSecretStore
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.database.model.databaseprotos.LocalRegistrationMetadata
+import org.thoughtcrime.securesms.database.model.databaseprotos.RestoreDecisionState
+import org.thoughtcrime.securesms.keyvalue.Completed
+import org.thoughtcrime.securesms.keyvalue.NewAccount
 import org.thoughtcrime.securesms.keyvalue.SignalStore
+import org.thoughtcrime.securesms.keyvalue.Skipped
+import org.thoughtcrime.securesms.keyvalue.isDecisionPending
 import org.thoughtcrime.securesms.pin.SvrRepository
+import org.thoughtcrime.securesms.profiles.AvatarHelper
+import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.registration.data.RegistrationRepository
 import java.io.File
 import java.io.IOException
@@ -91,6 +102,39 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
     Unit
   }
 
+  override suspend fun getStoredProfileData(): StoredProfileData = withContext(Dispatchers.IO) {
+    if (!SignalStore.account.isRegistered) {
+      return@withContext StoredProfileData()
+    }
+
+    val self = Recipient.self()
+    val profileName = self.profileName
+
+    val avatar: ByteArray? = if (AvatarHelper.hasAvatar(context, self.id)) {
+      try {
+        AvatarHelper.getAvatar(context, self.id)?.use { StreamUtil.readFully(it) }
+      } catch (e: IOException) {
+        Log.w(TAG, "[getStoredProfileData] Failed to read self avatar.", e)
+        null
+      }
+    } else {
+      null
+    }
+
+    val discoverable: Boolean? = when (SignalStore.phoneNumberPrivacy.phoneNumberDiscoverabilityMode) {
+      org.thoughtcrime.securesms.keyvalue.PhoneNumberPrivacyValues.PhoneNumberDiscoverabilityMode.DISCOVERABLE -> true
+      org.thoughtcrime.securesms.keyvalue.PhoneNumberPrivacyValues.PhoneNumberDiscoverabilityMode.NOT_DISCOVERABLE -> false
+      org.thoughtcrime.securesms.keyvalue.PhoneNumberPrivacyValues.PhoneNumberDiscoverabilityMode.UNDECIDED -> null
+    }
+
+    StoredProfileData(
+      givenName = profileName.givenName,
+      familyName = profileName.familyName,
+      avatar = avatar,
+      discoverableByPhoneNumber = discoverable
+    )
+  }
+
   override suspend fun readInProgressRegistrationData(): RegistrationData = withContext(Dispatchers.IO) {
     val file = File(context.cacheDir, TEMP_PROTO_FILENAME)
     if (file.exists()) {
@@ -120,6 +164,16 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
 
   override suspend fun commitRegistrationData() = withContext(Dispatchers.IO) {
     val data = readInProgressRegistrationData()
+
+    // The account's master key is always the one derived from the AEP, which we expect to have by the time we commit.
+    // Restore it up-front so any master-key-derived state we touch below resolves against the correct value rather
+    // than lazily generating a new AEP.
+    val accountEntropyPool: AccountEntropyPool? = data.accountEntropyPool.takeIf { it.isNotEmpty() }?.let { AccountEntropyPool(it) }
+    if (accountEntropyPool != null) {
+      SignalStore.account.restoreAccountEntropyPool(accountEntropyPool)
+    }
+
+    val masterKey: MasterKey? = accountEntropyPool?.deriveMasterKey()
 
     // Build LocalRegistrationMetadata if we have enough data for account setup
     if (data.e164.isNotEmpty() && data.aci.isNotEmpty() && data.pni.isNotEmpty() && data.servicePassword.isNotEmpty()) {
@@ -153,9 +207,7 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
         hasPin = data.pin.isNotEmpty()
         if (data.pin.isNotEmpty()) {
           pin = data.pin
-        }
-        if (data.temporaryMasterKey.size > 0) {
-          masterKey = data.temporaryMasterKey
+          masterKey?.let { this.masterKey = it.serialize().toByteString() }
         }
         fcmEnabled = SignalStore.account.fcmEnabled
         fcmToken = SignalStore.account.fcmToken ?: ""
@@ -165,15 +217,10 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
       // TODO [greyson] Should probably move this stuff into this file as we get closer to being done
       RegistrationRepository.registerAccountLocally(context, metadata)
       SignalStore.registration.localRegistrationMetadata = metadata
-
-      if (data.accountEntropyPool.isNotEmpty()) {
-        SignalStore.account.restoreAccountEntropyPool(AccountEntropyPool(data.accountEntropyPool))
-      }
     }
 
     // Handle PIN/master key
-    if (data.pin.isNotEmpty() && data.temporaryMasterKey.size > 0) {
-      val masterKey = MasterKey(data.temporaryMasterKey.toByteArray())
+    if (data.pin.isNotEmpty() && masterKey != null) {
       SvrRepository.onRegistrationComplete(
         masterKey,
         data.pin,
@@ -181,9 +228,40 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
         data.registrationLockEnabled,
         data.accountEntropyPool.isNotEmpty()
       )
+    } else if (data.pinOptedOut) {
+      Log.i(TAG, "[commitRegistrationData] User opted out of creating a PIN. Applying opt-out.")
+      SvrRepository.optOutOfPin(rotateAep = false)
     }
 
+    // The temporaryMasterKey is the one-time key restored from SVR during re-registration. The account's own master key
+    // is always the AEP-derived one above, so this is retained separately as the initial-restore key (used for the
+    // first storage service sync + recovery password). It must be set last, as onRegistrationComplete will have cleared
+    // the initial-restore key after recognizing the AEP-derived master key as our own.
+    if (data.temporaryMasterKey.size > 0) {
+      SignalStore.svr.masterKeyForInitialDataRestore = MasterKey(data.temporaryMasterKey.toByteArray())
+    }
+
+    applyRestoreDecision(data.restoreDecision)
+
     Unit
+  }
+
+  /**
+   * Translates the registration module's [RestoreDecision] into the app's [RestoreDecisionState] so the rest of the app
+   * knows whether we're a fresh account, skipped a restore, or successfully restored data. Only applied while the
+   * decision is still pending, since the state machine is otherwise terminal.
+   */
+  private fun applyRestoreDecision(decision: RestoreDecision) {
+    if (!SignalStore.registration.restoreDecisionState.isDecisionPending) {
+      return
+    }
+
+    SignalStore.registration.restoreDecisionState = when (decision) {
+      RestoreDecision.NEW_ACCOUNT -> RestoreDecisionState.NewAccount
+      RestoreDecision.SKIPPED -> RestoreDecisionState.Skipped
+      RestoreDecision.COMPLETED -> RestoreDecisionState.Completed
+      RestoreDecision.UNSET -> return
+    }
   }
 
   override fun restoreLocalBackupV1(uri: Uri, passphrase: String): Flow<LocalBackupRestoreProgress> = flow {
@@ -201,7 +279,7 @@ class AppRegistrationStorageController(private val context: Context) : StorageCo
       val database = SignalDatabase.backupDatabase
       FullBackupImporter.importFile(
         context,
-        AttachmentSecretProvider.getInstance(context).getOrCreateAttachmentSecret(),
+        AttachmentSecretProvider.getInstance(context, AppAttachmentSecretStore).getOrCreateAttachmentSecret(),
         database,
         uri,
         passphrase,

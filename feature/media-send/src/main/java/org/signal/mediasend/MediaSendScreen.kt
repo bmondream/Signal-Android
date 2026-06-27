@@ -9,11 +9,9 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import org.signal.core.ui.compose.theme.SignalTheme
@@ -24,27 +22,27 @@ fun MediaSendScreen(
   modifier: Modifier = Modifier,
   cameraSlot: @Composable () -> Unit = {},
   textStoryEditorSlot: @Composable () -> Unit = {},
-  videoEditorSlot: @Composable () -> Unit = {},
-  sendSlot: @Composable (MediaSendState) -> Unit = {}
+  sendSlot: @Composable (MediaSendState) -> Unit = {},
+  onExternalHudCommand: (HudCommand) -> Unit = {}
 ) {
   val viewModel = viewModel<MediaSendViewModel>(factory = MediaSendViewModel.Factory(args = contractArgs))
 
-  val state by viewModel.state.collectAsStateWithLifecycle()
-  val backStack = rememberNavBackStack(
-    if (state.isCameraFirst) MediaSendNavKey.Capture.Camera else MediaSendNavKey.Select
-  )
+  LaunchedEffect(viewModel) {
+    viewModel.hudCommands.collect { command ->
+      onExternalHudCommand(command)
+    }
+  }
 
   SignalTheme {
     CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides LocalActivity.current as NavigationEventDispatcherOwner) {
       Surface {
         MediaSendNavDisplay(
           stateFlow = viewModel.state,
-          backStack = backStack,
-          callback = viewModel,
+          backStack = viewModel.backStack,
+          eventHandler = viewModel,
           modifier = modifier,
           cameraSlot = cameraSlot,
           textStoryEditorSlot = textStoryEditorSlot,
-          videoEditorSlot = videoEditorSlot,
           sendSlot = sendSlot
         )
       }

@@ -30,6 +30,7 @@ import org.signal.libsignal.net.RequestResult
 import org.signal.registration.NetworkController
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationRepository
+import org.signal.registration.proto.RestoreDecision
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RemoteBackupRestoreViewModelTest {
@@ -157,7 +158,7 @@ class RemoteBackupRestoreViewModelTest {
   // ==================== Restore Progress Tests ====================
 
   @Test
-  fun `BackupRestoreBackup Complete progress emits RegistrationComplete and UserSuppliedAepVerified`() = runTest(testDispatcher) {
+  fun `BackupRestoreBackup Complete progress emits UserSuppliedAepVerified and hands off to finishRegistrationOrCreateProfile`() = runTest(testDispatcher) {
     every { mockRepository.restoreRemoteBackup(any()) } returns flowOf(
       RemoteBackupRestoreProgress.Complete
     )
@@ -171,9 +172,10 @@ class RemoteBackupRestoreViewModelTest {
       stateEmitter
     )
 
-    assertThat(emittedParentEvents).hasSize(2)
+    assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents[0]).isInstanceOf<RegistrationFlowEvent.UserSuppliedAepVerified>()
-    assertThat(emittedParentEvents[1]).isEqualTo(RegistrationFlowEvent.RegistrationComplete)
+    coVerify { mockRepository.setRestoreDecision(RestoreDecision.COMPLETED) }
+    coVerify { mockRepository.finishRegistrationOrCreateProfile(parentEventEmitter, any()) }
   }
 
   @Test

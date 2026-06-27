@@ -6,11 +6,16 @@
 package org.signal.registration.screens.pincreation
 
 import org.signal.core.models.AccountEntropyPool
-import org.signal.registration.util.DebugLoggableModel
+import org.signal.core.util.censor
 
 data class PinCreationState(
   val isAlphanumericKeyboard: Boolean = false,
-  val inputLabel: String? = null,
   val isConfirmEnabled: Boolean = false,
+  val pinMismatch: Boolean = false,
+  val firstPin: String? = null,
   val accountEntropyPool: AccountEntropyPool? = null
-) : DebugLoggableModel()
+) {
+  override fun toString(): String {
+    return "PinCreationState(isAlphanumericKeyboard=$isAlphanumericKeyboard, isConfirmEnabled=$isConfirmEnabled, pinMismatch=$pinMismatch, firstPin=${firstPin?.let { "${it.length} chars" }}, accountEntropyPool=${accountEntropyPool?.displayValue?.censor()})"
+  }
+}

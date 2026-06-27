@@ -5,7 +5,6 @@
 
 package org.thoughtcrime.securesms
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -15,7 +14,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -72,6 +70,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -85,8 +85,10 @@ import kotlinx.coroutines.withContext
 import org.signal.core.ui.BottomSheetUtil
 import org.signal.core.ui.compose.Snackbars
 import org.signal.core.ui.compose.theme.SignalTheme
+import org.signal.core.ui.navigation.TransitionSpecs
 import org.signal.core.ui.permissions.Permissions
 import org.signal.core.ui.rememberIsSplitPane
+import org.signal.core.util.AppForegroundObserver
 import org.signal.core.util.Util
 import org.signal.core.util.concurrent.LifecycleDisposable
 import org.signal.core.util.getParcelableCompat
@@ -104,6 +106,8 @@ import org.thoughtcrime.securesms.calls.log.CallLogFragment
 import org.thoughtcrime.securesms.calls.new.NewCallActivity
 import org.thoughtcrime.securesms.calls.quality.CallQuality
 import org.thoughtcrime.securesms.calls.quality.CallQualityBottomSheetFragment
+import org.thoughtcrime.securesms.chats.ConversationTransitionState
+import org.thoughtcrime.securesms.chats.chatsNavEntries
 import org.thoughtcrime.securesms.components.DebugLogsPromptDialogFragment
 import org.thoughtcrime.securesms.components.PromptBatterySaverDialogFragment
 import org.thoughtcrime.securesms.components.compose.ConnectivityWarningBottomSheet
@@ -133,7 +137,6 @@ import org.thoughtcrime.securesms.devicetransfer.olddevice.OldDeviceExitActivity
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupActivity
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.lock.v2.CreateSvrPinActivity
-import org.thoughtcrime.securesms.main.ChatNavGraphState
 import org.thoughtcrime.securesms.main.DetailsScreenNavHost
 import org.thoughtcrime.securesms.main.MainBottomChrome
 import org.thoughtcrime.securesms.main.MainBottomChromeCallback
@@ -142,7 +145,6 @@ import org.thoughtcrime.securesms.main.MainContentLayoutData
 import org.thoughtcrime.securesms.main.MainMegaphoneState
 import org.thoughtcrime.securesms.main.MainNavigationBar
 import org.thoughtcrime.securesms.main.MainNavigationDetailLocation
-import org.thoughtcrime.securesms.main.MainNavigationDetailLocationEffect
 import org.thoughtcrime.securesms.main.MainNavigationListLocation
 import org.thoughtcrime.securesms.main.MainNavigationRail
 import org.thoughtcrime.securesms.main.MainNavigationRouter
@@ -156,12 +158,10 @@ import org.thoughtcrime.securesms.main.MainToolbarState
 import org.thoughtcrime.securesms.main.MainToolbarViewModel
 import org.thoughtcrime.securesms.main.Material3OnScrollHelperBinder
 import org.thoughtcrime.securesms.main.callNavGraphBuilder
-import org.thoughtcrime.securesms.main.chatNavGraphBuilder
 import org.thoughtcrime.securesms.main.navigateToDetailLocation
 import org.thoughtcrime.securesms.main.rememberDetailNavHostController
 import org.thoughtcrime.securesms.main.rememberFocusRequester
 import org.thoughtcrime.securesms.main.storiesNavGraphBuilder
-import org.thoughtcrime.securesms.mediasend.camerax.CameraXRemoteConfig
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionActivity
 import org.thoughtcrime.securesms.mediasend.v3.mediaSendLauncher
 import org.thoughtcrime.securesms.megaphone.Megaphone
@@ -179,7 +179,6 @@ import org.thoughtcrime.securesms.stories.Stories
 import org.thoughtcrime.securesms.stories.archive.StoryArchiveActivity
 import org.thoughtcrime.securesms.stories.landing.StoriesLandingFragment
 import org.thoughtcrime.securesms.stories.settings.StorySettingsActivity
-import org.thoughtcrime.securesms.util.AppForegroundObserver
 import org.thoughtcrime.securesms.util.AppStartup
 import org.thoughtcrime.securesms.util.CachedInflater
 import org.thoughtcrime.securesms.util.CommunicationActions
@@ -197,7 +196,6 @@ import org.thoughtcrime.securesms.window.NavigationType
 import org.thoughtcrime.securesms.window.rememberThreePaneScaffoldNavigatorDelegate
 import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState
 import kotlin.time.Duration.Companion.minutes
-import org.signal.core.ui.R as CoreUiR
 
 class MainActivity :
   PassphraseRequiredActivity(),
@@ -498,18 +496,15 @@ class MainActivity :
           }
         }
 
-        val chatNavGraphState = ChatNavGraphState.remember(isSplitPane)
+        val convoTransitionState = ConversationTransitionState.remember(isSplitPane)
         val mutableInteractionSource = remember { MutableInteractionSource() }
-        MainNavigationDetailLocationEffect(mainNavigationViewModel, chatNavGraphState::writeGraphicsLayerToBitmap)
 
-        val chatsNavHostController = rememberDetailNavHostController(
-          onRequestFocus = rememberFocusRequester(
-            mainNavigationViewModel = mainNavigationViewModel,
-            currentListLocation = mainNavigationState.currentListLocation,
-            isTargetListLocation = { it in listOf(MainNavigationListLocation.CHATS, MainNavigationListLocation.ARCHIVE) }
-          )
-        ) {
-          chatNavGraphBuilder(chatNavGraphState)
+        LaunchedEffect(convoTransitionState) {
+          mainNavigationViewModel.setChatListSnapshotCaptureProvider { convoTransitionState.writeGraphicsLayerToBitmap() }
+        }
+
+        LaunchedEffect(isSplitPane) {
+          mainNavigationViewModel.onSplitPaneChanged(isSplitPane)
         }
 
         val callsNavHostController = rememberDetailNavHostController(
@@ -531,22 +526,23 @@ class MainActivity :
         }
 
         LaunchedEffect(Unit) {
-          suspend fun navigateToLocation(location: MainNavigationDetailLocation) {
+          fun navigateToLocation(location: MainNavigationDetailLocation) {
             when (location) {
               is MainNavigationDetailLocation.Empty -> {
                 when (mainNavigationState.currentListLocation) {
-                  MainNavigationListLocation.CHATS, MainNavigationListLocation.ARCHIVE -> chatsNavHostController
+                  MainNavigationListLocation.CHATS, MainNavigationListLocation.ARCHIVE -> {
+                    throw IllegalStateException("Navigation to ${mainNavigationState.currentListLocation} should be handled by ChatsBackStack.")
+                  }
+
                   MainNavigationListLocation.CALLS -> callsNavHostController
                   MainNavigationListLocation.STORIES -> storiesNavHostController
                 }.navigateToDetailLocation(location)
               }
 
-              is MainNavigationDetailLocation.Conversation -> {
-                chatNavGraphState.writeGraphicsLayerToBitmap()
-                chatsNavHostController.navigateToDetailLocation(location)
+              is MainNavigationDetailLocation.Conversation, is MainNavigationDetailLocation.Chats -> {
+                throw IllegalStateException("Navigation to $location should be handled by ChatsBackStack.")
               }
 
-              is MainNavigationDetailLocation.Chats -> chatsNavHostController.navigateToDetailLocation(location)
               is MainNavigationDetailLocation.CallLinkDetails -> callsNavHostController.navigateToDetailLocation(location)
               is MainNavigationDetailLocation.Calls -> callsNavHostController.navigateToDetailLocation(location)
               is MainNavigationDetailLocation.Stories -> storiesNavHostController.navigateToDetailLocation(location)
@@ -560,7 +556,9 @@ class MainActivity :
         }
 
         val scope = rememberCoroutineScope()
+
         BackHandler(paneExpansionState.currentAnchor == detailOnlyAnchor) {
+          mainNavigationViewModel.goTo(MainNavigationDetailLocation.Empty)
           scope.launch {
             paneExpansionState.animateTo(listOnlyAnchor)
           }
@@ -619,7 +617,7 @@ class MainActivity :
 
         AppScaffold(
           navigator = wrappedNavigator,
-          modifier = chatNavGraphState.writeContentToGraphicsLayer(),
+          modifier = convoTransitionState.writeContentToGraphicsLayer(),
           paneExpansionState = paneExpansionState,
           contentWindowInsets = WindowInsets(),
           snackbarHost = {
@@ -730,9 +728,13 @@ class MainActivity :
           primaryContent = {
             when (mainNavigationState.currentListLocation) {
               MainNavigationListLocation.CHATS, MainNavigationListLocation.ARCHIVE -> {
-                DetailsScreenNavHost(
-                  navHostController = chatsNavHostController,
-                  contentLayoutData = contentLayoutData
+                NavDisplay(
+                  backStack = mainNavigationViewModel.chatsBackStackEntries,
+                  onBack = { mainNavigationViewModel.popChatsDetailLocation() },
+                  transitionSpec = TransitionSpecs.HorizontalSlide.transitionSpec,
+                  popTransitionSpec = TransitionSpecs.HorizontalSlide.popTransitionSpec,
+                  predictivePopTransitionSpec = TransitionSpecs.HorizontalSlide.predictivePopTransitionSpec,
+                  entryProvider = entryProvider { chatsNavEntries(convoTransitionState) }
                 )
               }
 
@@ -761,7 +763,7 @@ class MainActivity :
           } else {
             null
           },
-          animatorFactory = if (mainNavigationState.currentListLocation == MainNavigationListLocation.CHATS || mainNavigationState.currentListLocation == MainNavigationListLocation.ARCHIVE) {
+          animatorFactory = if (mainNavigationState.currentListLocation.isChatsTab) {
             noEnterTransitionFactory
           } else {
             AppScaffoldAnimationStateFactory.Default
@@ -1052,11 +1054,34 @@ class MainActivity :
 
   private fun handleConversationIntent(intent: Intent) {
     if (ConversationIntents.isConversationIntent(intent)) {
+      if (!isTrustedConversationIntent(intent)) {
+        Log.w(TAG, "Received a conversation intent through an exported entry point. Ignoring its extras.")
+        intent.action = null
+        setIntent(intent)
+        return
+      }
+
+      val extras = intent.extras
+      if (extras == null) {
+        Log.w(TAG, "Received a conversation intent with no extras. Ignoring it.")
+        intent.action = null
+        setIntent(intent)
+        return
+      }
+
       mainNavigationViewModel.goTo(MainNavigationListLocation.CHATS)
-      mainNavigationViewModel.goTo(MainNavigationDetailLocation.Conversation(ConversationIntents.readArgsFromBundle(intent.extras!!)))
+      mainNavigationViewModel.goTo(MainNavigationDetailLocation.Conversation(ConversationIntents.readArgsFromBundle(extras)))
       intent.action = null
       setIntent(intent)
     }
+  }
+
+  /**
+   * While MainActivity isn't exporting, we have launcher aliases that are, so we verify that someone isn't launching us through those befre
+   * respecting various intent attributes.
+   */
+  private fun isTrustedConversationIntent(intent: Intent): Boolean {
+    return intent.component?.className == MainActivity::class.java.name
   }
 
   private fun handleGroupLinkInIntent(intent: Intent) {
@@ -1160,24 +1185,7 @@ class MainActivity :
       }
     }
 
-    if (CameraXRemoteConfig.isSupported()) {
-      onGranted()
-    } else {
-      Permissions.with(this@MainActivity)
-        .request(Manifest.permission.CAMERA)
-        .ifNecessary()
-        .withRationaleDialog(getString(R.string.CameraXFragment_allow_access_camera), getString(R.string.CameraXFragment_to_capture_photos_and_video_allow_camera), CoreUiR.drawable.symbol_camera_24)
-        .withPermanentDenialDialog(
-          getString(R.string.CameraXFragment_signal_needs_camera_access_capture_photos),
-          null,
-          R.string.CameraXFragment_allow_access_camera,
-          R.string.CameraXFragment_to_capture_photos_videos,
-          supportFragmentManager
-        )
-        .onAllGranted(onGranted)
-        .onAnyDenied { Toast.makeText(this@MainActivity, R.string.CameraXFragment_signal_needs_camera_access_capture_photos, Toast.LENGTH_LONG).show() }
-        .execute()
-    }
+    onGranted()
   }
 
   inner class ToolbarCallback : MainToolbarCallback {

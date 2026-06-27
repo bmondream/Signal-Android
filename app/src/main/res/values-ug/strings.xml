@@ -23,6 +23,7 @@
   <!-- Removed by excludeNonTranslatables <string name="pending_transfer_url" translatable="false">https://support.signal.org/hc/articles/360031949872#pending</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_faq_url" translatable="false">https://support.signal.org/hc/articles/360031949872#donate</string> -->
   <!-- Removed by excludeNonTranslatables <string name="inactive_primary_support" translatable="false">https://support.signal.org/hc/articles/9021007554074</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="recovery_key_phishing_support_url" translatable="false">https://support.signal.org/hc/articles/9932566320410</string> -->
 
     <!-- First placeholder is productId, second placeholder is app package -->
     <string name="backup_subscription_management_url">https://play.google.com/store/account/subscriptions?sku=%1$s&amp;package=%2$s</string>
@@ -270,76 +271,7 @@
     <!-- Unknown people row info dialog action to close the dialog -->
     <string name="CallInfoView__got_it">بىلدىم</string>
 
-    <!-- CameraFragment -->
-    <!-- Toasted when user device does not support video recording -->
-    <string name="CameraFragment__video_recording_is_not_supported_on_your_device">ئۈسكۈنىڭىز سىن خاتىرىلەشنى قوللىمايدۇ</string>
 
-    <!-- CameraXFragment -->
-    <string name="CameraXFragment_tap_for_photo_hold_for_video">چېكىلسە رەسىم، بېسىپ تۇرۇلسا سىن</string>
-    <!-- Accessibility content description to describe the capture button when taking an image/video -->
-    <string name="CameraXFragment_capture_description">ئېكران تۇتۇش</string>
-    <string name="CameraXFragment_change_camera_description">كامېرا ئالماشتۇر</string>
-    <string name="CameraXFragment_open_gallery_description">سۈرەتداننى ئاچ</string>
-    <!-- Button text asking for access to camera permissions -->
-    <string name="CameraXFragment_allow_access">ئىشلىتىشكە رۇخسەت</string>
-    <!-- Dialog title asking users for camera and microphone permission -->
-    <string name="CameraXFragment_allow_access_camera_microphone">كامېرا ۋە مىكروفونىڭىزغا ئىجازەت قىلىش</string>
-    <!-- Dialog title asking users for camera permission -->
-    <string name="CameraXFragment_allow_access_camera">كامېرا ھوقۇقىغا ئىجازەت قىلىش</string>
-    <!-- Dialog title asking users for microphone permission -->
-    <string name="CameraXFragment_allow_access_microphone">مىكروفوننى ئىشلىتىشكە رۇخسەت قىلىڭ</string>
-    <!-- Text explaining why Signal needs camera access in order to take photos -->
-    <string name="CameraXFragment_to_capture_photos_allow_camera">رەسىم تارتىش ئۈچۈن ، Signal نىڭ كامېرانى زىيارەت قىلىشىغا رۇخسەت قىلىڭ.</string>
-    <!-- Text explaining why Signal needs camera access in order to take photos and videos -->
-    <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">رەسىم ۋە سىنغا ئېلىش ئۈچۈن ، Signal نىڭ كامېرانى زىيارەت قىلىشىغا يول قويۇڭ.</string>
-    <!-- Text explaining why Signal needs camera and microphone access in order to take photos and videos -->
-    <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">رەسىم ۋە سىنغا ئېلىش ئۈچۈن، Signal نىڭ كامېرا ۋە مىكروفوننى زىيارەت قىلىشىغا رۇخسەت قىلىڭ.</string>
-    <!-- Text explaining why Signal needs microphone access to take videos -->
-    <string name="CameraXFragment_to_capture_videos_with_sound">ئاۋازلىق سىنغا ئېلىش ئۈچۈن، Signal نىڭ مىكروفوننى زىيارەت قىلىشىغا رۇخسەت قىلىڭ.</string>
-    <!-- Text explaining why Signal needs camera access to scan QR codes -->
-    <string name="CameraXFragment_to_scan_qr_code_allow_camera">QR كودىنى سايىلەش ئۈچۈن، Signal نىڭ كامېرانى زىيارەت قىلىشىغا رۇخسەت قىلىڭ.</string>
-    <!-- Toast dialog explaining why Signal needs camera permissions when capturing photos -->
-    <string name="CameraXFragment_signal_needs_camera_access_capture_photos">رەسىم تارتىش ئۈچۈن Signal كامېرا ئىجازىتىنى تەلەپ قىلىدۇ</string>
-    <!-- Toast dialog explaining why Signal needs camera permissions when scanning QR codes -->
-    <string name="CameraXFragment_signal_needs_camera_access_scan_qr_code">QR كودىنى سايىلەش ئۈچۈن Signal كامېرا ئىجازىتىنى تەلەپ قىلىدۇ</string>
-    <!-- Toast dialog explaining why Signal needs microphone permissions -->
-    <string name="CameraXFragment_signal_needs_microphone_access_video">سىنغا ئېلىش ئۈچۈن Signal مىكروفون ئىجازىتىنى تەلەپ قىلىدۇ</string>
-    <!-- Dialog description that explains the steps needed to give camera permission -->
-    <string name="CameraXFragment_to_capture_photos">Signal دا رەسىمگە تارتىش:</string>
-    <!-- Dialog description that explains the steps needed to give camera and microphone permission -->
-    <string name="CameraXFragment_to_capture_photos_videos">Signal دا رەسىم تارتىش ۋە سىنغا ئېلىش:</string>
-    <!-- Dialog description that explains the steps needed to give microphone permission -->
-    <string name="CameraXFragment_to_capture_videos">ئاۋازلىق سىنغا ئېلىش:</string>
-    <!-- Dialog description that explains the steps needed to give Signal camera permissions -->
-    <string name="CameraXFragment_to_scan_qr_codes">QR كودىنى سايىلەش:</string>
-    <!-- Error message shown when we try to take a photo, but fail -->
-    <string name="CameraXFragment_photo_capture_failed">رەسىمگە تارتىش مەغلۇب بولدى. قايتا سىناڭ.</string>
-    <!-- Error message shown when we try to take a photo, but fail when trying to process it (convert it into something the user can see). -->
-    <string name="CameraXFragment_photo_processing_failed">رەسىمنى بىر تەرەپ قىلىش مەغلۇب بولدى. قايتا سىناڭ.</string>
-    <!-- Accessibility label for the switch camera button -->
-    <string name="CameraXFragment_switch_camera">كامېرانى ئالماشتۇرۇش</string>
-    <!-- Accessibility label for flash button when flash is off -->
-    <string name="CameraXFragment_flash_off">چاقماق چىراقنى ئۆچۈرۈش</string>
-    <!-- Accessibility label for flash button when flash is on -->
-    <string name="CameraXFragment_flash_on">چاقماق چىراقنى ياندۇرۇش</string>
-    <!-- Accessibility label for flash button when flash is set to auto -->
-    <string name="CameraXFragment_flash_auto">ئاپتوماتىك چاقماق چىراق</string>
-    <!-- Accessibility label for the send button in media selection -->
-    <string name="CameraXFragment_send">ئەۋەت</string>
-
-    <!-- CameraContacts -->
-    <string name="CameraContacts_recent_contacts">يېقىنقى ئالاقەداشلار</string>
-    <string name="CameraContacts_signal_contacts">Signal ئالاقەداشلار</string>
-    <string name="CameraContacts_signal_groups">Signal گۇرۇپپىلىرى</string>
-    <!-- A warning shown in a toast when  -->
-    <plurals name="CameraContacts_you_can_share_with_a_maximum_of_n_conversations">
-        <item quantity="other">كۆپ بولغاندا %1$d پاراڭ بىلەن ئورتاقلىشالايسىز.</item>
-    </plurals>
-    <string name="CameraContacts_select_signal_recipients">Signal تاپشۇرۇۋالغۇچىلارنى تاللاش</string>
-    <string name="CameraContacts_no_signal_contacts">Signal ئالاقەداش يوق</string>
-    <string name="CameraContacts_you_can_only_use_the_camera_button">سىز پەقەت كامېرا كۇنۇپكىسىنى ئىشلىتىش ئارقىلىق Signal دىكى ئالاقەداشلىرىڭىزغا رەسىم ئەۋەتەلەيسىز. </string>
-    <string name="CameraContacts_cant_find_who_youre_looking_for">ئىزدەۋاتقان كىشىڭىزنى تاپالمايۋاتامسىز؟</string>
-    <string name="CameraContacts_invite_a_contact_to_join_signal">بىر ئالاقەداشنى Signal غا تەكلىپ قىلىش</string>
     <string name="CameraContacts__menu_search">ئىزدە</string>
 
     <!-- Censorship Circumvention Megaphone -->
@@ -538,7 +470,6 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">رەسىم تارتىش ياكى سىنغا ئېلىش ئۈچۈن Signal كامېرا ھوقۇقىغا موھتاج ، ئەمما ئۇ مەڭگۈلۈك رەت قىلىندى. ئەپ تەڭشەكلىرىدىن، «ھوقۇقلار» نى تاللاپ ۋە «كامېرا» نى قوزغىتىڭ.</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">رەسىم تارتىش ياكى سىنغا ئېلىش ئۈچۈن Signal كامېرا ھوقۇقىغا موھتاج</string>
     <string name="ConversationActivity_enable_the_microphone_permission_to_capture_videos_with_sound">ئاۋازلىق سىنغا ئېلىش ئۈچۈن مىكروفون ھوقۇقىنى قوزغىتىڭ.</string>
-    <string name="ConversationActivity_signal_needs_the_recording_permissions_to_capture_video">سىنغا ئېلىش ئۈچۈن Signal مىكروفون ھوقۇقىغا موھتاج ، ئەمما ئۇلار رەت قىلىندى. ئەپ تەڭشەكلىرىدىن «ھوقۇقلار» نى تاللاپ ۋە «مىكروفون» ۋە «كامېرا» نى قوزغىتىڭ.</string>
     <string name="ConversationActivity_signal_needs_recording_permissions_to_capture_video">سىنغا ئېلىش ئۈچۈن Signal غا مىكروفون ئىجازىتى لازىم.</string>
 
     <string name="ConversationActivity_quoted_contact_message">%1$s %2$s</string>
@@ -719,6 +650,12 @@
     <string name="ConversationFragment_group_names">گۇرۇپپا ناملىرى</string>
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">رەسىمنى چۈشۈرەلمىدى. قايتا سىناڭ.</string>
+    <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
+    <string name="ConversationFragment_attachment_backfill_failed_title">مېدىيانى چۈشۈرگىلى بولمىدى</string>
+    <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
+    <string name="ConversationFragment_attachment_backfill_timeout">بۇ ئۈسكۈنىنى ۋە تېلېفونىڭىزنىڭ تور ئۇلىنىشىنى تەكشۈرۈڭ. تېلېفونىڭىزدا Signal نى ئېچىڭ ، ئاندىن قايتا چۈشۈرۈپ سىناپ بېقىڭ.</string>
+    <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
+    <string name="ConversationFragment_attachment_backfill_not_found">بۇ مېدىيانى تېلېفونىڭىزدا ئىشلەتكىلى ۋە چۈشۈرگىلى بولمايدۇ.</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">مىقلانغان ئۇچۇرنىڭ ساقلىنىش ۋاقتى…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -1009,7 +946,6 @@
     <string name="CustomDefaultPreference_none">ھېچنېمە</string>
 
     <!-- AvatarSelectionBottomSheetDialogFragment -->
-    <string name="AvatarSelectionBottomSheetDialogFragment__taking_a_photo_requires_the_camera_permission">رەسىمگە تارتىش كامېرا ھوقۇقى تەلەپ قىلىدۇ.</string>
     <string name="AvatarSelectionBottomSheetDialogFragment__viewing_your_gallery_requires_the_storage_permission">ئالبومنى كۆرۈش ئۈچۈن ساقلىغۇچى ئىجازىتى لازىم.</string>
 
     <!-- DateUtils -->
@@ -1470,6 +1406,12 @@
     <string name="AddGroupDetailsFragment__remove">چىقىرىۋەت</string>
     <string name="AddGroupDetailsFragment__sms_contact">قىسقا ئۇچۇر ئالاقەداشى</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">بۇ گۇرۇپپىدىن %1$sنى چىقىرىۋېتەمدۇ؟</string>
+    <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
+    <string name="AddGroupDetailsFragment__discard_group">گۇرۇپپا قۇرۇشتىن ۋاز كېچەمسىز؟</string>
+    <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">ئەگەر «%1$s» گۇرۇپپىسىغا كىرسىڭىز، ئېلىپ بارغان ئۆزگەرتىشلەر ساقلانمايدۇ.</string>
+    <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
+    <string name="AddGroupDetailsFragment__discard">تاشلىۋەت</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
     <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">سىز Signal گۇرۇپپىسىنى قوللىمايدىغان ئالاقەداشنى تاللىدىڭىز، شۇڭا بۇ گۇرۇپپا MMS بولىدۇ. ئىختىيارى MMS گۇرۇپپا ئىسمى ۋە رەسىملىرى سىزگىلا كۆرۈنىدۇ.</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group after SMS Phase 0 -->
@@ -3304,6 +3246,8 @@
     <string name="NotificationChannel_calls">چاقىرىشلار</string>
     <!-- Notification channel name for notifications involving failures of some sort (eg donations, message sends, etc.) -->
     <string name="NotificationChannel_failures">مەغلۇبىيەت</string>
+    <!-- Notification channel name for internal-only app issue notifications. Only ever shown to internal users. -->
+    <string name="NotificationChannel_internal_issues">ئىچكى مەسىلىلەر</string>
     <string name="NotificationChannel_backups">زاپاسلار</string>
     <string name="NotificationChannel_locked_status">قۇلۇپ ھالىتى</string>
     <string name="NotificationChannel_app_updates">ئەپ يېڭىلاش</string>
@@ -3427,6 +3371,10 @@
     <string name="TransferControlView__processing">بىر تەرەپ قىلىۋاتىدۇ…</string>
     <!-- Status update label used while the device is transmitting data over the network. Will take the form of "1.0 MB/2.0 MB" -->
     <string name="TransferControlView__download_progress_s_s">%1$s/%2$s</string>
+    <!-- Accessibility description for the button that starts downloading an attachment -->
+    <string name="TransferControlView__download">چۈشۈر</string>
+    <!-- Accessibility description for the button that starts uploading an attachment -->
+    <string name="TransferControlView__upload">يۈكلەش</string>
 
     <!-- UnauthorizedReminder -->
     <!-- Message shown in a reminder banner when the user\'s device is no longer registered -->
@@ -3989,6 +3937,10 @@
   <!-- Removed by excludeNonTranslatables <string name="HelpFragment__debug_log" translatable="false">Debug Log:</string> -->
     <string name="HelpFragment__could_not_upload_logs">خاتىرىنى يۈكلىيەلمىدى</string>
     <string name="HelpFragment__please_be_as_descriptive_as_possible">ئامالنىڭ بارىچە ئەتراپلىق بايان قىلىپ ۋەقەنى چۈشىنىشىمىزگە ياردەم بېرىڭ.</string>
+    <!-- Error shown under the "tell us what\'s going on" field when the entered description is shorter than the required minimum length. The placeholder is the minimum number of characters. -->
+    <plurals name="HelpFragment__must_be_at_least_n_characters">
+        <item quantity="other">كەم دېگەندىمۇ %1$d ھەرپلەر ۋە بەلگىلەرنى ئۆز ئىچىگە ئېلىشى كېرەك</item>
+    </plurals>
     <string-array name="HelpFragment__categories_6">
         <item>بىر تاللاشنى تاللاڭ</item>
         <item>بەزى نەرسە ئىشلىمەيۋاتىدۇ</item>
@@ -4248,7 +4200,7 @@
     <string name="preferences_data_and_storage__never">ھەرگىز</string>
     <string name="preferences_data_and_storage__wifi_and_mobile_data">كۆچمە مەلۇمات ۋە WiFi</string>
     <string name="preferences_data_and_storage__mobile_data_only">كۆچمە سانلىق مەلۇماتلا</string>
-    <string name="preference_data_and_storage__using_less_data_may_improve_calls_on_bad_networks">ئاز مەلۇمات ئىشلىتىش ناچار تور شارائىتىدىكى چاقىرىقنى ياخشىلايدۇ</string>
+    <string name="preference_data_and_storage__using_less_data_may_improve_calls_on_bad_networks">تور ناچار ئەھۋالدا سانلىق مەلۇماتنى ئاز ئىشلىتىش تاللانسا سۆزلىشىش سۈپىتىنى ياخشىلايدۇ.</string>
     <string name="preferences_notifications__in_chat_sounds">پاراڭ ئىچىدىكى ئاۋاز</string>
     <string name="preferences_notifications__show">كۆرسەت</string>
     <string name="preferences_notifications__ringtone">قوڭغۇراق ئاۋازى</string>
@@ -5892,6 +5844,8 @@
     <string name="HelpSettingsFragment__support_center">قوللاش مەركىزى</string>
     <string name="HelpSettingsFragment__contact_us">بىز بىلەن ئالاقىلىشىڭ</string>
     <string name="HelpSettingsFragment__version">نەشر</string>
+    <!-- Displayed when copying help screen text to the clipboard -->
+    <string name="HelpSettingsFragment__copied_to_clipboard">چاپلاش تاختىسىغا كۆچۈرۈلدى</string>
     <string name="HelpSettingsFragment__debug_log">سازلاش خاتىرىسى</string>
     <!--    Header for the screen that displays the licenses of the open-source software dependencies of the Signal app-->
     <string name="HelpSettingsFragment__licenses">ئىجازەتنامە</string>
@@ -5908,11 +5862,13 @@
     <string name="DataAndStorageSettingsFragment__sending_high_quality_media_will_use_more_data">يۇقىرى سۈپەتلىك ۋاسىتە يوللىسىڭىز كۆپرەك مەلۇمات ئىشلىتىسىز</string>
     <!-- Disclaimer shown under the media auto-download settings. Placeholder is a formatted size like "100 KB". -->
     <string name="DataAndStorageSettingsFragment__voice_messages_and_stickers_under_size_are_always_auto_downloaded">ئاۋازلىق ئۇچۇرلار ۋە چاپلاقلار (ھەجىمى %1$s دىن كىچىك) ھەمىشە ئاپتوماتىك چۈشۈرۈلىدۇ.</string>
-    <!-- Setting option that can be selected to default media to be sent as high quality by default -->
-    <string name="DataAndStorageSettingsFragment__high">يۇقىرى</string>
-    <!-- Setting option that can be selected to default media to be sent as standard quality by default -->
-    <string name="DataAndStorageSettingsFragment__standard">ئۆلچەملىك</string>
     <string name="DataAndStorageSettingsFragment__calls">چاقىرىشلار</string>
+    <!-- Title of a toggle that keeps Signal connected in the background via a persistent foreground service instead of using FCM push messages -->
+    <string name="DataAndStorageSettingsFragment__stay_connected_in_background">ئارقا سۇپىدا ئۇچۇق ھالەتتە تۇرۇش</string>
+    <!-- Body of a confirmation dialog shown when a user tries to enable the "Stay connected in background" setting -->
+    <string name="DataAndStorageSettingsFragment__staying_connected_while_in_the_background_will_likely_result_in_increased_battery_usage">ئەپ ئارقا سۇپىدا ئوچۇق ھالەتتە تۇرغاندا باتارىيەنىڭ تۈگۈشىنى تېزلەشتۈرۈۋېتىشى مۇمكىن. بۇ مۇتلەق كۆپ قىسىم ئۈسكۈنىلەر ئۈچۈن لازىم ئەمەس. بۇنى پەقەت ئۇقتۇرۇش تاپشۇرۇۋېلىشتا مەسىلە كۆرۈلگەندىلا ئاندىن قوزغىتىڭ.</string>
+    <!-- Button label that enables the "Stay connected in background" setting from a confirmation dialog -->
+    <string name="DataAndStorageSettingsFragment__enable">قوزغىتىش</string>
 
     <!-- ChatColorSelectionFragment -->
     <!-- Text shown on a circle button to indicate the app will automatically select a color for conversation bubbles for this chat. -->
@@ -8569,7 +8525,7 @@
     <!-- Displayed as a label when remote backups are off -->
     <string name="RemoteBackupsSettingsFragment__off">تاقاق</string>
     <!-- Text shown in a popup indicating that the user needs to enter their screen lock -->
-    <string name="RemoteBackupsSettingsFragment__authenticatino_required">دەلىللەش تەلەپ قىلىنىدى</string>
+    <string name="RemoteBackupsSettingsFragment__authentication_required">دەلىللەش تەلەپ قىلىنىدى</string>
     <!-- Row label to launch payment history screen -->
     <string name="RemoteBackupsSettingsFragment__payment_history">پۇل تۆلەش تارىخى</string>
     <!-- Section header for backup information -->
@@ -8955,6 +8911,24 @@
     <string name="MessageBackupsKeyRecordScreen__you_have_not_finished_setting_up_backups">زاپاسلاشنى قۇرۇشنى تاماملاپ بولالمىدىڭىز، ھېچقانداق زاپاسلاش قۇرۇلمىدى. «تەڭشەك»تىن زاپاسلاشنى قوزغىتالايسىز.</string>
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">زاپاسلاشنى قۇرۇشتىن چېكىنىش</string>
+    <!-- Screen title when saving your recovery key -->
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى ساقلاڭ</string>
+    <!-- Screen subtitle for the recovery key screen -->
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىز، زاپاسلاشنى ئەسلىگە كەلتۈرۈش ئۈچۈن ئىشلىتىلىدىغان 64 خانىلىق كود. ئەگەر ئاچقۇچنى ئۇنتۇپ قالسىڭىز ھېساباتىڭىزنى ئەسلىگە كەلتۈرەلمەيسىز.</string>
+    <!-- Hint text to see the full recovery key -->
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">تولۇق ئاچقۇچنى كۆرۈش</string>
+    <!-- Bottom sheet caption to confirm your recovery key -->
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىىزنىڭ توغرا ساقلانغانلىقىنى جەزىملەشتۈرۈڭ. كېيىنكى قەدەمدە ساقلانغان پارولىڭىزنى كىرگۈزۈش تەلەپ قىلىنىدۇ.</string>
+    <!-- Button to confirm the recovery key -->
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى جەزملەشتۈرۈڭ</string>
+    <!-- Toast shown when the key is confirmed -->
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">ئەسلىگە كەلتۈرۈش ئاچقۇچى دەلىللەندى</string>
+    <!-- Dialog title shown when the recovery key fails to confirm -->
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">ئەسلىگە كەلتۈرۈش ئاچقۇچىنى دەلىللەشتە خاتالىق كۆرۈلدى</string>
+    <!-- Dialog body shown when the recovery key fails to confirm -->
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى دەلىللىگىلى بولمىدى. ئۇنى پارول باشقۇرغۇچىڭىزغا ساقلىغانلىقىڭىزنى جەزملەشتۈرۈڭ ياكى قولدا ساقلاڭ.</string>
+    <!-- Button option to save the key manually -->
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">قولدا ساقلاش</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9199,11 +9173,11 @@
     <!-- RestoreLocalBackupActivity: Label for the button that opens the contact support form -->
     <string name="RestoreLocalBackupActivity__contact_support">ياردەم خادىمى بىلەن ئالاقىلىشىش</string>
 
-    <!-- RestoreLocalBackupActivity: Title for the dialog shown when the restored backup belongs to a different account -->
+    <!-- RestoreLocalBackupActivity: Title for the dialog shown when on-device backups could not be automatically re-enabled -->
     <string name="RestoreLocalBackupActivity__turn_on_on_device_backups">ئۈسكۈنىدىكى زاپاسلاشلارنى قوزغىتامسىز؟</string>
 
-    <!-- RestoreLocalBackupActivity: Body for the dialog shown when the restored backup belongs to a different account, prompting the user to re-enable on-device backups -->
-    <string name="RestoreLocalBackupActivity__to_continue_using_on_device_backups">ئۈسكۈنىدىكى زاپاسلاشلارنى داۋاملىق ئىشلىتىش ئۈچۈن، بۇ ھېساباتتا ئۇلارنى قايتىدىن قوزغىتىڭ ھەمدە يېڭى ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى سەپلەڭ. بۇنى سىز خالىغان ۋاقىتتا «تەڭشەك &gt; زاپاشلاشلار» دىن قىلالايسىز.</string>
+    <!-- RestoreLocalBackupActivity: Body for the dialog shown when on-device backups could not be automatically re-enabled, prompting the user to re-enable on-device backups -->
+    <string name="RestoreLocalBackupActivity__to_continue_using_on_device_backups">ئۈسكۈنىدىكى زاپاسلارنى داۋاملىق ئىشلىتىش ئۈچۈن، بۇ ھېساباتتا ئۇلارنى قايتىدىن قوزغىتىڭ. بۇنى سىز خالىغان ۋاقىتتا « تەڭشەك &gt; زاپاسلار » دىن قىلالايسىز.</string>
 
     <!-- RestoreLocalBackupActivity: Confirm button label for the dialog prompting the user to re-enable on-device backups -->
     <string name="RestoreLocalBackupActivity__turn_on_now">ھازىر قوزغىتىش</string>
@@ -9682,8 +9656,10 @@
     <!-- Body for screen shown to let the user know that displaying their member label will take priority over their about text. -->
     <string name="MemberLabelsAboutOverride__body">بۇ گۇرۇپپىدا، ئەزا بەلگىڭىز رەسىمىڭىزنىڭ يېنىدا سىز ھەققىدىكى «About» تا كۆرسىتىلىدۇ.</string>
 
-    <!-- Label for internal-only section showing groups with same members -->
-  <!-- Removed by excludeNonTranslatables <string name="AddGroupDetailsFragment__groups_with_same_members" translatable="false">Groups with same members (Labs)</string> -->
+    <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
+    <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
+        <item quantity="other">ئەزالىرى ئوخشاش بولغان %1$d گۇرۇپپىلار</item>
+    </plurals>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">زاپاسلاشنى ئەسلىگە كەلتۈرەلمىدى</string>
@@ -9723,6 +9699,36 @@
     <string name="SafetyTipsBottomSheet__tip_3_body">دەلىللەش كودىڭىزغا يانداپ، Signal ئارقىلىق تىزىملاتقاندا، Signal PIN نومۇرىنى تەلەپ قىلىپ ھېساباتىڭىزنى قوغداڭ.</string>
     <!-- Button on the safety tips screen that opens account settings -->
     <string name="SafetyTipsBottomSheet__open_account_settings">ھېسابات تەڭشەكلىرىنى ئېچىڭ</string>
+
+    <!-- Title of a warning sheet shown when the user copies or pastes their recovery key, urging them not to share it -->
+    <string name="RecoveryKeyWarningSheetContent__do_not_share_your_recovery_key">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى باشقىلار بىلەن ئورتاقلاشماڭ</string>
+    <!-- Bolded lead-in to the warning sheet body; combined with RecoveryKeyWarningSheetContent__for_your_recovery_key_never_respond to form a full sentence -->
+    <string name="RecoveryKeyWarningSheetContent__signal_will_never_message_you">Signal ھەرگىز سىزگە ئۇچۇر يوللىمايدۇ</string>
+    <!-- Remainder of the warning sheet body following the bolded lead-in RecoveryKeyWarningSheetContent__signal_will_never_message_you -->
+    <string name="RecoveryKeyWarningSheetContent__for_your_recovery_key_never_respond">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىز ئۈچۈن. ھەرگىز Signal دىن كەلگەن قىياپەتكە كىرىۋالغان ئۇچۇرغا جاۋاپ قايتۇرماڭ. ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى بىخەتەر يەردە ساقلاڭ ھەمدە باشقىلار بىلەن ھەرگىز ئورتاقلاشماڭ.</string>
+    <!-- Button dismissing the recovery key warning sheet after the user has copied their key -->
+    <string name="RecoveryKeyWarningSheetContent__got_it">بىلدىم</string>
+    <!-- Button opening a help article with more information about recovery key safety -->
+    <string name="RecoveryKeyWarningSheetContent__learn_more">تەپسىلاتى</string>
+    <!-- Inline link opening a help article with more information about recovery key safety -->
+    <string name="RecoveryKeyWarningSheetContent__learn_more_period">تېخىمۇ كۆپ بىلدۈرگۈ</string>
+    <!-- Button declining to paste/share the recovery key, dismissing the warning sheet -->
+    <string name="RecoveryKeyWarningSheetContent__do_not_share_key">ئاچقۇچنى ئورتاقلاشماڭ</string>
+    <!-- Button indicating the user wants to proceed with sharing/pasting the recovery key, which shows a final confirmation -->
+    <string name="RecoveryKeyWarningSheetContent__share_key">ئاچقۇچنى ئورتاقلىشىش</string>
+
+    <!-- Title of the final confirmation dialog shown before pasting a recovery key -->
+    <string name="RecoveryKeyWarningDialog__do_not_share_recovery_key">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى ئورتاقلاشماڭ</string>
+    <!-- First sentence of the final confirmation dialog body warning against sharing the recovery key -->
+    <string name="RecoveryKeyWarningDialog__do_not_share_your_recovery_key_with_anyone">ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى باشقىلار بىلەن ھەرگىز ئورتاقلاشماڭ. ئۇلار بۇ ئارقىلىق سىزنىڭ ھېساباتىڭىزنى ئوغۇرلاشقا ئۇرۇنىدۇ.</string>
+    <!-- Bolded middle sentence of the final confirmation dialog body -->
+    <string name="RecoveryKeyWarningDialog__signal_will_never_message_you_for_your_recovery_key">Signal ھەرگىز ئەسلىگە كەلتۈرۈش ئاچقۇچىڭىزنى سوراپ سىزگە ئۇچۇر يوللىمايدۇ.</string>
+    <!-- Final sentence of the final confirmation dialog body -->
+    <string name="RecoveryKeyWarningDialog__never_respond_to_a_chat">ھەرگىز Signal دىن كەلگەن قىياپەتكە كىرىۋالغان ئۇچۇرغا جاۋاپ قايتۇرماڭ.</string>
+    <!-- Button confirming the user wants to paste the recovery key -->
+    <string name="RecoveryKeyWarningDialog__paste_key">ئاچقۇچنى چاپلاش</string>
+    <!-- Button declining to paste the recovery key -->
+    <string name="RecoveryKeyWarningDialog__dont_share">ئورتاقلاشماسلىق</string>
 
     <!-- EOF -->
 </resources>

@@ -221,7 +221,7 @@ object ConversationListSearchModels {
 
       (itemView as ConversationListItem).bindThread(
         lifecycleOwner,
-        model.thread.threadRecord,
+        model.thread.threadWithRecipient,
         requestManager,
         Locale.getDefault(),
         emptySet(),
@@ -229,7 +229,7 @@ object ConversationListSearchModels {
         model.thread.query,
         true,
         false,
-        0
+        null
       )
     }
   }

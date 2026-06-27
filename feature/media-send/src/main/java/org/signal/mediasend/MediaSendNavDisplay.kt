@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +23,7 @@ import org.signal.core.ui.compose.AllDevicePreviews
 import org.signal.core.ui.compose.Previews
 import org.signal.mediasend.edit.MediaEditScreen
 import org.signal.mediasend.select.MediaSelectScreen
+import org.signal.mediasend.select.MediaSelectScreenState
 
 /**
  * Enforces the following flow of:
@@ -33,11 +35,10 @@ import org.signal.mediasend.select.MediaSelectScreen
 fun MediaSendNavDisplay(
   stateFlow: StateFlow<MediaSendState>,
   backStack: NavBackStack<NavKey>,
-  callback: MediaSendCallback,
+  eventHandler: MediaSendEventHandler,
   modifier: Modifier = Modifier,
   cameraSlot: @Composable () -> Unit = {},
   textStoryEditorSlot: @Composable () -> Unit = {},
-  videoEditorSlot: @Composable () -> Unit = {},
   sendSlot: @Composable (MediaSendState) -> Unit = {}
 ) {
   NavDisplay(
@@ -48,17 +49,40 @@ fun MediaSendNavDisplay(
       is MediaSendNavKey.Capture -> NavEntry(MediaSendNavKey.Capture.Chrome) {
         MediaCaptureScreen(
           backStack = backStack,
+          onEvent = eventHandler::onMediaCaptureScreenEvent,
           cameraSlot = cameraSlot,
           textStoryEditorSlot = textStoryEditorSlot
         )
       }
 
-      MediaSendNavKey.Select -> NavEntry(key) {
+      MediaSendNavKey.Select.Folders -> NavEntry(key) {
         val state by stateFlow.collectAsStateWithLifecycle()
+        val screenState = remember(state.mediaFolders, state.selectedMedia) {
+          MediaSelectScreenState.Folders(
+            mediaFolders = state.mediaFolders,
+            selectedMedia = state.selectedMedia
+          )
+        }
+
         MediaSelectScreen(
-          state = state,
-          backStack = backStack,
-          callback = callback
+          state = screenState,
+          onEvent = eventHandler::onMediaSelectScreenEvent
+        )
+      }
+
+      is MediaSendNavKey.Select.Files -> NavEntry(key) {
+        val state by stateFlow.collectAsStateWithLifecycle()
+        val screenState = remember(state.selectedMedia, state.selectedMediaFolderItems) {
+          MediaSelectScreenState.Files(
+            selectedMediaFolder = key.folder,
+            selectedMediaFolderItems = state.selectedMediaFolderItems,
+            selectedMedia = state.selectedMedia
+          )
+        }
+
+        MediaSelectScreen(
+          state = screenState,
+          onEvent = eventHandler::onMediaSelectScreenEvent
         )
       }
 
@@ -66,9 +90,7 @@ fun MediaSendNavDisplay(
         val state by stateFlow.collectAsStateWithLifecycle()
         MediaEditScreen(
           state = state,
-          backStack = backStack,
-          videoEditorSlot = videoEditorSlot,
-          callback = callback
+          onEvent = eventHandler::onMediaEditScreenEvent
         )
       }
 
@@ -90,10 +112,9 @@ private fun MediaSendNavDisplayPreview() {
       MediaSendNavDisplay(
         stateFlow = MutableStateFlow(MediaSendState(isCameraFirst = true)),
         backStack = rememberNavBackStack(MediaSendNavKey.Edit),
-        callback = MediaSendCallback.Empty,
+        eventHandler = MediaSendEventHandler.Empty,
         cameraSlot = { BoxWithText("Camera Slot") },
         textStoryEditorSlot = { BoxWithText("Text Story Editor Slot") },
-        videoEditorSlot = { BoxWithText("Video Editor Slot") },
         sendSlot = { _ -> BoxWithText("Send Slot") }
       )
     }

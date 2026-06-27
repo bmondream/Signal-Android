@@ -70,7 +70,7 @@ class RegistrationViewModel(private val repository: RegistrationRepository, save
       is RegistrationFlowEvent.ResetState -> RegistrationFlowState(isRestoringNavigationState = false)
       is RegistrationFlowEvent.SessionUpdated -> state.copy(sessionMetadata = event.session)
       is RegistrationFlowEvent.E164Chosen -> state.copy(sessionE164 = event.e164)
-      is RegistrationFlowEvent.Registered -> state.copy(accountEntropyPool = event.accountEntropyPool)
+      is RegistrationFlowEvent.Registered -> state.copy(accountEntropyPool = event.accountEntropyPool, storageCapable = event.storageCapable)
       is RegistrationFlowEvent.MasterKeyRestoredFromSvr -> state.copy(temporaryMasterKey = event.masterKey)
       is RegistrationFlowEvent.NavigateToScreen -> applyNavigationToScreenEvent(state, event)
       is RegistrationFlowEvent.NavigateBack -> {
@@ -83,6 +83,7 @@ class RegistrationViewModel(private val repository: RegistrationRepository, save
       }
       is RegistrationFlowEvent.RecoveryPasswordInvalid -> state.copy(doNotAttemptRecoveryPassword = true)
       is RegistrationFlowEvent.PendingRestoreOptionSelected -> state.copy(pendingRestoreOption = event.option)
+      is RegistrationFlowEvent.RestoreMethodTokenReceived -> state.copy(restoreMethodToken = event.token)
       is RegistrationFlowEvent.UserSuppliedAepSubmitted -> state.copy(unverifiedRestoredAep = event.aep)
       is RegistrationFlowEvent.UserSuppliedAepVerified -> {
         repository.saveVerifiedUserSuppliedAep(event.aep)
@@ -164,6 +165,14 @@ class RegistrationViewModel(private val repository: RegistrationRepository, save
     }
   }
 
+  fun getRequiredLinkedDevicePermission(): String? {
+    return if (Build.VERSION.SDK_INT >= 33) {
+      Manifest.permission.POST_NOTIFICATIONS
+    } else {
+      null
+    }
+  }
+
   private suspend fun persistFlowState(event: RegistrationFlowEvent) {
     when (event) {
       is RegistrationFlowEvent.ResetState -> repository.clearFlowState()
@@ -179,6 +188,7 @@ class RegistrationViewModel(private val repository: RegistrationRepository, save
       is RegistrationFlowEvent.E164Chosen,
       is RegistrationFlowEvent.RecoveryPasswordInvalid,
       is RegistrationFlowEvent.PendingRestoreOptionSelected,
+      is RegistrationFlowEvent.RestoreMethodTokenReceived,
       is RegistrationFlowEvent.UserSuppliedAepSubmitted,
       is RegistrationFlowEvent.UserSuppliedAepVerified -> repository.saveFlowState(_state.value)
       is RegistrationFlowEvent.RegistrationComplete -> repository.clearFlowState()

@@ -40,6 +40,7 @@ import org.signal.registration.R
 import org.signal.registration.screens.OnePaneRegistrationScaffold
 import org.signal.registration.screens.RegistrationScaffold
 import org.signal.registration.screens.TwoPaneRegistrationScaffold
+import org.signal.registration.screens.attachDebugLogHelper
 
 /**
  * Screen shown when the user's account is locked due to too many failed PIN attempts
@@ -77,22 +78,33 @@ private fun OnePaneLayout(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Title()
-        Spacer(modifier = Modifier.height(12.dp))
-        Description(state)
+        Description(
+          state = state,
+          modifier = Modifier.padding(top = 16.dp)
+        )
       }
     },
     footer = {
-      Column(
-        modifier = modifier
-          .fillMaxWidth()
-          .padding(vertical = 16.dp)
-          .horizontalGutters(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+      RegistrationScaffold.FooterSurface(
+        isElevated = scrollState.canScrollForward
       ) {
-        NextButton(onEvent, modifier = Modifier.widthIn(max = params.maxButtonWidth).fillMaxWidth())
-        Spacer(modifier = Modifier.height(16.dp))
-        LearnMore(onEvent)
+        Column(
+          modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+            .horizontalGutters(),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center
+        ) {
+          NextButton(
+            onEvent,
+            modifier = Modifier
+              .widthIn(max = params.maxButtonWidth)
+              .fillMaxWidth()
+          )
+          Spacer(modifier = Modifier.height(16.dp))
+          LearnMore(onEvent)
+        }
       }
     }
   )
@@ -135,17 +147,21 @@ private fun TwoPaneLayout(
       }
     },
     footer = {
-      Row(
-        modifier = modifier
-          .padding(vertical = 16.dp)
-          .fillMaxWidth()
-          .horizontalGutters(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
+      RegistrationScaffold.FooterSurface(
+        isElevated = firstPaneScrollState.canScrollForward || secondPaneScrollState.canScrollForward
       ) {
-        LearnMore(onEvent)
-        Spacer(modifier = Modifier.size(16.dp))
-        NextButton(onEvent, modifier = Modifier.widthIn(max = params.maxButtonWidth))
+        Row(
+          modifier = modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth()
+            .horizontalGutters(),
+          horizontalArrangement = Arrangement.End,
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          LearnMore(onEvent)
+          Spacer(modifier = Modifier.size(16.dp))
+          NextButton(onEvent, modifier = Modifier.widthIn(max = params.maxButtonWidth))
+        }
       }
     }
   )
@@ -156,17 +172,22 @@ private fun Title() {
   Text(
     text = stringResource(R.string.AccountLockedScreen__account_locked),
     style = MaterialTheme.typography.headlineMedium,
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier
+      .fillMaxWidth()
+      .attachDebugLogHelper()
   )
 }
 
 @Composable
-private fun Description(state: AccountLockedState) {
+private fun Description(
+  state: AccountLockedState,
+  modifier: Modifier = Modifier
+) {
   Text(
     text = stringResource(R.string.AccountLockedScreen__your_account, state.daysRemaining),
     style = MaterialTheme.typography.bodyLarge,
     color = MaterialTheme.colorScheme.onSurfaceVariant,
-    modifier = Modifier.fillMaxWidth()
+    modifier = modifier
   )
 }
 

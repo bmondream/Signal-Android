@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 import kotlinx.serialization.Serializable
@@ -48,6 +50,7 @@ import org.signal.registration.screens.aepentry.EnterAepForLocalBackupViewModel
 import org.signal.registration.screens.aepentry.EnterAepForRemoteBackupPostRegistrationViewModel
 import org.signal.registration.screens.aepentry.EnterAepForRemoteBackupPreRegistrationViewModel
 import org.signal.registration.screens.aepentry.EnterAepScreen
+import org.signal.registration.screens.allownotifications.AllowNotificationsScreen
 import org.signal.registration.screens.captcha.CaptchaScreen
 import org.signal.registration.screens.captcha.CaptchaScreenEvents
 import org.signal.registration.screens.captcha.CaptchaState
@@ -55,16 +58,36 @@ import org.signal.registration.screens.countrycode.Country
 import org.signal.registration.screens.countrycode.CountryCodePickerRepository
 import org.signal.registration.screens.countrycode.CountryCodePickerScreen
 import org.signal.registration.screens.countrycode.CountryCodePickerViewModel
+import org.signal.registration.screens.createprofile.CreateProfileScreen
+import org.signal.registration.screens.createprofile.CreateProfileScreenEvents
+import org.signal.registration.screens.createprofile.CreateProfileViewModel
+import org.signal.registration.screens.devicetransfer.complete.DeviceTransferCompleteScreen
+import org.signal.registration.screens.devicetransfer.complete.DeviceTransferCompleteViewModel
+import org.signal.registration.screens.devicetransfer.instructions.DeviceTransferInstructionsScreen
+import org.signal.registration.screens.devicetransfer.instructions.DeviceTransferInstructionsViewModel
+import org.signal.registration.screens.devicetransfer.progress.DeviceTransferProgressScreen
+import org.signal.registration.screens.devicetransfer.progress.DeviceTransferProgressViewModel
+import org.signal.registration.screens.devicetransfer.setup.DeviceTransferSetupScreen
+import org.signal.registration.screens.devicetransfer.setup.DeviceTransferSetupViewModel
+import org.signal.registration.screens.discoverability.PhoneNumberDiscoverabilityScreen
+import org.signal.registration.screens.discoverability.PhoneNumberDiscoverabilityViewModel
+import org.signal.registration.screens.linkaccount.LinkAccountScreen
+import org.signal.registration.screens.linkaccount.LinkAccountScreenEvent
+import org.signal.registration.screens.linkaccount.LinkAccountViewModel
 import org.signal.registration.screens.localbackuprestore.EnterLocalBackupV1PassphaseScreen
 import org.signal.registration.screens.localbackuprestore.LocalBackupRestoreEvents
 import org.signal.registration.screens.localbackuprestore.LocalBackupRestoreResult
 import org.signal.registration.screens.localbackuprestore.LocalBackupRestoreScreen
 import org.signal.registration.screens.localbackuprestore.LocalBackupRestoreViewModel
+import org.signal.registration.screens.messagesync.MessageSyncScreen
+import org.signal.registration.screens.messagesync.MessageSyncScreenEvent
+import org.signal.registration.screens.messagesync.MessageSyncViewModel
 import org.signal.registration.screens.permissions.PermissionsScreen
 import org.signal.registration.screens.phonenumber.PhoneNumberEntryScreenEvents
 import org.signal.registration.screens.phonenumber.PhoneNumberEntryViewModel
 import org.signal.registration.screens.phonenumber.PhoneNumberScreen
 import org.signal.registration.screens.pincreation.PinCreationScreen
+import org.signal.registration.screens.pincreation.PinCreationScreenEvents
 import org.signal.registration.screens.pincreation.PinCreationViewModel
 import org.signal.registration.screens.pinentry.PinEntryForRegistrationLockViewModel
 import org.signal.registration.screens.pinentry.PinEntryForSmsBypassViewModel
@@ -97,6 +120,15 @@ sealed interface RegistrationRoute : NavKey, Parcelable {
 
   @Serializable
   data class Permissions(val nextRoute: RegistrationRoute) : RegistrationRoute
+
+  @Serializable
+  data class AllowNotifications(val nextRoute: RegistrationRoute) : RegistrationRoute
+
+  @Serializable
+  data object LinkAccount : RegistrationRoute
+
+  @Serializable
+  data object MessageSync : RegistrationRoute
 
   @Serializable
   data object PhoneNumberEntry : RegistrationRoute
@@ -149,7 +181,6 @@ sealed interface RegistrationRoute : NavKey, Parcelable {
           restoreOptions = buildList {
             add(ArchiveRestoreOption.SignalSecureBackup)
             add(ArchiveRestoreOption.LocalBackup)
-            add(ArchiveRestoreOption.DeviceTransfer)
           },
           isPreRegistration = true
         )
@@ -160,7 +191,6 @@ sealed interface RegistrationRoute : NavKey, Parcelable {
           restoreOptions = buildList {
             add(ArchiveRestoreOption.SignalSecureBackup)
             add(ArchiveRestoreOption.LocalBackup)
-            add(ArchiveRestoreOption.DeviceTransfer)
             add(ArchiveRestoreOption.None)
           },
           isPreRegistration = false
@@ -195,7 +225,22 @@ sealed interface RegistrationRoute : NavKey, Parcelable {
   data object Transfer : RegistrationRoute
 
   @Serializable
+  data object DeviceTransferInstructions : RegistrationRoute
+
+  @Serializable
+  data object DeviceTransferSetup : RegistrationRoute
+
+  @Serializable
+  data object DeviceTransferProgress : RegistrationRoute
+
+  @Serializable
+  data object DeviceTransferComplete : RegistrationRoute
+
+  @Serializable
   data object Profile : RegistrationRoute
+
+  @Serializable
+  data class PhoneNumberDiscoverability(val initialDiscoverable: Boolean) : RegistrationRoute
 
   @Serializable
   data object FullyComplete : RegistrationRoute
@@ -205,6 +250,8 @@ private const val CAPTCHA_RESULT = "captcha_token"
 private const val COUNTRY_CODE_RESULT = "country_code_result"
 private const val BACKUP_CREDENTIAL_RESULT = "backup_credential_result"
 private const val LOCAL_BACKUP_RESTORE_RESULT = "local_backup_restore_result"
+private const val PHONE_NUMBER_DISCOVERABILITY_RESULT = "phone_number_discoverability_result"
+private const val PIN_LEARN_MORE_URL = "https://support.signal.org/hc/articles/360007059792"
 
 /**
  * Sets up the navigation graph for the registration flow using Navigation 3.
@@ -316,11 +363,19 @@ private fun EntryProviderScope<NavKey>.navigationEntries(
   entry<RegistrationRoute.Welcome> {
     val context = LocalContext.current
     val termsAndPrivacyUrl = stringResource(R.string.terms_and_privacy_policy_url)
+
     WelcomeScreen(
+      isLinkAndSyncAvailable = registrationRepository.isLinkAndSyncAvailable,
       onEvent = { event ->
         when (event) {
           WelcomeScreenEvents.Continue -> parentEventEmitter.navigateTo(RegistrationRoute.Permissions(nextRoute = RegistrationRoute.PhoneNumberEntry))
-          WelcomeScreenEvents.LinkDevice -> throw NotImplementedError("Haven't implemented linked devices yet")
+          WelcomeScreenEvents.LinkDevice -> {
+            if (registrationViewModel.getRequiredLinkedDevicePermission().isNullOrBlank()) {
+              parentEventEmitter.navigateTo(RegistrationRoute.LinkAccount)
+            } else {
+              parentEventEmitter.navigateTo(RegistrationRoute.AllowNotifications(RegistrationRoute.LinkAccount))
+            }
+          }
           WelcomeScreenEvents.HasOldPhone -> parentEventEmitter.navigateTo(RegistrationRoute.Permissions(nextRoute = RegistrationRoute.QuickRestoreQrScan))
           WelcomeScreenEvents.DoesNotHaveOldPhone -> parentEventEmitter.navigateTo(RegistrationRoute.Permissions(nextRoute = RegistrationRoute.ArchiveRestoreSelection.forManualRestore()))
           WelcomeScreenEvents.ViewTermsAndPrivacy -> {
@@ -345,6 +400,72 @@ private fun EntryProviderScope<NavKey>.navigationEntries(
     PermissionsScreen(
       permissionsState = localPermissionsState,
       onProceed = onProceed
+    )
+  }
+
+  // --- Allow Notifications Screen
+  entry<RegistrationRoute.AllowNotifications> { key ->
+    val onProceed = { parentEventEmitter.navigateTo(key.nextRoute) }
+    val localPermissionState = rememberPermissionState(
+      permission = registrationViewModel.getRequiredLinkedDevicePermission()!!,
+      onPermissionResult = { onProceed() }
+    )
+
+    AllowNotificationsScreen(
+      permissionState = localPermissionState,
+      onProceed = onProceed
+    )
+  }
+
+  // --- Link account Screen
+  entry<RegistrationRoute.LinkAccount> {
+    val viewModel: LinkAccountViewModel = viewModel(
+      factory = LinkAccountViewModel.Factory(
+        repository = registrationRepository,
+        parentState = registrationViewModel.state,
+        parentEventEmitter = registrationViewModel::onEvent
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val url = stringResource(R.string.terms_and_privacy_policy_url) // TODO [regv5] update with proper url
+
+    LinkAccountScreen(
+      state = state,
+      onEvent = {
+        when (it) {
+          LinkAccountScreenEvent.GetHelpClick -> LinkActions.openUrl(context, url) {
+            Toast.makeText(context, R.string.LinkActions_error_no_browser_found, Toast.LENGTH_SHORT).show()
+          }
+          else -> viewModel.onEvent(it)
+        }
+      }
+    )
+  }
+
+  // --- Message Sync Screen
+  entry<RegistrationRoute.MessageSync> {
+    val viewModel: MessageSyncViewModel = viewModel(
+      factory = MessageSyncViewModel.Factory(
+        repository = registrationRepository,
+        parentState = registrationViewModel.state,
+        parentEventEmitter = registrationViewModel::onEvent
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val url = stringResource(R.string.terms_and_privacy_policy_url) // TODO [regv5] update with proper url
+
+    MessageSyncScreen(
+      state = state,
+      onEvent = {
+        when (it) {
+          MessageSyncScreenEvent.LearnMoreClick -> LinkActions.openUrl(context, url) {
+            Toast.makeText(context, R.string.LinkActions_error_no_browser_found, Toast.LENGTH_SHORT).show()
+          }
+          else -> viewModel.onEvent(it)
+        }
+      }
     )
   }
 
@@ -465,10 +586,23 @@ private fun EntryProviderScope<NavKey>.navigationEntries(
       )
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     PinCreationScreen(
       state = state,
-      onEvent = { viewModel.onEvent(it) }
+      onEvent = { event ->
+        when (event) {
+          PinCreationScreenEvents.LearnMore -> {
+            LinkActions.openUrl(context, PIN_LEARN_MORE_URL) { error ->
+              when (error) {
+                OpenUrlError.NoBrowserFound -> Toast.makeText(context, R.string.LinkActions_error_no_browser_found, Toast.LENGTH_SHORT).show()
+              }
+            }
+          }
+
+          else -> viewModel.onEvent(event)
+        }
+      }
     )
   }
 
@@ -541,6 +675,8 @@ private fun EntryProviderScope<NavKey>.navigationEntries(
       factory = ArchiveRestoreSelectionViewModel.Factory(
         restoreOptions = key.restoreOptions,
         isPreRegistration = key.isPreRegistration,
+        repository = registrationRepository,
+        parentState = registrationViewModel.state,
         parentEventEmitter = registrationViewModel::onEvent
       )
     )
@@ -675,8 +811,102 @@ private fun EntryProviderScope<NavKey>.navigationEntries(
     // TODO: Implement TransferScreen
   }
 
+  // -- Device Transfer: Instructions
+  entry<RegistrationRoute.DeviceTransferInstructions> {
+    val viewModel: DeviceTransferInstructionsViewModel = viewModel(
+      factory = DeviceTransferInstructionsViewModel.Factory(parentEventEmitter)
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    DeviceTransferInstructionsScreen(
+      state = state,
+      onEvent = viewModel::onEvent
+    )
+  }
+
+  // -- Device Transfer: Setup (permissions, wifi, verify SAS)
+  entry<RegistrationRoute.DeviceTransferSetup> {
+    val context = LocalContext.current.applicationContext
+    val viewModel: DeviceTransferSetupViewModel = viewModel(
+      factory = DeviceTransferSetupViewModel.Factory(
+        context = context,
+        networkController = RegistrationDependencies.get().networkController,
+        setupEvents = DeviceTransferSetupViewModel.transferStatusFlow(),
+        parentState = registrationViewModel.state,
+        parentEventEmitter = parentEventEmitter
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    DeviceTransferSetupScreen(
+      state = state,
+      onEvent = viewModel::onEvent
+    )
+  }
+
+  // -- Device Transfer: Progress (receiving + importing)
+  entry<RegistrationRoute.DeviceTransferProgress> {
+    val context = LocalContext.current.applicationContext
+    val viewModel: DeviceTransferProgressViewModel = viewModel(
+      factory = DeviceTransferProgressViewModel.Factory(
+        context = context,
+        progressEvents = DeviceTransferProgressViewModel.restoreStatusFlow(),
+        parentEventEmitter = parentEventEmitter
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val showCancelDialog by viewModel.showCancelDialog.collectAsState()
+    DeviceTransferProgressScreen(
+      state = state,
+      showCancelDialog = showCancelDialog,
+      onEvent = viewModel::onEvent
+    )
+  }
+
+  // -- Device Transfer: Complete
+  entry<RegistrationRoute.DeviceTransferComplete> {
+    val viewModel: DeviceTransferCompleteViewModel = viewModel(
+      factory = DeviceTransferCompleteViewModel.Factory(registrationRepository, parentEventEmitter)
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    DeviceTransferCompleteScreen(
+      state = state,
+      onEvent = viewModel::onEvent
+    )
+  }
+
   entry<RegistrationRoute.Profile> {
-    // TODO: Implement ProfileScreen
+    val viewModel: CreateProfileViewModel = viewModel(
+      factory = CreateProfileViewModel.Factory(
+        repository = registrationRepository,
+        parentEventEmitter = registrationViewModel::onEvent
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ResultEffect<Boolean>(registrationViewModel.resultBus, PHONE_NUMBER_DISCOVERABILITY_RESULT) { discoverable ->
+      viewModel.onEvent(CreateProfileScreenEvents.DiscoverabilityChanged(discoverable))
+    }
+
+    CreateProfileScreen(
+      state = state,
+      onEvent = viewModel::onEvent
+    )
+  }
+
+  entry<RegistrationRoute.PhoneNumberDiscoverability> { key ->
+    val viewModel: PhoneNumberDiscoverabilityViewModel = viewModel(
+      factory = PhoneNumberDiscoverabilityViewModel.Factory(
+        initialDiscoverable = key.initialDiscoverable,
+        parentEventEmitter = registrationViewModel::onEvent,
+        resultBus = registrationViewModel.resultBus,
+        resultKey = PHONE_NUMBER_DISCOVERABILITY_RESULT
+      )
+    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    PhoneNumberDiscoverabilityScreen(
+      state = state,
+      onEvent = viewModel::onEvent
+    )
   }
 
   entry<RegistrationRoute.FullyComplete> {

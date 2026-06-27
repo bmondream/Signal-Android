@@ -12,15 +12,22 @@ import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import assertk.assertions.prop
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.signal.registration.PendingRestoreOption
 import org.signal.registration.RegistrationFlowEvent
+import org.signal.registration.RegistrationFlowState
+import org.signal.registration.RegistrationRepository
 import org.signal.registration.RegistrationRoute
+import org.signal.registration.proto.RestoreDecision
 
 class ArchiveRestoreSelectionViewModelTest {
 
+  private lateinit var mockRepository: RegistrationRepository
   private lateinit var emittedParentEvents: MutableList<RegistrationFlowEvent>
   private lateinit var parentEventEmitter: (RegistrationFlowEvent) -> Unit
   private lateinit var emittedStates: MutableList<ArchiveRestoreSelectionState>
@@ -28,6 +35,7 @@ class ArchiveRestoreSelectionViewModelTest {
 
   @Before
   fun setup() {
+    mockRepository = mockk(relaxed = true)
     emittedParentEvents = mutableListOf()
     parentEventEmitter = { event -> emittedParentEvents.add(event) }
     emittedStates = mutableListOf()
@@ -45,6 +53,8 @@ class ArchiveRestoreSelectionViewModelTest {
     return ArchiveRestoreSelectionViewModel(
       restoreOptions = restoreOptions,
       isPreRegistration = isPreRegistration,
+      repository = mockRepository,
+      parentState = MutableStateFlow(RegistrationFlowState()),
       parentEventEmitter = parentEventEmitter
     )
   }
@@ -132,7 +142,7 @@ class ArchiveRestoreSelectionViewModelTest {
   }
 
   @Test
-  fun `DeviceTransfer is not implemented and emits no events`() = runTest {
+  fun `DeviceTransfer navigates to DeviceTransferInstructions`() = runTest {
     val viewModel = createViewModel(isPreRegistration = false)
     val initialState = ArchiveRestoreSelectionState()
 
@@ -142,7 +152,11 @@ class ArchiveRestoreSelectionViewModelTest {
       stateEmitter
     )
 
-    assertThat(emittedParentEvents).hasSize(0)
+    assertThat(emittedParentEvents).hasSize(1)
+    assertThat(emittedParentEvents.first())
+      .isInstanceOf<RegistrationFlowEvent.NavigateToScreen>()
+      .prop(RegistrationFlowEvent.NavigateToScreen::route)
+      .isEqualTo(RegistrationRoute.DeviceTransferInstructions)
   }
 
   @Test
@@ -176,17 +190,34 @@ class ArchiveRestoreSelectionViewModelTest {
   // ==================== ConfirmSkip Tests ====================
 
   @Test
-  fun `ConfirmSkip navigates to PinCreate and clears dialog`() = runTest {
+  fun `ConfirmSkip when not storage capable navigates to PinCreate and clears dialog`() = runTest {
     val viewModel = createViewModel(isPreRegistration = false)
-    val initialState = ArchiveRestoreSelectionState(showSkipWarningDialog = true)
+    val initialState = ArchiveRestoreSelectionState(showSkipWarningDialog = true, storageCapable = false)
 
     viewModel.applyEvent(initialState, ArchiveRestoreSelectionScreenEvents.ConfirmSkip, stateEmitter)
 
+    coVerify { mockRepository.setRestoreDecision(RestoreDecision.SKIPPED) }
     assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents.first())
       .isInstanceOf<RegistrationFlowEvent.NavigateToScreen>()
       .prop(RegistrationFlowEvent.NavigateToScreen::route)
       .isEqualTo(RegistrationRoute.PinCreate)
+    assertThat(emittedStates.last().showSkipWarningDialog).isFalse()
+  }
+
+  @Test
+  fun `ConfirmSkip when storage capable navigates to PinEntryForSvrRestore and clears dialog`() = runTest {
+    val viewModel = createViewModel(isPreRegistration = false)
+    val initialState = ArchiveRestoreSelectionState(showSkipWarningDialog = true, storageCapable = true)
+
+    viewModel.applyEvent(initialState, ArchiveRestoreSelectionScreenEvents.ConfirmSkip, stateEmitter)
+
+    coVerify { mockRepository.setRestoreDecision(RestoreDecision.SKIPPED) }
+    assertThat(emittedParentEvents).hasSize(1)
+    assertThat(emittedParentEvents.first())
+      .isInstanceOf<RegistrationFlowEvent.NavigateToScreen>()
+      .prop(RegistrationFlowEvent.NavigateToScreen::route)
+      .isEqualTo(RegistrationRoute.PinEntryForSvrRestore)
     assertThat(emittedStates.last().showSkipWarningDialog).isFalse()
   }
 
@@ -233,5 +264,14 @@ class ArchiveRestoreSelectionViewModelTest {
     )
 
     assertThat(viewModel.state.value.showSkipButton).isTrue()
+  }
+
+  @Test
+  fun `applyParentState copies storageCapable from parent`() = runTest {
+    val viewModel = createViewModel()
+
+    val result = viewModel.applyParentState(ArchiveRestoreSelectionState(), RegistrationFlowState(storageCapable = true))
+
+    assertThat(result.storageCapable).isTrue()
   }
 }

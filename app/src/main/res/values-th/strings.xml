@@ -602,6 +602,8 @@
     <string name="ConversationFragment__update_build">ปรับรุ่น Signal</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">ลงทะเบียน Signal อีกครั้ง</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">เชื่อมโยงอีกครั้ง</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">กลับไป</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -651,11 +653,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">ไม่สามารถดาวน์โหลดรูปภาพได้ โปรดลองอีกครั้ง</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">ไม่สามารถดาวน์โหลดไฟล์สื่อได้</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของโทรศัพท์คุณและอุปกรณ์เครื่องนี้ จากนั้นเปิด Signal บนโทรศัพท์ แล้วลองดาวน์โหลดอีกครั้ง</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">ไม่สามารถดาวน์โหลดไฟล์สื่อได้เนื่องจากไม่พบไฟล์นี้บนโทรศัพท์ของคุณ</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">ปักหมุดไว้เป็นเวลา…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -698,7 +700,7 @@
     <!-- Detail tip 0 title -->
     <string name="SafetyTips_detail_tip0_title">อย่าตอบกลับแชทจาก Signal</string>
     <!-- Detail tip 0 message -->
-    <string name="SafetyTips_detail_tip0_message">Signal ไม่มีนโยบายในการส่งข้อความหาคุณเพื่อขอรหัสสำหรับลงทะเบียน, PIN หรือกุญแจกู้คืนของคุณ โปรดอย่าตอบกลับแชทที่แอบอ้างว่าเป็น Signal หรือฝ่ายสนับสนุนของ Signal มิจฉาชีพอาจใช้แชทปลอมเพื่อพยายามเข้ายึดบัญชีคุณ</string>
+    <string name="SafetyTips_detail_tip0_message">Signal จะไม่ส่งข้อความหาคุณเพื่อขอรหัสสำหรับลงทะเบียน, PIN หรือกุญแจกู้คืนของคุณ โปรดอย่าตอบกลับแชทที่แอบอ้างว่าเป็น Signal หรือฝ่ายสนับสนุนของ Signal มิจฉาชีพอาจใช้แชทปลอมเพื่อพยายามเข้ายึดบัญชีคุณ</string>
     <!-- Detail tip 1 title -->
     <string name="SafetyTips_detail_tip1_title">ตรวจสอบชื่อและรูปภาพ</string>
     <!-- Detail tip 1 message -->
@@ -1407,9 +1409,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">ผู้ติดต่อ SMS</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">ลบ %1$s ออกจากกลุ่มนี้หรือไม่</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">ยกเลิกการสร้างกลุ่มใช่หรือไม่</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">หากคุณกลับไปยังกลุ่ม \"%1$s\" การเปลี่ยนแปลงใดๆ ของคุณจะไม่ถูกบันทึก</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">ยกเลิก</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2791,6 +2793,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">ไม่พบข้อมูลเกี่ยวกับ \'%1$s\'</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">ไม่พบผลลัพธ์</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3309,11 +3313,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">ไม่สามารถบันทึกไฟล์สื่อได้</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">ไฟล์สื่อนี้ถูกออฟโหลดจากอุปกรณ์ของคุณเนื่องจากตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บบนอุปกรณ์\" เปิดใช้งานอยู่ คุณสามารถดาวน์โหลดไฟล์ทีละไฟล์ หรือปิดใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บบนอุปกรณ์\" เพื่อดาวน์โหลดไฟล์สื่อทั้งหมดมายังอุปกรณ์</string>
+    <string name="AttachmentSaver__media_offloaded_message">ไฟล์สื่อนี้ถูกออฟโหลดจากอุปกรณ์ของคุณเนื่องจากตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" เปิดใช้งานอยู่ คุณสามารถดาวน์โหลดไฟล์ทีละไฟล์ หรือปิดใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" เพื่อดาวน์โหลดไฟล์สื่อทั้งหมดมายังอุปกรณ์</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">ไม่สามารถบันทึกไฟล์ทั้งหมดได้</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">ไฟล์สื่อที่คุณเลือกบางไฟล์ถูกออฟโหลดจากอุปกรณ์เนื่องจากตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บบนอุปกรณ์\" เปิดใช้งานอยู่ คุณสามารถบันทึกไฟล์ทีละไฟล์ หรือปิดใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บบนอุปกรณ์\" เพื่อดาวน์โหลดไฟล์สื่อทั้งหมดมายังอุปกรณ์</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">ไฟล์สื่อที่คุณเลือกบางไฟล์ถูกออฟโหลดจากอุปกรณ์เนื่องจากตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" เปิดใช้งานอยู่ คุณสามารถบันทึกไฟล์ทีละไฟล์ หรือปิดใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" เพื่อดาวน์โหลดไฟล์สื่อทั้งหมดมายังอุปกรณ์</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">ดูการตั้งค่าพื้นที่จัดเก็บ</string>
 
@@ -3381,6 +3385,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">อุปกรณ์เครื่องนี้ไม่ได้ลงทะเบียนอีกต่อไป นี่น่าจะเป็นเพราะคุณลงทะเบียนหมายเลขโทรศัพท์นี้กับ Signal ไว้บนอุปกรณ์เครื่องอื่น</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">ลงทะเบียนอุปกรณ์อีกครั้ง</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">อุปกรณ์เครื่องนี้ไม่ได้เชื่อมโยงอีกต่อไป กรุณาเชื่อมโยง Signal กับโทรศัพท์ของคุณอีกครั้งเพื่อส่งข้อความต่อ</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">เชื่อมโยงอุปกรณ์อีกครั้ง</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">คุณออกจากระบบ Signal บนอุปกรณ์เครื่องนี้แล้ว</string>
@@ -8049,6 +8057,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"กู้คืนข้อมูลสำรองด้วยการติดตั้ง Signal ใหม่ โดยเปิดแอปแล้วแตะเลือกกู้คืนจากข้อมูลสำรอง จากนั้นจึงไปที่ไฟล์ข้อมูลสำรอง"</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">ตรวจยืนยันกุญแจกู้คืนของคุณ</string>
@@ -8422,13 +8436,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">หากเปิดใช้งาน ระบบจะลบข้อความออกจากอุปกรณ์ที่เชื่อมโยงอยู่ตามการตั้งค่าการจำกัดข้อความในแชทสูงสุด</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">พื้นที่จัดเก็บบนอุปกรณ์</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">พื้นที่จัดเก็บของ Signal</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">เพิ่มประสิทธิภาพพื้นที่จัดเก็บบนอุปกรณ์</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">ไฟล์สื่อที่ไม่ได้ใช้งานจะถูกออฟโหลด แต่คุณสามารถดาวน์โหลดไฟล์กลับมาจากข้อมูลสำรองได้ทุกเมื่อ</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">ฟีเจอร์การเพิ่มประสิทธิภาพพื้นที่จัดเก็บจะสามารถใช้งานได้ในกรณีที่มีการชำระค่าแพ็กเกจสำรองข้อมูลที่ปลอดภัยของ Signal การสมัครแพ็กเกจสำรองข้อมูลของคุณยังอยู่ระหว่างดำเนินการและยังไม่ได้เปิดใช้งาน โปรดลองอีกครั้งในภายหลัง</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">เปิดใช้งาน</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -8898,13 +8918,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">ดาวน์โหลดไฟล์สื่อ</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">ในการสร้างกุญแจกู้คืนใหม่ คุณจะต้องปิดใช้งานฟีเจอร์ \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บ\" แล้วรอจนไฟล์สื่อดาวน์โหลดเสร็จสิ้น จากนั้นคุณจึงจะสามารถสร้างกุญแจใหม่ได้</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">ในการสร้างกุญแจกู้คืนใหม่ คุณจะต้องปิดใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" แล้วรอจนไฟล์สื่อดาวน์โหลดเสร็จสิ้น จากนั้นคุณจึงจะสามารถสร้างกุญแจใหม่ได้</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">ปิดใช้งานและดาวน์โหลด</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">สร้างกุญแจกู้คืนใหม่</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">คุณมีความจำเป็นที่จะต้องสร้างกุญแจใหม่เฉพาะแค่ในกรณีที่มีบุคคลอื่นทราบกุญแจของคุณเท่านั้น โดยคุณจะต้องอัปโหลดข้อมูลสำรองซึ่งรวมถึงไฟล์สื่ออีกครั้ง และหากคุณกำลังใช้งานฟีเจอร์ \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บ\" คุณจะต้องดาวน์โหลดไฟล์สื่อที่เคยออฟโหลดไว้ให้เสร็จก่อน</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">คุณมีความจำเป็นที่จะต้องสร้างกุญแจใหม่เฉพาะแค่ในกรณีที่มีบุคคลอื่นทราบกุญแจของคุณเท่านั้น โดยคุณจะต้องอัปโหลดข้อมูลสำรองซึ่งรวมถึงไฟล์สื่ออีกครั้ง และหากคุณกำลังใช้งานตัวเลือก \"เพิ่มประสิทธิภาพพื้นที่จัดเก็บของ Signal\" คุณจะต้องดาวน์โหลดไฟล์สื่อที่เคยออฟโหลดไว้ให้เสร็จก่อน</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">ออกจากการตั้งค่าการสำรองข้อมูลใช่หรือไม่</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -8912,23 +8932,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">ออกจากการตั้งค่าการสำรองข้อมูล</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">บันทึกกุญแจกู้คืนของคุณ</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">กุญแจกู้คืนคือรหัส 64 ตัวที่จะทำให้คุณสามารถกู้คืนข้อมูลสำรองได้ คุณจะไม่สามารถกู้คืนบัญชีได้หากลืมกุญแจนี้</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">ดูกุญแจแบบเต็ม</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">โปรดยืนยันว่าคุณบันทึกกุญแจกู้คืนเรียบร้อยแล้ว ระบบจะให้คุณใส่รหัสผ่านที่บันทึกไว้ในขั้นตอนต่อไป</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">ยืนยันกุญแจกู้คืน</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">ยืนยันกุญแจกู้คืนแล้ว</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">เกิดข้อผิดพลาดในการยืนยันกุญแจกู้คืน</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">ไม่สามารถยืนยันกุญแจกู้คืนของคุณได้ โปรดตรวจสอบว่าคุณบันทึกกุญแจไว้ในตัวจัดการรหัสผ่านแล้ว หรือบันทึกกุญแจด้วยตัวเอง</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">บันทึกกุญแจด้วยตัวเอง</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9658,8 +9678,25 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="other">%1$d กลุ่มที่มีสมาชิกเหมือนกัน</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">ค้นหาสมาชิก</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">สมาชิกทุกคน</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">ผู้ดูแล</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">ผู้ติดต่อ</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">ไม่สามารถกู้คืนข้อมูลสำรอง</string>

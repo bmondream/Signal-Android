@@ -11,6 +11,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import org.thoughtcrime.securesms.main.MainDetailBackStack
 import org.thoughtcrime.securesms.main.MainNavigationDetailLocation
 import org.thoughtcrime.securesms.recipients.RecipientId
 
@@ -18,7 +19,7 @@ import org.thoughtcrime.securesms.recipients.RecipientId
  * Controls the navigation stack used by the chats screen.
  */
 @OptIn(SavedStateHandleSaveableApi::class)
-class ChatsBackStack(savedStateHandle: SavedStateHandle) {
+class ChatsBackStack(savedStateHandle: SavedStateHandle) : MainDetailBackStack {
 
   companion object {
     private const val KEY = "chats_back_stack"
@@ -29,7 +30,7 @@ class ChatsBackStack(savedStateHandle: SavedStateHandle) {
     )
   }
 
-  val entries: SnapshotStateList<MainNavigationDetailLocation> = savedStateHandle.saveable(
+  override val entries: SnapshotStateList<MainNavigationDetailLocation> = savedStateHandle.saveable(
     key = KEY,
     saver = saver
   ) {
@@ -45,13 +46,10 @@ class ChatsBackStack(savedStateHandle: SavedStateHandle) {
       }
     }
 
-  val isEmpty: Boolean
-    get() = entries.singleOrNull() is MainNavigationDetailLocation.Empty
-
   /**
    * Pushes an entry onto the stack.
    */
-  fun push(location: MainNavigationDetailLocation) {
+  override fun push(location: MainNavigationDetailLocation) {
     when (location) {
       is MainNavigationDetailLocation.Empty, entries.lastOrNull() -> Unit
 
@@ -61,25 +59,6 @@ class ChatsBackStack(savedStateHandle: SavedStateHandle) {
       }
 
       else -> entries.add(location)
-    }
-  }
-
-  /**
-   * Pops the top entry off the stack. Returns true if something was popped, false if the stack is already at its root.
-   */
-  fun pop(): Boolean {
-    if (entries.size <= 1) return false
-    entries.removeAt(entries.lastIndex)
-    return true
-  }
-
-  /**
-   * Resets the stack to its base empty state.
-   */
-  fun reset() {
-    entries.removeAll { it !is MainNavigationDetailLocation.Empty }
-    if (entries.isEmpty()) {
-      entries.add(MainNavigationDetailLocation.Empty)
     }
   }
 }

@@ -85,4 +85,23 @@
   <string name="CameraXFragment_send">ಕಳುಹಿಸು</string>
   <!-- Displayed in a permissions dialog when the user has denied access to hardware for image and video capture. -->
   <string name="CameraXFragment_signal_needs_the_recording_permissions_to_capture_video">ವೀಡಿಯೊಗಳನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಲು Signal ಗೆ ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿಗಳು ಅಗತ್ಯವಿರುತ್ತವೆ, ಆದರೆ ಅವುಗಳನ್ನು ಶಾಶ್ವತವಾಗಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಆ್ಯಪ್ ಸೆಟ್ಟಿಂಗ್‌ ಗಳಿಗೆ ಮುಂದುವರಿಯಿರಿ, \"ಅನುಮತಿಗಳು\" ಆಯ್ಕೆ ಮಾಡಿ, ಮತ್ತು \"ಮೈಕ್ರೊಫೋನ್\" ಮತ್ತು \"ಕ್ಯಾಮರಾ\" ಸಕ್ರಿಯಗೊಳಿಸಿ.</string>
+
+  <!-- Displayed when there is an error capturing video -->
+  <string name="MediaSendViewModel__error_recording_video">ವೀಡಿಯೊ ರೆಕಾರ್ಡಿಂಗ್ ಮಾಡುವಾಗ ದೋಷ ಉಂಟಾಗಿದೆ</string>
+  <!-- Displayed when there is an error capturing image -->
+  <string name="MediaSendViewModel__error_taking_photo">ಫೊಟೋ ತೆಗೆಯುವಾಗ ದೋಷ ಉಂಟಾಗಿದೆ</string>
+
+  <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_title">%1$s ಕಂಡುಬಂದಿದೆ</string>
+  <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_body">\"%1$s\" ಅವರೊಂದಿಗೆ ಚಾಟ್ ಆರಂಭಿಸಿ</string>
+  <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
+  <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">ಚಾಟ್‌ಗೆ ಹೋಗಿ</string>
+
+  <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">ಸಾಧನ ಲಿಂಕ್ ಮಾಡುವುದೇ?</string>
+  <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">ನೀವು ಒಂದು Signal ಸಾಧನವನ್ನು ಲಿಂಕ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸುತ್ತಿರುವಂತೆ ತೋರುತ್ತಿದೆ. ಮುಂದುವರಿಸಿ ಎಂಬುದನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ ಮತ್ತು \"ಹೊಸ ಸಾಧನವನ್ನು ಲಿಂಕ್ ಮಾಡಿ\" ಎಂಬುದನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ ಮತ್ತು QR ಕೋಡ್ ಅನ್ನು ಪುನಃ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</string>
+  <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">ಮುಂದುವರಿಸಿ</string>
 </resources>

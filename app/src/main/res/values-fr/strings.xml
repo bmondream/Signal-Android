@@ -615,6 +615,8 @@
     <string name="ConversationFragment__update_build">Installez la dernière version de Signal</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Se réinscrire à Signal</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">Réassociez-le</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Retour</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -648,7 +650,7 @@
     <!-- Text shown in conversation header when in a message request state that the name is not verified -->
     <string name="ConversationFragment_name_not_verified">Ce nom n\'est pas vérifié</string>
     <!-- Label for official chat pill shown in the Note to Self conversation header -->
-    <string name="ConversationFragment_official_chat">Conversation officielle</string>
+    <string name="ConversationFragment_official_chat">Canal de diffusion officiel</string>
     <!-- Description shown in the Signal release notes conversation header -->
     <string name="ConversationFragment_release_notes_description">Le seul canal de diffusion officiel de Signal. Pour découvrir les nouveautés et notes de version.</string>
     <!-- Label shown in place of the input in the Signal release notes conversation -->
@@ -665,11 +667,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">Impossible de télécharger la photo. Veuillez réessayer.</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">Impossible de télécharger le média</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">Vérifiez la connexion Internet de votre téléphone et de cet appareil. Ouvrez Signal sur votre téléphone, puis réessayez de télécharger le média.</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">Signal ne peut pas télécharger ce média, car il n\'est plus disponible sur votre téléphone.</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">Épingler le message pendant…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -1451,9 +1453,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">Contact SMS</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">Retirer %1$s du groupe ?</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">Abandonner la création du groupe ?</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">Si vous décidez d\'ouvrir la conversation de groupe \"%1$s\", vos modifications ne seront pas enregistrées.</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">Supprimer</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2279,7 +2281,7 @@
     <!-- Alert dialog title to accept a message request -->
     <string name="MessageRequestBottomView_accept_request">Accepter la demande ?</string>
     <!-- Alert dialog body to review the message request carefully -->
-    <string name="MessageRequestBottomView_review_requests_carefully">Examinez attentivement les demandes. Les utilisateurs choisissent librement leur nom de profil et leur identité n\'est pas vérifiée.</string>
+    <string name="MessageRequestBottomView_review_requests_carefully">Examinez attentivement les invitations. Les utilisateurs choisissent librement leur nom de profil et leur identité n\'est pas vérifiée.</string>
     <!-- Alert dialog body for accepting a message request. Contains bold substring placeholder -->
     <string name="MessageRequestBottomView_accept_request_body">N\'acceptez que les invitations des personnes en qui vous avez confiance. %1$s de communiquer votre PIN, code d\'inscription ni clé de récupération.</string>
     <!-- Bold substring used in accept request body: "Signal will never" -->
@@ -2287,7 +2289,7 @@
     <!-- Alert dialog title to accept a message request to join a group -->
     <string name="MessageRequestBottomView_join_group">Rejoindre le groupe ?</string>
     <!-- Alert dialog body to review the message request for a group carefully -->
-    <string name="MessageRequestBottomView_review_requests_carefully_groups">Examinez attentivement les demandes. Les noms de groupe sont choisis par les membres ou les admins et ils ne sont pas vérifiés.</string>
+    <string name="MessageRequestBottomView_review_requests_carefully_groups">Examinez attentivement les invitations. Les noms de groupe sont choisis par les membres ou les admins et ne sont pas vérifiés.</string>
     <!-- Button text to join a group -->
     <string name="MessageRequestBottomView_join">Rejoindre</string>
 
@@ -2707,7 +2709,7 @@
     <!-- Notice in a row when user has no groups in common -->
     <string name="AboutSheet__you_have_no_groups_in_common">Aucun groupe en commun</string>
     <!-- Notice when a user is not a connection to review requests carefully -->
-    <string name="AboutSheet__review_requests_carefully">Examinez attentivement les demandes</string>
+    <string name="AboutSheet__review_requests_carefully">Examinez attentivement les invitations</string>
     <!-- Text used when user has groups in common. Placeholder is the count -->
     <plurals name="AboutSheet__d_groups_in">
         <item quantity="one">%1$d groupe en commun</item>
@@ -2885,6 +2887,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">\"%1$s\" est introuvable.</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">Aucun résultat</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3414,11 +3418,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">Impossible d\'enregistrer le média</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">Ce média a été déplacé vers la sauvegarde, puis supprimé de votre appareil, car l\'option \"Optimiser l\'espace de stockage de l\'appareil\" est activée. Vous pouvez télécharger des éléments un à un, ou désactiver cette option pour télécharger tous les médias sur votre appareil.</string>
+    <string name="AttachmentSaver__media_offloaded_message">Ce média a été déplacé vers la sauvegarde, puis supprimé de votre appareil, car l\'option \"Optimiser le stockage Signal\" est activée. Vous pouvez télécharger chaque élément individuellement, ou désactiver cette option pour télécharger tous les médias sur votre appareil.</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">Impossible d\'enregistrer tous les éléments</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">Vous avez sélectionné des médias qui ont été déplacés vers la sauvegarde, puis supprimés de votre appareil, car l\'option \"Optimiser l\'espace de stockage de l\'appareil\" est activée. Pour télécharger tous les médias sur votre appareil, enregistrez chaque élément un à un ou désactivez l\'option d\'optimisation.</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">Certains médias sélectionnés ont été déplacés vers la sauvegarde, puis supprimés de votre appareil, car l\'option \"Optimiser le stockage Signal\" est activée. Vous pouvez enregistrer chaque élément individuellement, ou désactiver cette option pour télécharger tous les médias sur votre appareil.</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">Afficher les paramètres de stockage</string>
 
@@ -3487,6 +3491,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Cet appareil n\'est plus enregistré. Vous avez probablement inscrit votre numéro de téléphone sur Signal depuis un autre appareil.</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">Réenregistrer l\'appareil</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">Cet appareil n\'est plus associé. Associez-le de nouveau pour continuer à utiliser Signal.</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">Réassocier l\'appareil</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">Cet appareil a été déconnecté de Signal.</string>
@@ -3674,7 +3682,7 @@
     <string name="ConversationUpdateItem_block_request">Bloquer la demande</string>
     <!-- Text shown in conversation header that the account messaging the user does not have any groups in common with them -->
     <string name="ConversationUpdateItem_no_groups_in_common_review_requests_carefully">Aucun groupe en commun</string>
-    <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Aucun contact dans ce groupe. Examinez attentivement les demandes.</string>
+    <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Aucun contact dans ce groupe. Examinez attentivement les invitations.</string>
     <string name="ConversationUpdateItem_view">Afficher</string>
     <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">Lorsque vous enverrez des messages à ce contact, le délai avant disparition des messages éphémères sera défini sur %1$s.</string>
     <!-- Update item button text to show to boost a feature -->
@@ -5581,8 +5589,8 @@
     <string name="CanNotSendPaymentDialog__send_a_message">Envoyer un message</string>
 
     <!-- GroupsInCommonMessageRequest -->
-    <string name="GroupsInCommonMessageRequest__you_have_no_groups_in_common_with_this_person">Vous n\'avez aucun groupe en commun avec cette personne. Pour éviter les messages indésirables, examinez attentivement les demandes avant de les accepter.</string>
-    <string name="GroupsInCommonMessageRequest__none_of_your_contacts_or_people_you_chat_with_are_in_this_group">Aucun de vos contacts ne fait partie de ce groupe. Pour éviter les messages indésirables, examinez attentivement les demandes avant de les accepter.</string>
+    <string name="GroupsInCommonMessageRequest__you_have_no_groups_in_common_with_this_person">Vous n\'avez aucun groupe en commun avec cette personne. Pour éviter les messages indésirables, examinez attentivement les invitations avant de les accepter.</string>
+    <string name="GroupsInCommonMessageRequest__none_of_your_contacts_or_people_you_chat_with_are_in_this_group">Aucun de vos contacts ne fait partie de ce groupe. Pour éviter les messages indésirables, examinez attentivement les invitations avant de les accepter.</string>
     <string name="GroupsInCommonMessageRequest__about_message_requests">À propos des invitations par message</string>
     <string name="GroupsInCommonMessageRequest__okay">OK</string>
   <!-- Removed by excludeNonTranslatables <string name="GroupsInCommonMessageRequest__support_article" translatable="false">https://support.signal.org/hc/articles/360007459591</string> -->
@@ -8237,6 +8245,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Pour restaurer une sauvegarde, réinstallez Signal, puis ouvrez l\'appli. Touchez \"Restaurer une sauvegarde\" et recherchez votre dossier de sauvegarde."</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">Confirmez votre clé de récupération</string>
@@ -8613,13 +8627,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">Si vous activez cette option, les limites de stockage s’appliqueront aussi à vos appareils associés : les messages qui y sont stockés seront également supprimés.</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">Stockage de l’appareil</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">Stockage Signal</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Optimiser l\'espace de stockage de l\'appareil</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Optimiser le stockage Signal</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">Signal déplacera les médias inutilisés vers la sauvegarde et les supprimera de votre appareil, mais vous pourrez les télécharger depuis votre sauvegarde à tout moment.</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">L\'optimisation de l\'espace de stockage n\'est disponible qu\'avec la version payante des sauvegardes sécurisées Signal. Votre abonnement aux sauvegardes est en cours de traitement et n\'est pas encore actif. Veuillez réessayer plus tard.</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">Activer</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -9096,13 +9116,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">Téléchargez vos médias</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Pour créer une nouvelle clé de récupération, désactivez l\'option \"Optimiser l\'espace de stockage\" et attendez que vos médias soient téléchargés. Vous pourrez créer une nouvelle clé une fois le téléchargement terminé.</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Pour créer une nouvelle clé de récupération, désactivez l\'option \"Optimiser le stockage Signal\" et attendez que vos médias soient téléchargés. Vous pourrez créer une nouvelle clé une fois le téléchargement terminé.</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">Désactiver et télécharger</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">Créer une nouvelle clé de récupération</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">La création d\'une nouvelle clé n\'est nécessaire que si quelqu\'un connaît votre clé actuelle. Vous devrez réimporter votre sauvegarde (y compris vos médias). Si vous avez activé l\'option \"Optimiser l\'espace de stockage\", commencez par télécharger les médias déplacés vers la sauvegarde.</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">La création d\'une nouvelle clé n\'est nécessaire que si quelqu\'un connaît votre clé actuelle. Vous devrez réimporter votre sauvegarde (y compris vos médias). Si vous avez activé l\'option \"Optimiser le stockage Signal\", commencez par télécharger les médias déplacés vers la sauvegarde.</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">Quitter la configuration des sauvegardes ?</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -9110,23 +9130,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">Quitter la configuration</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Enregistrez votre clé de récupération</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Votre clé de récupération est un code de 64 caractères qui vous permet de restaurer votre sauvegarde. Si vous oubliez votre clé, il vous sera impossible de récupérer votre compte.</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">Afficher la clé</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirmez que vous avez bien enregistré votre clé de récupération. Elle vous sera demandée à l\'étape suivante.</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirmer la clé de récupération</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Clé de récupération confirmée</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Erreur lors de la confirmation de la clé de récupération</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Impossible de confirmer votre clé de récupération. Assurez-vous de l\'avoir enregistrée dans votre gestionnaire de mots de passe ou enregistrez-la manuellement.</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Enregistrer la clé manuellement</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9861,9 +9881,26 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="one">%1$d group with the same members</item>
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="one">%1$d groupe contient les mêmes membres</item>
+        <item quantity="other">%1$d groupes contiennent les mêmes membres</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">Rechercher des membres</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">Tous les membres</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">Administrateurs</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">Contacts</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">Impossible de restaurer la sauvegarde</string>

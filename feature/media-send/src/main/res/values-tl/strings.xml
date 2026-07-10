@@ -85,4 +85,23 @@
   <string name="CameraXFragment_send">Ipadala</string>
   <!-- Displayed in a permissions dialog when the user has denied access to hardware for image and video capture. -->
   <string name="CameraXFragment_signal_needs_the_recording_permissions_to_capture_video">Kailangan ng Signal ang pahintulot sa Mikropono para makapag-record ng mga video, ngunit tinanggihan ang mga ito. Pumunta sa app settings, piliin ang \"Pahintulot\", at i-enable ang \"Mikropono\" at \"Camera\".</string>
+
+  <!-- Displayed when there is an error capturing video -->
+  <string name="MediaSendViewModel__error_recording_video">Nagkaroon ng error sa pag-record ng video</string>
+  <!-- Displayed when there is an error capturing image -->
+  <string name="MediaSendViewModel__error_taking_photo">Nagkaroon ng error sa pagkuha ng photo</string>
+
+  <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_title">Nakita si %1$s</string>
+  <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_body">Magsimula ng chat kay \"%1$s\"</string>
+  <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
+  <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">Pumunta sa chat</string>
+
+  <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">Gusto mo bang i-link ang iyong device?</string>
+  <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">Mukhang sinusubukan mong mag-link ng isang Signal device. I-tap ang continue, tapos i-tap ang \"Mag-link ng Bagong Device\", at subukang i-scan ulit ang QR code.</string>
+  <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">Magpatuloy</string>
 </resources>

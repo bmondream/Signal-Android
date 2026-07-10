@@ -85,4 +85,23 @@
   <string name="CameraXFragment_send">Sūtīt</string>
   <!-- Displayed in a permissions dialog when the user has denied access to hardware for image and video capture. -->
   <string name="CameraXFragment_signal_needs_the_recording_permissions_to_capture_video">Signal ir vajadzīgas mikrofona atļaujas video ierakstīšanai, taču tās tika liegtas. Lūdzu, dodieties uz lietotnes iestatījumiem, izvēlieties “Atļaujas” un iespējojiet “Mikrofons” un “Kamera”.</string>
+
+  <!-- Displayed when there is an error capturing video -->
+  <string name="MediaSendViewModel__error_recording_video">Ierakstot video, radās kļūda</string>
+  <!-- Displayed when there is an error capturing image -->
+  <string name="MediaSendViewModel__error_taking_photo">Uzņemot attēlu, radās kļūda</string>
+
+  <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_title">Atrasts lietotājs: %1$s</string>
+  <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_body">Uzsāciet sarunu ar \"%1$s\"</string>
+  <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
+  <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">Doties uz sarunu</string>
+
+  <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">Vai piesaistīt ierīci?</string>
+  <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">Šķiet, ka mēģināt piesaistīt Signal ierīci. Pieskarties pie \"Turpināt\" un pie \"Piesaistīt jaunu ierīci\". Pēc tam skenējiet QR kodu vēlreiz.</string>
+  <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">Turpināt</string>
 </resources>

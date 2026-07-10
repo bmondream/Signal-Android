@@ -9,6 +9,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -23,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
@@ -57,10 +59,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.compose.AndroidFragment
 import androidx.fragment.compose.rememberFragmentState
@@ -70,7 +75,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -101,6 +108,7 @@ import org.thoughtcrime.securesms.backup.v2.ArchiveRestoreProgressState
 import org.thoughtcrime.securesms.backup.v2.ui.CouldNotCompleteBackupRestoreSheet
 import org.thoughtcrime.securesms.backup.v2.ui.verify.VerifyBackupKeyActivity
 import org.thoughtcrime.securesms.calls.YouAreAlreadyInACallSnackbar.show
+import org.thoughtcrime.securesms.calls.callsNavEntries
 import org.thoughtcrime.securesms.calls.log.CallLogFilter
 import org.thoughtcrime.securesms.calls.log.CallLogFragment
 import org.thoughtcrime.securesms.calls.new.NewCallActivity
@@ -137,7 +145,6 @@ import org.thoughtcrime.securesms.devicetransfer.olddevice.OldDeviceExitActivity
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupActivity
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.lock.v2.CreateSvrPinActivity
-import org.thoughtcrime.securesms.main.DetailsScreenNavHost
 import org.thoughtcrime.securesms.main.MainBottomChrome
 import org.thoughtcrime.securesms.main.MainBottomChromeCallback
 import org.thoughtcrime.securesms.main.MainBottomChromeState
@@ -157,11 +164,6 @@ import org.thoughtcrime.securesms.main.MainToolbarMode
 import org.thoughtcrime.securesms.main.MainToolbarState
 import org.thoughtcrime.securesms.main.MainToolbarViewModel
 import org.thoughtcrime.securesms.main.Material3OnScrollHelperBinder
-import org.thoughtcrime.securesms.main.callNavGraphBuilder
-import org.thoughtcrime.securesms.main.navigateToDetailLocation
-import org.thoughtcrime.securesms.main.rememberDetailNavHostController
-import org.thoughtcrime.securesms.main.rememberFocusRequester
-import org.thoughtcrime.securesms.main.storiesNavGraphBuilder
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionActivity
 import org.thoughtcrime.securesms.mediasend.v3.mediaSendLauncher
 import org.thoughtcrime.securesms.megaphone.Megaphone
@@ -176,14 +178,12 @@ import org.thoughtcrime.securesms.service.BackupMediaRestoreService
 import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.starred.StarredMessagesActivity
 import org.thoughtcrime.securesms.stories.Stories
-import org.thoughtcrime.securesms.stories.archive.StoryArchiveActivity
 import org.thoughtcrime.securesms.stories.landing.StoriesLandingFragment
-import org.thoughtcrime.securesms.stories.settings.StorySettingsActivity
+import org.thoughtcrime.securesms.stories.storiesNavEntries
 import org.thoughtcrime.securesms.util.AppStartup
 import org.thoughtcrime.securesms.util.CachedInflater
 import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.DynamicNoActionBarTheme
-import org.thoughtcrime.securesms.util.DynamicTheme
 import org.thoughtcrime.securesms.util.Material3OnScrollHelper
 import org.thoughtcrime.securesms.util.SplashScreenUtil
 import org.thoughtcrime.securesms.util.TopToastPopup
@@ -196,6 +196,7 @@ import org.thoughtcrime.securesms.window.NavigationType
 import org.thoughtcrime.securesms.window.rememberThreePaneScaffoldNavigatorDelegate
 import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState
 import kotlin.time.Duration.Companion.minutes
+import org.signal.core.ui.R as CoreUiR
 
 class MainActivity :
   PassphraseRequiredActivity(),
@@ -286,14 +287,6 @@ class MainActivity :
     }
 
     AppStartup.getInstance().onCriticalRenderEventStart()
-
-    enableEdgeToEdge(
-      navigationBarStyle = if (DynamicTheme.isDarkTheme(this)) {
-        SystemBarStyle.dark(0)
-      } else {
-        SystemBarStyle.light(0, 0)
-      }
-    )
 
     super.onCreate(savedInstanceState, ready)
     navigator = MainNavigator(this, mainNavigationViewModel)
@@ -507,54 +500,6 @@ class MainActivity :
           mainNavigationViewModel.onSplitPaneChanged(isSplitPane)
         }
 
-        val callsNavHostController = rememberDetailNavHostController(
-          onRequestFocus = rememberFocusRequester(
-            mainNavigationViewModel = mainNavigationViewModel,
-            currentListLocation = mainNavigationState.currentListLocation
-          ) { it == MainNavigationListLocation.CALLS }
-        ) {
-          callNavGraphBuilder(it)
-        }
-
-        val storiesNavHostController = rememberDetailNavHostController(
-          onRequestFocus = rememberFocusRequester(
-            mainNavigationViewModel = mainNavigationViewModel,
-            currentListLocation = mainNavigationState.currentListLocation
-          ) { it == MainNavigationListLocation.STORIES }
-        ) {
-          storiesNavGraphBuilder()
-        }
-
-        LaunchedEffect(Unit) {
-          fun navigateToLocation(location: MainNavigationDetailLocation) {
-            when (location) {
-              is MainNavigationDetailLocation.Empty -> {
-                when (mainNavigationState.currentListLocation) {
-                  MainNavigationListLocation.CHATS, MainNavigationListLocation.ARCHIVE -> {
-                    throw IllegalStateException("Navigation to ${mainNavigationState.currentListLocation} should be handled by ChatsBackStack.")
-                  }
-
-                  MainNavigationListLocation.CALLS -> callsNavHostController
-                  MainNavigationListLocation.STORIES -> storiesNavHostController
-                }.navigateToDetailLocation(location)
-              }
-
-              is MainNavigationDetailLocation.Conversation, is MainNavigationDetailLocation.Chats -> {
-                throw IllegalStateException("Navigation to $location should be handled by ChatsBackStack.")
-              }
-
-              is MainNavigationDetailLocation.CallLinkDetails -> callsNavHostController.navigateToDetailLocation(location)
-              is MainNavigationDetailLocation.Calls -> callsNavHostController.navigateToDetailLocation(location)
-              is MainNavigationDetailLocation.Stories -> storiesNavHostController.navigateToDetailLocation(location)
-            }
-          }
-
-          mainNavigationViewModel.earlyNavigationDetailLocationRequested?.let { navigateToLocation(it) }
-          mainNavigationViewModel.clearEarlyDetailLocation()
-
-          mainNavigationViewModel.detailLocation.collect { navigateToLocation(it) }
-        }
-
         val scope = rememberCoroutineScope()
 
         BackHandler(paneExpansionState.currentAnchor == detailOnlyAnchor) {
@@ -739,16 +684,32 @@ class MainActivity :
               }
 
               MainNavigationListLocation.CALLS -> {
-                DetailsScreenNavHost(
-                  navHostController = callsNavHostController,
-                  contentLayoutData = contentLayoutData
+                NavDisplay(
+                  backStack = mainNavigationViewModel.callsBackStackEntries,
+                  onBack = { mainNavigationViewModel.popCallsDetailLocation() },
+                  transitionSpec = TransitionSpecs.HorizontalSlide.transitionSpec,
+                  popTransitionSpec = TransitionSpecs.HorizontalSlide.popTransitionSpec,
+                  predictivePopTransitionSpec = TransitionSpecs.HorizontalSlide.predictivePopTransitionSpec,
+                  entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                  ),
+                  entryProvider = entryProvider { callsNavEntries(isSplitPane) }
                 )
               }
 
               MainNavigationListLocation.STORIES -> {
-                DetailsScreenNavHost(
-                  navHostController = storiesNavHostController,
-                  contentLayoutData = contentLayoutData
+                NavDisplay(
+                  backStack = mainNavigationViewModel.storiesBackStackEntries,
+                  onBack = { mainNavigationViewModel.popStoriesDetailLocation() },
+                  transitionSpec = TransitionSpecs.HorizontalSlide.transitionSpec,
+                  popTransitionSpec = TransitionSpecs.HorizontalSlide.popTransitionSpec,
+                  predictivePopTransitionSpec = TransitionSpecs.HorizontalSlide.predictivePopTransitionSpec,
+                  entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                  ),
+                  entryProvider = entryProvider { storiesNavEntries() }
                 )
               }
             }
@@ -829,6 +790,23 @@ class MainActivity :
           MaterialTheme.colorScheme.surface
         } else {
           SignalTheme.colors.colorSurface1
+        }
+
+        val context = LocalContext.current
+        val isDarkTheme = isSystemInDarkTheme()
+        val navBarColor = if (isSplitPane) backgroundColor.toArgb() else ContextCompat.getColor(context, CoreUiR.color.signal_colorSurface2)
+        LaunchedEffect(isDarkTheme, navBarColor) {
+          if (Build.VERSION.SDK_INT >= 26) {
+            enableEdgeToEdge(
+              navigationBarStyle = if (isDarkTheme) {
+                SystemBarStyle.dark(navBarColor)
+              } else {
+                SystemBarStyle.light(navBarColor, navBarColor)
+              }
+            )
+          } else {
+            enableEdgeToEdge()
+          }
         }
 
         val modifier = when {
@@ -1171,7 +1149,7 @@ class MainActivity :
       } else if (SignalStore.internal.useNewMediaActivity) {
         mediaSendLauncher.launch(
           MediaSendActivityContract.Args(
-            isCameraFirst = false,
+            isCameraFirst = true,
             isStory = destination == MainNavigationListLocation.STORIES
           )
         )
@@ -1249,11 +1227,11 @@ class MainActivity :
     }
 
     override fun onStoryPrivacyClick() {
-      startActivity(StorySettingsActivity.getIntent(this@MainActivity))
+      mainNavigationViewModel.goTo(MainNavigationDetailLocation.Stories.PrivacySettings)
     }
 
     override fun onStoryArchiveClick() {
-      startActivity(StoryArchiveActivity.createIntent(this@MainActivity))
+      mainNavigationViewModel.goTo(MainNavigationDetailLocation.Stories.Archive)
     }
 
     override fun onCloseSearchClick() {

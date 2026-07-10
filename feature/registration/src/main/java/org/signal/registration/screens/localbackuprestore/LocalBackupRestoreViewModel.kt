@@ -23,7 +23,7 @@ import org.signal.core.util.logging.Log
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationRepository
 import org.signal.registration.RegistrationRoute
-import org.signal.registration.proto.RestoreDecision
+import org.signal.registration.RestoreDecision
 import org.signal.registration.screens.EventDrivenViewModel
 import org.signal.registration.screens.util.navigateBack
 import org.signal.registration.screens.util.navigateTo
@@ -120,7 +120,8 @@ class LocalBackupRestoreViewModel(
       parentEventEmitter.navigateBack()
     } else {
       repository.setRestoreDecision(RestoreDecision.COMPLETED)
-      repository.finishRegistrationOrCreateProfile(parentEventEmitter)
+      repository.restoreAccountRecord()
+      parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
     }
   }
 

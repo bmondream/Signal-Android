@@ -615,6 +615,8 @@
     <string name="ConversationFragment__update_build">Signal-ды жаңарту</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signal-ға қайта тіркелу</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">Re-link</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Алдыңғы экранға қайтыңыз.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -665,11 +667,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">Фотосурет жүктеп алынбады. Әрекетті қайталап көріңіз.</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">Мультимедианы жүктеп алу мүмкін емес</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">Осы құрылғыны және телефоныңыздың интернет байланысын тексеріңіз. Телефоныңызда Signal қолданбасын ашыңыз да, қайта жүктеп алып көріңіз.</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">Бұл мультимедиа файлы телефоныңызда бұдан былай қолжетімді емес және оны жүктеп алу мүмкін емес.</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">Бекітілу ұзақтығы…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -712,7 +714,7 @@
     <!-- Detail tip 0 title -->
     <string name="SafetyTips_detail_tip0_title">Signal-дан келген чаттарға жауап бермеңіз</string>
     <!-- Detail tip 0 message -->
-    <string name="SafetyTips_detail_tip0_message">Signal ешқашан сізге хабарласып, тіркеу кодыңызды, PIN кодыңызды немесе қалпына келтіру кілтіңізді сұрамайды. Signal-дың немесе Signal қолдау орталығының атын жамылған чаттарға жауап бермеңіз. Арам пиғылды адамдар аккаунтыңызға ие болу үшін фейк чаттардың параметрлерін орнатады.</string>
+    <string name="SafetyTips_detail_tip0_message">Signal ешқашан сізге хабар жіберіп, тіркеу кодыңызды, PIN кодыңызды немесе қалпына келтіру кілтіңізді сұрамайды. Signal-дың немесе Signal қолдау орталығының атын жамылған чаттарға жауап бермеңіз. Арам пиғылды адамдар аккаунтыңызға ие болу үшін фейк чаттардың параметрлерін орнатады.</string>
     <!-- Detail tip 1 title -->
     <string name="SafetyTips_detail_tip1_title">Аты-жөнін және фотосуреттерін тексеріңіз</string>
     <!-- Detail tip 1 message -->
@@ -1451,9 +1453,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">SMS контактісі</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">Бұл топтан %1$s контактісін шығарғыңыз келе ме?</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">Топты өшіру керек пе?</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">\"%1$s\" тобына өтсеңіз, өзгерістер сақталмайды.</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">Тастау</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2885,6 +2887,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">\"%1$s\" бойынша бірде-бір нәтиже табылмады</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">Бірде-бір нәтиже табылмады</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3414,11 +3418,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">Мультимедианы сақтау мүмкін емес</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">Бұл мультимедиа құрылғыңыздан жүктеп шығарылды, себебі \"Құрылғыдағы жадты оңтайландыру\" функциясы қосылды. Мультимедианың барлығын құрылғыңызға жүктеп алу үшін элементтерді бір-бірден жүктеп алуға немесе \"Құрылғыдағы жадты оңтайландыру\" функциясын өшіруге болады.</string>
+    <string name="AttachmentSaver__media_offloaded_message">Бұл мультимедиа құрылғыңыздан жүктеп шығарылды, себебі \"Signal жадын оңтайландыру\" функциясы қосылды. Мультимедианың барлығын құрылғыңызға жүктеп алу үшін элементтерді бір-бірден жүктеп алуға немесе \"Signal жадын оңтайландыру\" функциясын өшіруге болады.</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">Барлық элементті сақтау мүмкін емес</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">Сіз таңдаған кейбір мультимедиа құрылғыңыздан жүктеп шығарылды, себебі \"Құрылғыдағы жадты оңтайландыру\" функциясы қосылды. Мультимедианың барлығын құрылғыңызға жүктеп алу үшін элементтерді бір-бірден сақтауға немесе \"Құрылғыдағы жадты оңтайландыру\" функциясын өшіруге болады.</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">Сіз таңдаған кейбір мультимедиа құрылғыңыздан жүктеп шығарылды, себебі \"Signal жадын оңтайландыру\" функциясы қосылды. Мультимедианың барлығын құрылғыңызға жүктеп алу үшін элементтерді бір-бірден сақтауға немесе \"Signal жадын оңтайландыру\" функциясын өшіруге болады.</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">Жад параметрлерін көру</string>
 
@@ -3487,6 +3491,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Бұл құрылғы бұдан былай тіркелмеген. Телефон нөміріңізді Signal орнатылған басқа құрылғыда тіркегендіктен осындай болуы мүмкін.</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">Құрылғыны қайта тіркеу</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">This device is no longer linked. Re-link Signal with your phone to continue messaging.</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">Re-link device</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">Осы құрылғыдағы Signal-дан шығып кеттіңіз.</string>
@@ -8237,6 +8245,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Сақтық көшірмені қалпына келтіру үшін Signal-дың жаңа нұсқасын орнатыңыз. Қолданбаны ашып, \"Сақтық көшірмені қалпына келтіру\" опциясын түртіңіз де, сақтық көшірме файлын тауып алыңыз."</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">Қалпына келтіру кілтін растау</string>
@@ -8613,13 +8627,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">Іске қосылып тұрғанда, чат лимиттері де байланыстырылған құрылғылардан хаттарды жояды.</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">Құрылғыдағы сақтау орны</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">Signal жады</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Құрылғыдағы сақтау орнын оңтайландыру</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Signal жадын оңтайландыру</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">Қолданылмаған мультимедиа алып тасталады, бірақ оны резервтік көшірмеден кез келген уақытта жүктеп алуға болады.</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">Жадты оңтайландыру үшін Signal қауіпсіз сақтық көшірмелерінің ақылы деңгейі керек. Сақтық көшірмелер жазылымы әлі өңделіп жатыр және әзірге белсенді емес. Кейінірек қайталап көріңіз.</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">Іске қосу</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -9096,13 +9116,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">Мультимедианы жүктеп алу</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Жаңа қалпына келтіру кілтін жасау үшін \"Сақтау орнын оңтайландыру\" функциясын өшіріңіз және мультимедиа жүктеп алынғанын күтіңіз. Жүктеп алу процесі аяқталған соң, жаңа кілт жасай аласыз.</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Жаңа қалпына келтіру кілтін жасау үшін \"Signal жадын оңтайландыру\" функциясын өшіріңіз және мультимедиа жүктеп алынғанын күтіңіз. Жүктеп алу процесі аяқталған соң, жаңа кілт жасай аласыз.</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">Өшіру және жүктеп алу</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">Жаңа қалпына келтіру кілтін жасау</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">Кілтіңіз біреуге мәлім болған жағдайда ғана жаңасын жасау керек. Сақтық көшірмені, соның ішінде мультимедианы қайта жүктеп салуыңыз керек. \"Сақтау орнын оңтайландыру\" функциясын қолданып жатсаңыз, алдымен мультимедианы жүктеп алуыңыз керек.</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">Кілтіңіз біреуге мәлім болған жағдайда ғана жаңасын жасау керек. Сақтық көшірмені, соның ішінде мультимедианы қайта жүктеп салуыңыз керек. \"Signal жадын оңтайландыру\" функциясын пайдаланып жатсаңыз, алдымен жүктеп шығарылған мультимедианы жүктеп алуыңыз керек.</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">Сақтық көшірме параметрінен шығу керек пе?</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -9110,23 +9130,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">Сақтық көшірме параметрінен шығу</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Қалпына келтіру кілтіңізді сақтаңыз</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Қалпына келтіру кілті – сақтық көшірмені қалпына келтіруге мүмкіндік беретін 64 таңбалы код. Кілтіңізді ұмытып қалсаңыз, аккаунтты қалпына келтіре алмайсыз.</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">Толық кілтті көру</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Қалпына келтіру кілтіңіздің дұрыс жазылғанын растаңыз. Келесі қадамда сақталған құпия сөзіңізді толтыру сұралады.</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Қалпына келтіру кілтін растау</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Қалпына келтіру кілті расталды</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Қалпына келтіру кілтін растау кезінде қате шықты</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Қалпына келтіру кілтін растау мүмкін болмады. Оны құпия сөз менеджерінде сақтап қойыңыз немесе оны қолмен сақтаңыз.</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Кілтті қолмен сақтау</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9861,9 +9881,26 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="one">%1$d group with the same members</item>
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="one">Бірдей мүшелерден тұратын %1$d топ</item>
+        <item quantity="other">Бірдей мүшелерден тұратын %1$d топ</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">Мүшелерді іздеу</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">Барлық мүше</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">Әкімшілер</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">Контактілер</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">Сақтық көшірме қалпына келтірілмейді</string>

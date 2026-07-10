@@ -10,6 +10,7 @@ sealed class PinEntryScreenEvents {
     override fun toString(): String = "PinEntered(pin=${pin.length} chars)"
   }
   data object ToggleKeyboard : PinEntryScreenEvents()
-  data object NeedHelp : PinEntryScreenEvents()
   data object Skip : PinEntryScreenEvents()
+  data object CreateNewPin : PinEntryScreenEvents()
+  data object ContactSupport : PinEntryScreenEvents()
 }

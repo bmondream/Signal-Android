@@ -336,7 +336,7 @@ class InternalBackupPlaygroundViewModel : ViewModel() {
 
     viewModelScope.launch {
       when (val result = BackupRepository.restoreRemoteBackup()) {
-        RemoteRestoreResult.Success -> {
+        is RemoteRestoreResult.Success -> {
           _state.value = _state.value.copy(statusMessage = "Import complete!")
           ThreadUtil.runOnMain { afterDbRestoreCallback() }
         }
@@ -352,7 +352,7 @@ class InternalBackupPlaygroundViewModel : ViewModel() {
   }
 
   fun loadStats() {
-    viewModelScope.launch(Dispatchers.IO) {
+    viewModelScope.launch(Dispatchers.Default) {
       launch {
         var stats = SignalDatabase.attachments.debugGetAttachmentStats()
 
@@ -398,7 +398,7 @@ class InternalBackupPlaygroundViewModel : ViewModel() {
     return@withContext false
   }
 
-  suspend fun clearLocalMediaBackupState() = withContext(Dispatchers.IO) {
+  suspend fun clearLocalMediaBackupState() = withContext(Dispatchers.Default) {
     SignalDatabase.attachments.clearAllArchiveData()
   }
 

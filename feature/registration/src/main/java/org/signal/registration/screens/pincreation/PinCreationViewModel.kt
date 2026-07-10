@@ -21,8 +21,9 @@ import org.signal.registration.NetworkController
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationFlowState
 import org.signal.registration.RegistrationRepository
-import org.signal.registration.proto.RestoreDecision
+import org.signal.registration.RestoreDecision
 import org.signal.registration.screens.EventDrivenViewModel
+import kotlin.time.toKotlinDuration
 
 /**
  * ViewModel for the PIN creation screen.
@@ -67,9 +68,9 @@ class PinCreationViewModel(
 
           else -> {
             Log.d(TAG, "[PinSubmitted] Confirmation PIN matched.")
-            _state.value = state.copy(pinMismatch = false)
-            val result = applyPinSubmitted(state, event.pin)
-            _state.value = result
+            val loadingState = state.copy(pinMismatch = false, loading = true)
+            _state.value = loadingState
+            _state.value = applyPinSubmitted(loadingState, event.pin)
           }
         }
       }
@@ -90,6 +91,9 @@ class PinCreationViewModel(
       is PinCreationScreenEvents.OptOut -> {
         _state.value = state.copy(isConfirmEnabled = false)
         applyOptOut()
+      }
+      is PinCreationScreenEvents.ConsumeOneTimeEvent -> {
+        _state.value = state.copy(oneTimeEvent = null)
       }
     }
   }
@@ -121,7 +125,8 @@ class PinCreationViewModel(
       is RequestResult.Success -> {
         Log.i(TAG, "[PinSubmitted] Successfully backed up master key to SVR.")
         repository.setRestoreDecision(RestoreDecision.NEW_ACCOUNT)
-        repository.finishRegistrationOrCreateProfile(parentEventEmitter)
+        repository.restoreAccountRecord()
+        parentEventEmitter(RegistrationFlowEvent.RegistrationComplete)
         state
       }
 
@@ -129,8 +134,7 @@ class PinCreationViewModel(
         when (val error = result.error) {
           is NetworkController.BackupMasterKeyError.EnclaveNotFound -> {
             Log.w(TAG, "[PinSubmitted] SVR enclave not found.")
-            // TODO [registration] - Report to UI and indicate to library user that pin could not be created
-            throw NotImplementedError("Report to UI and indicate to library user that pin could not be created")
+            state.copy(loading = false, oneTimeEvent = PinCreationState.OneTimeEvent.ServiceError)
           }
 
           is NetworkController.BackupMasterKeyError.NotRegistered -> {
@@ -143,14 +147,12 @@ class PinCreationViewModel(
 
       is RequestResult.RetryableNetworkError -> {
         Log.w(TAG, "[PinSubmitted] Network error when backing up master key.", result.networkError)
-        // TODO [registration] - Report to UI and indicate to library user that pin could not be created
-        throw NotImplementedError("Report to UI and indicate to library user that pin could not be created")
+        state.copy(loading = false, oneTimeEvent = PinCreationState.OneTimeEvent.NetworkError(result.retryAfter?.toKotlinDuration()))
       }
 
       is RequestResult.ApplicationError -> {
         Log.w(TAG, "[PinSubmitted] Application error when backing up master key.", result.cause)
-        // TODO [registration] - Report to UI and indicate to library user that pin could not be created
-        throw NotImplementedError("Report to UI and indicate to library user that pin could not be created")
+        state.copy(loading = false, oneTimeEvent = PinCreationState.OneTimeEvent.ServiceError)
       }
     }
   }

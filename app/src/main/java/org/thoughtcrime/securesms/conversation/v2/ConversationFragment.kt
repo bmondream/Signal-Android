@@ -1247,7 +1247,7 @@ class ConversationFragment :
 
     viewLifecycleOwner.lifecycle.addObserver(LastScrolledPositionUpdater(adapter, layoutManager, viewModel))
 
-    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
       var wasTerminated: Boolean? = null
       viewModel
         .groupRecordFlow
@@ -2489,7 +2489,17 @@ class ConversationFragment :
         ?: MediaUtil.IMAGE_WEBP
     )
 
-    sendMessageWithoutComposeInput(slide = slide, clearCompose = clearCompose)
+    val quote = if (SignalStore.labs.stickerReplies) {
+      inputPanel.quote.orNull()
+    } else {
+      null
+    }
+
+    sendMessageWithoutComposeInput(slide = slide, quote = quote, clearCompose = clearCompose)
+
+    if (quote != null) {
+      inputPanel.clearQuote()
+    }
 
     viewModel.updateStickerLastUsedTime(stickerRecord, System.currentTimeMillis().milliseconds)
   }
@@ -4751,6 +4761,10 @@ class ConversationFragment :
 
     override fun onReRegisterClicked() {
       startActivity(RegistrationActivity.newIntentForReRegistration(requireContext()))
+    }
+
+    override fun onReLinkDeviceClicked() {
+      startActivity(RegistrationActivity.newIntentForReLinkDevice(requireContext()))
     }
 
     override fun onCancelGroupRequestClicked() {

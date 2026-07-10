@@ -615,6 +615,8 @@
     <string name="ConversationFragment__update_build">Signal bijwerken</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signal opnieuw registreren</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">Koppel opnieuw</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Terug</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -665,11 +667,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">Foto kan niet worden gedownload. Probeer het opnieuw.</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">Kan media niet downloaden</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">Controleer de internetverbinding van dit apparaat en van je telefoon. Open Signal op je telefoon en probeer opnieuw te downloaden.</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">Dit bestand is niet meer beschikbaar op je telefoon en kan niet worden gedownload.</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">Dit bericht vastzetten voor…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -1451,9 +1453,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">Sms-contact</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">%1$s uit deze groep verwijderen?</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">Nieuwe groep verwijderen?</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">Als je doorgaat naar de groep ‘%1$s’, worden je wijzigingen niet opgeslagen.</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">Verwijderen</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2885,6 +2887,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">Geen resultaten gevonden voor ‘%1$s’</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">Geen sticker gevonden</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3414,11 +3418,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">Kan media niet opslaan</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">Deze mediabestanden zijn verplaatst van je apparaat omdat ‘Apparaatopslag optimaliseren’ is ingeschakeld. Je kunt items één voor één downloaden of je kunt ‘Apparaatopslag optimaliseren’ uitschakelen om alle media naar je apparaat te downloaden.</string>
+    <string name="AttachmentSaver__media_offloaded_message">Dit mediabestand is verplaatst van je apparaat omdat ‘Signal-opslag optimaliseren’ is ingeschakeld. Je kunt items één voor één downloaden of je kunt ‘Signal-opslag optimaliseren’ uitschakelen om alle media naar je apparaat te downloaden.</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">Kan niet alle items opslaan</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">Sommige mediabestanden die je hebt geselecteerd zijn verplaatst van je apparaat omdat ‘Apparaatopslag optimaliseren’ is ingeschakeld. Je kunt items één voor één opslaan of je kunt ‘Apparaatopslag optimaliseren’ uitschakelen om alle media naar je apparaat te downloaden.</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">Sommige mediabestanden die je hebt geselecteerd zijn verplaatst van je apparaat omdat ‘Signal-opslag optimaliseren’ is ingeschakeld. Je kunt items één voor één opslaan of je kunt ‘Signal-opslag optimaliseren’ uitschakelen om alle media naar je apparaat te downloaden.</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">Opslaginstellingen weergeven</string>
 
@@ -3487,6 +3491,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Dit apparaat is niet meer geregistreerd. Dit komt waarschijnlijk omdat je je telefoonnummer bij Signal op een ander apparaat hebt geregistreerd.</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">Registreer het apparaat opnieuw</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">Dit apparaat is niet meer gekoppeld. Koppel Signal opnieuw met je telefoon om door te gaan met het verzenden van berichten.</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">Apparaat opnieuw koppelen</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">Je bent uitgelogd bij Signal op dit apparaat.</string>
@@ -8237,6 +8245,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Om je gegevens uit een back-up terug te zetten, moet je Signal opnieuw installeren. Open vervolgens de app, tik op ‘Back-upgegevens terugzetten’ en zoek de back-upmap."</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">Verifieer je herstelsleutel</string>
@@ -8613,13 +8627,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">Verwijder met chatlimieten ook berichten op je gekoppelde apparaten</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">Apparaatopslag</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">Signal-opslag</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Apparaatopslag optimaliseren</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Signal-opslag optimaliseren</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">Ongebruikte media worden verwijderd van je apparaat, maar kunnen op elk moment opnieuw worden gedownload vanuit je back-up.</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">Opslagoptimalisatie kan alleen worden gebruikt met een betaald abonnement op Signal Secure Backups. Je back-upabonnement wordt nog verwerkt en is nog niet actief. Probeer het later opnieuw.</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">Inschakelen</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -9096,13 +9116,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">Media downloaden</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Om een nieuwe herstelsleutel aan te maken, moet je  ’Apparaatopslag optimaliseren’ uitschakelen en wachten tot je media zijn gedownload. Wanneer het downloaden is voltooid, kun je een nieuwe sleutel aanmaken.</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">Om een nieuwe herstelsleutel aan te maken, moet je ’Signal-opslag optimaliseren’ uitschakelen en wachten tot je media zijn gedownload. Wanneer het downloaden is voltooid, kun je een nieuwe sleutel aanmaken.</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">Uitschakelen en downloaden</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">Een nieuwe herstelsleutel aanmaken</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">Het aanmaken van een nieuwe sleutel is alleen nodig als iemand anders je sleutel kent. Je moet je back-up, inclusief media, opnieuw uploaden. Als je ‘Apparaatopslag optimaliseren’ gebruikt, moet je eerst de verplaatste media opnieuw downloaden.</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">Het aanmaken van een nieuwe sleutel is alleen nodig als iemand anders je sleutel kent. Je moet je back-up, inclusief media, opnieuw uploaden. Als je ‘Signal-opslag optimaliseren’ gebruikt, moet je eerst de verplaatste media opnieuw downloaden.</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">Instellen back-up verlaten?</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -9110,23 +9130,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">Instellen back-up verlaten</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Je herstelsleutel opslaan</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Je herstelsleutel is een code van 64 tekens waarmee je je back-up kunt herstellen. Als je je sleutel vergeet, kun je je account niet herstellen.</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">Volledige sleutel weergeven</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Bevestig dat je herstelsleutel juist is vastgelegd. In de volgende stap word je gevraagd je opgeslagen herstelsleutel in te voeren.</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Herstelsleutel bevestigen</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Herstelsleutel bevestigd</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Fout bij bevestigen van herstelsleutel</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Je herstelsleutel kon niet worden bevestigd. Zorg ervoor dat je de sleutel handmatig of in je wachtwoordmanager opslaat.</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Sleutel handmatig opslaan</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9861,9 +9881,26 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="one">%1$d group with the same members</item>
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="one">%1$d groep met dezelfde leden</item>
+        <item quantity="other">%1$d groepen met dezelfde leden</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">Leden zoeken</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">Alle leden</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">Beheerders</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">Contacten</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">Back-up kan niet worden teruggezet</string>

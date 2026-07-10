@@ -24,7 +24,7 @@ import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationFlowState
 import org.signal.registration.RegistrationRepository
 import org.signal.registration.RegistrationRoute
-import org.signal.registration.proto.RestoreDecision
+import org.signal.registration.RestoreDecision
 
 class PinEntryForSvrRestoreViewModelTest {
 
@@ -59,7 +59,7 @@ class PinEntryForSvrRestoreViewModelTest {
   // ==================== PinEntered Success Tests ====================
 
   @Test
-  fun `PinEntered with correct PIN restores master key and hands off to finishRegistrationOrCreateProfile`() = runTest {
+  fun `PinEntered with correct PIN restores master key and completes registration`() = runTest {
     val masterKey = mockk<MasterKey>(relaxed = true)
     val svrCredentials = NetworkController.SvrCredentials(
       username = "test-username",
@@ -69,15 +69,17 @@ class PinEntryForSvrRestoreViewModelTest {
 
     coEvery { mockRepository.getSvrCredentials() } returns
       RequestResult.Success(svrCredentials)
-    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), any(), forRegistrationLock = false) } returns
+    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), forRegistrationLock = false) } returns
       RequestResult.Success(NetworkController.MasterKeyResponse(masterKey))
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.PinEntered("123456"), parentEventEmitter, stateEmitter)
 
-    assertThat(emittedParentEvents).hasSize(1)
+    assertThat(emittedParentEvents).hasSize(2)
     assertThat(emittedParentEvents[0]).isInstanceOf<RegistrationFlowEvent.MasterKeyRestoredFromSvr>()
+    assertThat(emittedParentEvents[1]).isEqualTo(RegistrationFlowEvent.RegistrationComplete)
     coVerify { mockRepository.setRestoreDecision(RestoreDecision.COMPLETED) }
-    coVerify { mockRepository.finishRegistrationOrCreateProfile(parentEventEmitter, any()) }
+    coVerify { mockRepository.restoreAccountRecord(any()) }
+    assertThat(emittedStates.last().loading).isEqualTo(true)
   }
 
   // ==================== GetSvrCredentials Error Tests ====================
@@ -95,6 +97,7 @@ class PinEntryForSvrRestoreViewModelTest {
 
     assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents.first()).isEqualTo(RegistrationFlowEvent.ResetState)
+    assertThat(emittedStates.last().loading).isEqualTo(true)
   }
 
   @Test
@@ -110,6 +113,7 @@ class PinEntryForSvrRestoreViewModelTest {
 
     assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents.first()).isEqualTo(RegistrationFlowEvent.ResetState)
+    assertThat(emittedStates.last().loading).isEqualTo(true)
   }
 
   @Test
@@ -123,6 +127,7 @@ class PinEntryForSvrRestoreViewModelTest {
 
     assertThat(emittedParentEvents).hasSize(0)
     assertThat(emittedStates.last().oneTimeEvent).isEqualTo(PinEntryState.OneTimeEvent.NetworkError)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
   }
 
   @Test
@@ -136,6 +141,7 @@ class PinEntryForSvrRestoreViewModelTest {
 
     assertThat(emittedParentEvents).hasSize(0)
     assertThat(emittedStates.last().oneTimeEvent).isEqualTo(PinEntryState.OneTimeEvent.UnknownError)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
   }
 
   // ==================== RestoreMasterKey Error Tests ====================
@@ -151,7 +157,7 @@ class PinEntryForSvrRestoreViewModelTest {
 
     coEvery { mockRepository.getSvrCredentials() } returns
       RequestResult.Success(svrCredentials)
-    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), any(), forRegistrationLock = false) } returns
+    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), forRegistrationLock = false) } returns
       RequestResult.NonSuccess(
         NetworkController.RestoreMasterKeyError.WrongPin(triesRemaining)
       )
@@ -160,10 +166,11 @@ class PinEntryForSvrRestoreViewModelTest {
 
     assertThat(emittedParentEvents).hasSize(0)
     assertThat(emittedStates.last().triesRemaining).isEqualTo(triesRemaining)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
   }
 
   @Test
-  fun `PinEntered with no SVR data navigates to PinCreate`() = runTest {
+  fun `PinEntered with no SVR data shows the no-data-to-restore dialog without navigating`() = runTest {
     val svrCredentials = NetworkController.SvrCredentials(
       username = "test-username",
       password = "test-password"
@@ -172,18 +179,42 @@ class PinEntryForSvrRestoreViewModelTest {
 
     coEvery { mockRepository.getSvrCredentials() } returns
       RequestResult.Success(svrCredentials)
-    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), any(), forRegistrationLock = false) } returns
+    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), forRegistrationLock = false) } returns
       RequestResult.NonSuccess(
         NetworkController.RestoreMasterKeyError.NoDataFound
       )
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.PinEntered("123456"), parentEventEmitter, stateEmitter)
 
+    assertThat(emittedParentEvents).hasSize(0)
+    assertThat(emittedStates.last().showNoDataToRestoreDialog).isEqualTo(true)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
+  }
+
+  // ==================== No Data To Restore Dialog Tests ====================
+
+  @Test
+  fun `CreateNewPin dismisses the dialog and navigates to PinCreate`() = runTest {
+    val initialState = PinEntryState(mode = PinEntryState.Mode.SvrRestore, showNoDataToRestoreDialog = true)
+
+    viewModel.applyEvent(initialState, PinEntryScreenEvents.CreateNewPin, parentEventEmitter, stateEmitter)
+
+    assertThat(emittedStates.last().showNoDataToRestoreDialog).isEqualTo(false)
     assertThat(emittedParentEvents).hasSize(1)
     assertThat(emittedParentEvents.first())
       .isInstanceOf<RegistrationFlowEvent.NavigateToScreen>()
       .prop(RegistrationFlowEvent.NavigateToScreen::route)
       .isInstanceOf<RegistrationRoute.PinCreate>()
+  }
+
+  @Test
+  fun `ContactSupport dismisses the dialog without navigating`() = runTest {
+    val initialState = PinEntryState(mode = PinEntryState.Mode.SvrRestore, showNoDataToRestoreDialog = true)
+
+    viewModel.applyEvent(initialState, PinEntryScreenEvents.ContactSupport, parentEventEmitter, stateEmitter)
+
+    assertThat(emittedStates.last().showNoDataToRestoreDialog).isEqualTo(false)
+    assertThat(emittedParentEvents).hasSize(0)
   }
 
   @Test
@@ -196,13 +227,14 @@ class PinEntryForSvrRestoreViewModelTest {
 
     coEvery { mockRepository.getSvrCredentials() } returns
       RequestResult.Success(svrCredentials)
-    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), any(), forRegistrationLock = false) } returns
+    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), forRegistrationLock = false) } returns
       RequestResult.RetryableNetworkError(java.io.IOException("Network error"))
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.PinEntered("123456"), parentEventEmitter, stateEmitter)
 
     assertThat(emittedParentEvents).hasSize(0)
     assertThat(emittedStates.last().oneTimeEvent).isEqualTo(PinEntryState.OneTimeEvent.NetworkError)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
   }
 
   @Test
@@ -215,27 +247,29 @@ class PinEntryForSvrRestoreViewModelTest {
 
     coEvery { mockRepository.getSvrCredentials() } returns
       RequestResult.Success(svrCredentials)
-    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), any(), forRegistrationLock = false) } returns
+    coEvery { mockRepository.restoreMasterKeyFromSvr(any(), any(), forRegistrationLock = false) } returns
       RequestResult.ApplicationError(RuntimeException("Unexpected"))
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.PinEntered("123456"), parentEventEmitter, stateEmitter)
 
     assertThat(emittedParentEvents).hasSize(0)
     assertThat(emittedStates.last().oneTimeEvent).isEqualTo(PinEntryState.OneTimeEvent.UnknownError)
+    assertThat(emittedStates.last().loading).isEqualTo(false)
   }
 
   // ==================== Skip Tests ====================
 
   @Test
-  fun `Skip records PIN opt-out and completes registration`() = runTest {
+  fun `Skip navigates to PinCreate`() = runTest {
     val initialState = PinEntryState(mode = PinEntryState.Mode.SvrRestore)
 
     viewModel.applyEvent(initialState, PinEntryScreenEvents.Skip, parentEventEmitter, stateEmitter)
 
-    coVerify { mockRepository.setPinOptedOut() }
-    coVerify { mockRepository.setRestoreDecision(RestoreDecision.SKIPPED) }
     assertThat(emittedParentEvents).hasSize(1)
-    assertThat(emittedParentEvents.first()).isEqualTo(RegistrationFlowEvent.RegistrationComplete)
+    assertThat(emittedParentEvents.first())
+      .isInstanceOf<RegistrationFlowEvent.NavigateToScreen>()
+      .prop(RegistrationFlowEvent.NavigateToScreen::route)
+      .isInstanceOf<RegistrationRoute.PinCreate>()
   }
 
   // ==================== ToggleKeyboard Tests ====================

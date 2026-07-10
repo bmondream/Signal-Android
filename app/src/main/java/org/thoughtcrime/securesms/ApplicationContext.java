@@ -52,6 +52,7 @@ import org.signal.ringrtc.CallManager;
 import org.thoughtcrime.securesms.apkupdate.ApkUpdateRefreshListener;
 import org.thoughtcrime.securesms.avatar.AvatarPickerStorage;
 import org.thoughtcrime.securesms.backup.v2.BackupRepository;
+import org.thoughtcrime.securesms.preferences.EditProxyActivity;
 import org.thoughtcrime.securesms.conversation.drafts.DraftBlobs;
 import org.thoughtcrime.securesms.crypto.AppAttachmentSecretStore;
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider;
@@ -118,14 +119,16 @@ import org.thoughtcrime.securesms.service.webrtc.AndroidTelecomUtil;
 import org.thoughtcrime.securesms.storage.StorageSyncHelper;
 import org.thoughtcrime.securesms.util.AppStartup;
 import org.thoughtcrime.securesms.util.BatterySnapshotTracker;
+import org.thoughtcrime.securesms.util.CommunicationActions;
 import org.thoughtcrime.securesms.util.DeviceProperties;
 import org.thoughtcrime.securesms.util.DynamicTheme;
 import org.thoughtcrime.securesms.util.Environment;
-import org.thoughtcrime.securesms.util.PlayServicesUtil;
+import org.signal.core.util.PlayServicesUtil;
 import org.thoughtcrime.securesms.util.RemoteConfig;
 import org.thoughtcrime.securesms.util.SignalLocalMetrics;
 import org.thoughtcrime.securesms.util.SignalUncaughtExceptionHandler;
 import org.thoughtcrime.securesms.util.SqlCipherLogTarget;
+import org.thoughtcrime.securesms.util.SupportEmailUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.thoughtcrime.securesms.util.VersionTracker;
 import org.thoughtcrime.securesms.util.dynamiclanguage.DynamicLanguageContextWrapper;
@@ -183,9 +186,9 @@ public class ApplicationContext extends Application implements AppForegroundObse
                 initializeLogging();
                 Log.i(TAG, "onCreate()");
               })
+              .addBlocking("security-provider", this::initializeSecurityProvider)
               .addBlocking("app-dependencies", this::initializeAppDependencies)
               .addBlocking("anr-detector", this::startAnrDetector)
-              .addBlocking("security-provider", this::initializeSecurityProvider)
               .addBlocking("crash-handling", this::initializeCrashHandling)
               .addBlocking("rx-init", this::initializeRx)
               .addBlocking("event-bus", () -> EventBus.builder().logNoSubscriberMessages(false).installDefaultEventBus())
@@ -432,6 +435,15 @@ public class ApplicationContext extends Application implements AppForegroundObse
         null,
         context -> {
           context.startActivity(new Intent(context, SubmitDebugLogActivity.class));
+          return Unit.INSTANCE;
+        },
+        context -> {
+          context.startActivity(EditProxyActivity.intent(context));
+          return Unit.INSTANCE;
+        },
+        (context, subject) -> {
+          String body = SupportEmailUtil.generateSupportEmailBody(context, subject, null, null);
+          CommunicationActions.openEmail(context, SupportEmailUtil.getSupportEmailAddress(context), subject, body);
           return Unit.INSTANCE;
         }
       )

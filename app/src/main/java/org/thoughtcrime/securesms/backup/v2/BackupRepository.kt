@@ -646,7 +646,7 @@ object BackupRepository {
     val state = SignalStore.backup.backupDownloadNotifierState ?: return null
     val nextSheetDisplayTime = state.lastSheetDisplaySeconds.seconds + state.intervalSeconds.seconds
 
-    val remainingAttachmentSize = withContext(SignalDispatchers.IO) {
+    val remainingAttachmentSize = withContext(SignalDispatchers.Default) {
       SignalDatabase.attachments.getRemainingRestorableAttachmentSize()
     }
 
@@ -1250,6 +1250,7 @@ object BackupRepository {
       return ImportResult.Failure
     }
     SignalStore.backup.hasInvalidBackupVersion = false
+    val selfId: RecipientId
 
     var transactionSuccessful = false
     try {
@@ -1321,7 +1322,7 @@ object BackupRepository {
       SignalStore.backup.mediaRootBackupKey = mediaRootBackupKey
 
       // Add back self after clearing data
-      val selfId: RecipientId = SignalDatabase.recipients.getAndPossiblyMerge(selfData.aci, selfData.pni, selfData.e164, pniVerified = true, changeSelf = true)
+      selfId = SignalDatabase.recipients.getAndPossiblyMerge(selfData.aci, selfData.pni, selfData.e164, pniVerified = true, changeSelf = true)
       SignalDatabase.recipients.setProfileKey(selfId, selfData.profileKey)
       SignalDatabase.recipients.setProfileSharing(selfId, true)
 
@@ -1532,7 +1533,7 @@ object BackupRepository {
     Log.d(TAG, "[import] Finished! ${eventTimer.stop().summary}")
     stopwatch.stop(TAG)
 
-    return ImportResult.Success(backupTime = header.backupTimeMs)
+    return ImportResult.Success(backupTime = header.backupTimeMs, selfRecipientId = selfId)
   }
 
   fun listRemoteMediaObjects(limit: Int, cursor: String? = null): NetworkResult<ArchiveGetMediaItemsResponse> {
@@ -2310,19 +2311,23 @@ object BackupRepository {
       forwardSecrecyToken = forwardSecrecyToken,
       cancellationSignal = cancellationSignal
     )
-    if (result == ImportResult.Failure) {
-      Log.w(TAG, "[remoteRestore] Failed to import backup")
-      return RemoteRestoreResult.Failure
+
+    return when (result) {
+      is ImportResult.Failure -> {
+        Log.w(TAG, "[remoteRestore] Failed to import backup")
+        RemoteRestoreResult.Failure
+      }
+
+      is ImportResult.Success -> {
+        Log.i(TAG, "[remoteRestore] Restore successful")
+        BackupMediaRestoreService.resetTimeout()
+        AppDependencies.jobManager.add(BackupRestoreMediaJob())
+        RemoteRestoreResult.Success(result.selfRecipientId)
+      }
     }
-
-    BackupMediaRestoreService.resetTimeout()
-    AppDependencies.jobManager.add(BackupRestoreMediaJob())
-
-    Log.i(TAG, "[remoteRestore] Restore successful")
-    return RemoteRestoreResult.Success
   }
 
-  suspend fun restoreLinkAndSyncBackup(response: TransferArchiveResponse, ephemeralBackupKey: MessageBackupKey) {
+  suspend fun restoreLinkAndSyncBackup(response: TransferArchiveResponse, ephemeralBackupKey: MessageBackupKey): RemoteRestoreResult {
     val context = AppDependencies.application
     ArchiveRestoreProgress.onRestorePending()
 
@@ -2354,9 +2359,16 @@ object BackupRepository {
       override fun shouldCancel() = cancellationSignal()
     }
 
+    val cdn = response.cdn
+    val key = response.key
+    if (cdn == null || key == null) {
+      Log.w(TAG, "[restoreLinkAndSyncBackup] Response has no archive location (error=${response.error}); nothing to download.")
+      return RemoteRestoreResult.Failure
+    }
+
     Log.i(TAG, "[restoreLinkAndSyncBackup] Downloading backup")
     val tempBackupFile = AppDependencies.blobs.forNonAutoEncryptingSingleSessionOnDisk(AppDependencies.application)
-    when (val result = AppDependencies.signalServiceMessageReceiver.retrieveLinkAndSyncBackup(response.cdn, response.key, tempBackupFile, progressListener)) {
+    when (val result = AppDependencies.signalServiceMessageReceiver.retrieveLinkAndSyncBackup(cdn, key, tempBackupFile, progressListener)) {
       is NetworkResult.Success -> Log.i(TAG, "[restoreLinkAndSyncBackup] Download successful")
       else -> {
         Log.w(TAG, "[restoreLinkAndSyncBackup] Failed to download backup file", result.getCause())
@@ -2385,16 +2397,19 @@ object BackupRepository {
       cancellationSignal = cancellationSignal
     )
 
-    if (result == ImportResult.Failure) {
-      Log.w(TAG, "[restoreLinkAndSyncBackup] Failed to import backup")
-      return RemoteRestoreResult.Failure
+    return when (result) {
+      is ImportResult.Failure -> {
+        Log.w(TAG, "[restoreLinkAndSyncBackup] Failed to import backup")
+        RemoteRestoreResult.Failure
+      }
+
+      is ImportResult.Success -> {
+        Log.i(TAG, "[restoreLinkAndSyncBackup] Restore successful")
+        BackupMediaRestoreService.resetTimeout()
+        AppDependencies.jobManager.add(BackupRestoreMediaJob())
+        RemoteRestoreResult.Success(result.selfRecipientId)
+      }
     }
-
-    BackupMediaRestoreService.resetTimeout()
-    AppDependencies.jobManager.add(BackupRestoreMediaJob())
-
-    Log.i(TAG, "[restoreLinkAndSyncBackup] Restore successful")
-    return RemoteRestoreResult.Success
   }
 
   private fun buildDebugInfo(): ByteString {
@@ -2524,12 +2539,12 @@ data class StagedBackupKeyRotations(
 )
 
 sealed class ImportResult {
-  data class Success(val backupTime: Long) : ImportResult()
+  data class Success(val backupTime: Long, val selfRecipientId: RecipientId) : ImportResult()
   data object Failure : ImportResult()
 }
 
 sealed interface RemoteRestoreResult {
-  data object Success : RemoteRestoreResult
+  data class Success(val selfRecipientId: RecipientId) : RemoteRestoreResult
   data object NetworkError : RemoteRestoreResult
   data object Canceled : RemoteRestoreResult
   data object Failure : RemoteRestoreResult

@@ -8,8 +8,8 @@ compileSdk = "android-36.1"
 targetSdk = "35"
 minSdk = "23"
 ndk = "28.0.13004108"
-javaVersion = "17"
-kotlinJvmTarget = "17"
+javaVersion = "21"
+kotlinJvmTarget = "21"
 gradle = "9.2.1"
 kotlin = "2.2.20"
 android-gradle-plugin = "9.2.1"
@@ -171,7 +171,7 @@ libsignal-client = { module = "org.signal:libsignal-client", version.ref = "libs
 libsignal-android = { module = "org.signal:libsignal-android", version.ref = "libsignal-client" }
 protobuf-gradle-plugin = { module = "com.google.protobuf:protobuf-gradle-plugin", version.ref = "protobuf-gradle-plugin" }
 signal-aesgcmprovider = "org.signal:aesgcmprovider:0.0.4"
-signal-ringrtc = "org.signal:ringrtc-android:2.69.3"
+signal-ringrtc = "org.signal:ringrtc-android:2.69.5"
 
 # Third Party
 signal-android-database-sqlcipher = "net.zetetic:sqlcipher-android:4.16.0"

@@ -25,7 +25,7 @@
   <!-- Label for the button that switches the capture screen to the camera. -->
   <string name="MediaCaptureScreen__camera">Камера</string>
   <!-- Label for the button that switches the capture screen to the text story editor. -->
-  <string name="MediaCaptureScreen__text_story">Text Story</string>
+  <string name="MediaCaptureScreen__text_story">Тэкставая гiсторыя</string>
   <!-- Video editor play button content description -->
   <string name="VideoEditorHud_play_video_description">Прайграць відэа</string>
 
@@ -42,19 +42,19 @@
   <!-- Button text asking for access to camera permissions -->
   <string name="CameraXFragment_allow_access">Дазволіць доступ</string>
   <!-- Dialog title asking users for camera and microphone permission -->
-  <string name="CameraXFragment_allow_access_camera_microphone">Уключыце доступ да камеры і мікрафона</string>
+  <string name="CameraXFragment_allow_access_camera_microphone">Дазвольце доступ да камеры і мікрафона</string>
   <!-- Dialog title asking users for camera permission -->
-  <string name="CameraXFragment_allow_access_camera">Уключыце доступ да камеры</string>
+  <string name="CameraXFragment_allow_access_camera">Дазвольце доступ да камеры</string>
   <!-- Dialog title asking users for microphone permission -->
-  <string name="CameraXFragment_allow_access_microphone">Уключыце доступ да мікрафона</string>
+  <string name="CameraXFragment_allow_access_microphone">Дазвольце доступ да мікрафона</string>
   <!-- Text explaining why Signal needs camera access in order to take photos and videos -->
-  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">Для стварэння фота і відэа дайце Signal доступ да камеры.</string>
+  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">Каб ствараць фота і відэа, дазвольце Signal доступ да камеры.</string>
   <!-- Text explaining why Signal needs camera and microphone access in order to take photos and videos -->
-  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">Для стварэння фота і відэа дайце Signal доступ да камеры і мікрафона.</string>
+  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">Каб ствараць фота і відэа, дазвольце Signal доступ да камеры і мікрафона.</string>
   <!-- Text explaining why Signal needs microphone access to take videos -->
-  <string name="CameraXFragment_to_capture_videos_with_sound">Каб ствараць відэа з гукам, дайце Signal доступ да вашага мікрафона.</string>
+  <string name="CameraXFragment_to_capture_videos_with_sound">Каб ствараць відэа з гукам, дазвольце Signal доступ да вашага мікрафона.</string>
   <!-- Text explaining why Signal needs camera access to scan QR codes -->
-  <string name="CameraXFragment_to_scan_qr_code_allow_camera">Каб сканаваць QR-код, дайце Signal доступ да вашай камеры.</string>
+  <string name="CameraXFragment_to_scan_qr_code_allow_camera">Каб сканаваць QR-код, дазвольце Signal доступ да вашай камеры.</string>
   <!-- Toast dialog explaining why Signal needs camera permissions when capturing photos -->
   <string name="CameraXFragment_signal_needs_camera_access_capture_photos">Signal патрабуе доступу да камеры, каб ствараць фота</string>
   <!-- Toast dialog explaining why Signal needs camera permissions when scanning QR codes -->
@@ -85,4 +85,23 @@
   <string name="CameraXFragment_send">Адправіць</string>
   <!-- Displayed in a permissions dialog when the user has denied access to hardware for image and video capture. -->
   <string name="CameraXFragment_signal_needs_the_recording_permissions_to_capture_video">Signal патрабуе дазволу на мікрафон для запісу відэа, але ён быў вамі адмоўлены. Калі ласка, перайдзіце ў меню наладаў праграмы, выберыце «Дазволы» і ўключыце «Мікрафон» і «Камера».</string>
+
+  <!-- Displayed when there is an error capturing video -->
+  <string name="MediaSendViewModel__error_recording_video">Памылка падчас запісу відэа</string>
+  <!-- Displayed when there is an error capturing image -->
+  <string name="MediaSendViewModel__error_taking_photo">Памылка падчас здымання фота</string>
+
+  <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_title">Знойдзены карыстальнік: %1$s</string>
+  <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_body">Распачніце чат з «%1$s»</string>
+  <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
+  <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">Перайсці ў чат</string>
+
+  <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">Звязаць прыладу?</string>
+  <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">Здаецца, вы спрабуеце звязаць прыладу Signal. Націсніце «Працягнуць» і потым націсніце «Звязаць новую прыладу», пасля чаго нанова праскануйце QR-код.</string>
+  <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">Працягнуць</string>
 </resources>

@@ -615,6 +615,8 @@
     <string name="ConversationFragment__update_build">Signal லைப் புதுப்பிக்கவும்</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signalஐ மீண்டும் பதிவு செய்க</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">Re-link</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">முந்தைய திரைக்குச் செல்லவும்.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -665,11 +667,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">படத்தைப் பதிவிறக்க முடியவில்லை. மீண்டும் முயலவும்.</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">ஊடகத்தைப் பதிவிறக்க முடியவில்லை</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">இந்தச் சாதனம் மற்றும் உங்கள் பேசியின் இணைய இணைப்பைச் சரிபார்க்கவும். உங்கள் பேசியில் சிக்னலைத் திறந்து, மீண்டும் பதிவிறக்க முயலவும்.</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">இந்த ஊடகம் இனி உங்கள் பேசியில் கிடைக்காது, அதனால் பதிவிறக்கம் செய்ய முடியாது.</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">இதற்காகப் பின் செய்ததை பராமரிக்கவும்…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -712,7 +714,7 @@
     <!-- Detail tip 0 title -->
     <string name="SafetyTips_detail_tip0_title">சிக்னலிலிருந்து வரும் உரையாடல்களுக்குப் பதிலளிக்காதீர்கள்</string>
     <!-- Detail tip 0 message -->
-    <string name="SafetyTips_detail_tip0_message">உங்கள் பதிவுக் குறியீடு, பின் அல்லது மீட்புக் குறியீட்டைக் கேட்டு சிக்னல் ஒருபோதும் உங்களுக்கு மெசேஜ் அனுப்பாது. சிக்னல் அல்லது சிக்னல் ஆதரவு போல் ஆள்மாறாட்டம் செய்து வரும் உரையாடல்களுக்கு ஒருபோதும் பதிலளிக்காதீர்கள். உங்கள் கணக்கை ஹேக் செய்ய மோசடிக்காரர்கள் போலி உரையாடல்களை உருவாக்குவார்கள்.</string>
+    <string name="SafetyTips_detail_tip0_message">ஒரு பதிவுக் குறியீடு, பின் அல்லது மீட்புக் குறியீட்டைக் கேட்டு உங்களுக்கு சிக்னல் ஒருபோதும் செய்தியை அனுப்பாது. சிக்னல் அல்லது சிக்னல் ஆதரவு போல் ஆள்மாறாட்டம் செய்து வரும் உரையாடல்களுக்கு ஒருபோதும் பதிலளிக்காதீர்கள். உங்கள் கணக்கை ஹேக் செய்ய மோசடிக்காரர்கள் போலி உரையாடல்களை உருவாக்குவார்கள்.</string>
     <!-- Detail tip 1 title -->
     <string name="SafetyTips_detail_tip1_title">பெயர்கள் மற்றும் படங்களைச் சரிபாருங்கள்</string>
     <!-- Detail tip 1 message -->
@@ -1451,9 +1453,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">SMS தொடர்பு</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">இந்த குழுவிலிருந்து %1$s ஐ அகற்ற வேண்டுமா?</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">தொகுப்பை நிராகரிக்கவா?</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">நீங்கள் \"%1$s\" தொகுப்பிற்குச் சென்றால், உங்கள் மாற்றங்கள் சேமிக்கப்படாது.</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">புறந்தள்ளு</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2885,6 +2887,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">\'%1$s\' க்கான முடிவுகள் எதுவும் கிடைக்கவில்லை</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">இல்லை முடிவுகள் கிடைத்தன</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3414,11 +3418,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">ஊடகத்தைச் சேமிக்க முடியவில்லை</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">சாதனச் சேமிப்பகத்தை மேம்படுத்துக\" அம்சம் ஆன் செய்யப்பட்டிருப்பதால், இந்த ஊடகம் உங்கள் சாதனத்திலிருந்து ஆஃப்லோடு செய்யப்பட்டுள்ளது. நீங்கள் உருப்படிகளை ஒவ்வொன்றாகப் பதிவிறக்கலாம் அல்லது அனைத்து ஊடகத்தையும் உங்கள் சாதனத்தில் பதிவிறக்க \"சாதனத்தில் உள்ள சேமிப்பகத்தை மேம்படுத்துக\" என்பதை ஆஃப் செய்யலாம்.</string>
+    <string name="AttachmentSaver__media_offloaded_message">\"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" அம்சம் ஆன் செய்யப்பட்டிருப்பதால், இந்த ஊடகம் உங்கள் சிக்னல் செயலியிலிருந்து ஆஃப்லோடு செய்யப்பட்டுள்ளது. நீங்கள் உருப்படிகளை ஒவ்வொன்றாகப் பதிவிறக்கலாம் அல்லது அனைத்து ஊடகத்தையும் உங்கள் சிக்னல் செயலியில் பதிவிறக்க \"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" என்பதை ஆஃப் செய்யலாம்.</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">அனைத்து உருப்படிகளையும் சேமிக்க முடியவில்லை</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">\"சாதனத்தில் உள்ள சேமிப்பகத்தை மேம்படுத்துக\" அம்சம் ஆன் செய்யப்பட்டிருப்பதால், நீங்கள் தேர்ந்தெடுத்த சில ஊடகங்கள் உங்கள் சாதனத்திலிருந்து ஆஃப்லோடு செய்யப்பட்டுள்ளன. நீங்கள் உருப்படிகளை ஒவ்வொன்றாகச் சேமிக்கலாம் அல்லது அனைத்து ஊடகத்தையும் உங்கள் சாதனத்தில் பதிவிறக்க \"சாதனச் சேமிப்பகத்தை மேம்படுத்துக\" என்பதை ஆஃப் செய்யலாம்.</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">\"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" அம்சம் ஆன் செய்யப்பட்டிருப்பதால், நீங்கள் தேர்ந்தெடுத்த சில ஊடகங்கள் உங்கள் சிக்னல் செயலியிலிருந்து ஆஃப்லோடு செய்யப்பட்டுள்ளன. நீங்கள் உருப்படிகளை ஒவ்வொன்றாகச் சேமிக்கலாம் அல்லது அனைத்து ஊடகத்தையும் உங்கள் சிக்னல் செயலியில் பதிவிறக்க \"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" என்பதை ஆஃப் செய்யலாம்.</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">சேமிப்பக அமைப்புகளைக் காண்க</string>
 
@@ -3487,6 +3491,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">இந்த டிவைஸ் இனி பதிவுசெய்யப்பட்டிருக்காது. உங்கள் தொலைபேசி எண்ணை சிக்னலில் வேறு டிவைஸில் பதிவு செய்ததால் இது நிகழலாம்.</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">டிவைஸை மீண்டும் பதிவு செய்க</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">This device is no longer linked. Re-link Signal with your phone to continue messaging.</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">Re-link device</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">இந்த டிவைஸில் Signal இல் இருந்து வெளியேறிவிட்டீர்கள்.</string>
@@ -8237,6 +8245,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"காப்புப்பிரதியை மீட்டமைக்க, சிக்னலின் புதிய பிரதியை நிறுவவும். செயலியைத் திறந்து, காப்புப்பிரதியை மீட்டமை என்பதைத் தட்டி, பின்னர் காப்புப்பிரதி கோப்பைக் கண்டறியவும்."</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">உங்கள் மீட்புக் குறியீட்டைச் சரிபார்க்கவும்</string>
@@ -8613,13 +8627,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">செயல்படுத்தப்பட்டால், சாட் வரம்புகள் உங்கள் இணைக்கப்பட்ட சாதனங்களிலிருந்து மெசேஜ்களையும் அழிக்கும்.</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">டிவைஸ் சேமிப்பகம்</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">சிக்னல் சேமிப்பகம்</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">டிவைஸ் சேமிப்பகத்தை உகந்ததாக்குக</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">சிக்னல் சேமிப்பகத்தை உகந்ததாக்குக</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">பயன்படுத்தப்படாத மீடியா ஆஃப்லோட் செய்யப்படும், ஆனால் அவற்றை எப்போது வேண்டுமானாலும் உங்கள் காப்புப்பிரதியிலிருந்து பதிவிறக்கம் செய்யலாம்.</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">சிக்லின் பாதுகாப்பான காப்புப் பிரதிகளின் கட்டண அடுக்குடன் மட்டுமே சேமிப்பக உகந்ததாக்கலைப் பயன்படுத்த முடியும். உங்கள் காப்புப் பிரதி சந்தா இன்னும் செயலாக்கத்தில் உள்ளது ஆனால் இன்னும் செயல்படத் தொடங்கவில்லை. பின்னர் மீண்டும் முயலவும்.</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">இயக்கு</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -9096,13 +9116,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">மீடியாவை இப்போதே பதிவிறக்குக</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">புதிய மீட்புக் குறியீட்டை உருவாக்க, நீங்கள் \"சேமிப்பகத்தை மேம்படுத்துதல்\" அம்சத்தை ஆஃப் செய்ய வேண்டும், மேலும் உங்கள் ஊடகப் பதிவிறக்கம் செய்யப்படும் வரை காத்திருக்க வேண்டும். பதிவிறக்கம் முடிந்ததும், நீங்கள் ஒரு புதிய குறியீட்டை உருவாக்கலாம்.</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">புதிய மீட்புக் குறியீட்டை உருவாக்க, நீங்கள் \"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" அம்சத்தை ஆஃப் செய்ய வேண்டும், மேலும் உங்கள் ஊடகம் பதிவிறக்கம் செய்யப்படும் வரை காத்திருக்க வேண்டும். பதிவிறக்கம் முடிந்ததும், நீங்கள் ஒரு புதிய குறியீட்டை உருவாக்கலாம்.</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">ஆஃப் செய்துவிட்டு, பதிவிறக்கவும்</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">புதிய மீட்பு குறியீட்டை உருவாக்கவும்</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">உங்கள் குறியீட்டை வேறு யாராவது அறிந்துகொண்டால் மட்டுமே புதிய குறியீட்டை உருவாக்குவது அவசியம். மீடியா உட்பட உங்கள் காப்புப்பிரதியை மீண்டும் பதிவேற்ற வேண்டும். நீங்கள் \"சேமிப்பகத்தை மேம்படுத்துதல்\" அம்சத்தைப் பயன்படுத்தினால், முதலில் ஆஃப்லோட் செய்யப்பட்ட மீடியாவை பதிவிறக்கம் செய்ய வேண்டும்.</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">உங்கள் குறியீட்டை வேறு யாராவது அறிந்துகொண்டால் மட்டுமே புதிய குறியீட்டை உருவாக்குவது அவசியம். ஊடகம் உட்பட உங்கள் காப்புப்பிரதியை மீண்டும் பதிவேற்ற வேண்டும். நீங்கள் \"சிக்னல் சேமிப்பகத்தை மேம்படுத்துக\" அம்சத்தைப் பயன்படுத்தினால், முதலில் ஆஃப்லோட் செய்யப்பட்ட ஊடகத்தைப் பதிவிறக்கம் செய்ய வேண்டும்.</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">காப்புப்பிரதி அமைவிலிருந்து வெளியேறவா?</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -9110,23 +9130,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">காப்புப்பிரதி அமைவிலிருந்து வெளியேறுக</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">உங்கள் மீட்புக் குறியீட்டைச் சேமியுங்கள்</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">உங்களின் 64 இலக்க மீட்புக் குறியீடானது உங்களின் காப்புப்பிரதியை மீட்டமைக்க உங்களை அனுமதிக்கிறது. உங்கள் குறியீட்டை மறந்துவிட்டால், உங்கள் கணக்கை உங்களால் மீட்டமைக்க முடியாது.</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">முழுக் குறியீட்டையும் காண்க</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">உங்கள் மீட்புக் குறியீடு சரியாகப் பதிவு செய்யப்பட்டுள்ளதா என்பதை உறுதிப்படுத்தவும். அடுத்த படியில் நீங்கள் சேமித்த கடவுச்சொல்லை உள்ளிடும்படி கேட்கப்படுவீர்கள்.</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">மீட்புக் குறியீட்டை உறுதிப்படுத்துக</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">மீட்புக் குறியீடு உறுதிப்படுத்தப்பட்டது</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">மீட்புக் குறியீட்டை உறுதிப்படுத்துவதில் பிழை</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">உங்கள் மீட்புக் குறியீட்டை உறுதிப்படுத்த முடியவில்லை. இதை உங்கள் கடவுச்சொல் நிர்வாகியில் சேமித்துள்ளதை உறுதிசெய்யவும் அல்லது கைமுறையாகச் சேமிக்கவும்.</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">குறியீட்டைக் கைமுறையாகச் சேமி</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9861,9 +9881,26 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="one">%1$d group with the same members</item>
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="one">அதே உறுப்பினர்களைக் கொண்ட %1$d தொகுப்பு</item>
+        <item quantity="other">அதே உறுப்பினர்களைக் கொண்ட %1$d தொகுப்புகள்</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">உறுப்பினர்களைத் தேடுதல்</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">அனைத்து உறுப்பினர்கள்</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">நிர்வாகிகள்</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">தொடர்புகள்</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">காப்புப்பிரதியை மீட்டெடுக்க முடியவில்லை</string>

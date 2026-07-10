@@ -48,11 +48,11 @@
   <!-- Dialog title asking users for microphone permission -->
   <string name="CameraXFragment_allow_access_microphone">允許存取咪高風</string>
   <!-- Text explaining why Signal needs camera access in order to take photos and videos -->
-  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">要影相或者拍片嘅話，請允許 Signal 存取您部機嘅相機。</string>
+  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera">要影相同拍片嘅話，Signal 需要存取您部機嘅相機。</string>
   <!-- Text explaining why Signal needs camera and microphone access in order to take photos and videos -->
-  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">要影相同拍片嘅話，請允許 Signal 存取你嘅相機同咪。</string>
+  <string name="CameraXFragment_to_capture_photos_and_video_allow_camera_microphone">要影相同拍片嘅話，Signal 需要存取你嘅相機同咪。</string>
   <!-- Text explaining why Signal needs microphone access to take videos -->
-  <string name="CameraXFragment_to_capture_videos_with_sound">要拍有聲片嘅話，請允許 Signal 存取你個咪。</string>
+  <string name="CameraXFragment_to_capture_videos_with_sound">要拍有聲片嘅話，Signal 需要存取你個咪。</string>
   <!-- Text explaining why Signal needs camera access to scan QR codes -->
   <string name="CameraXFragment_to_scan_qr_code_allow_camera">要掃二維碼嘅話，Signal 需要存取你嘅相機。</string>
   <!-- Toast dialog explaining why Signal needs camera permissions when capturing photos -->
@@ -85,4 +85,23 @@
   <string name="CameraXFragment_send">傳送</string>
   <!-- Displayed in a permissions dialog when the user has denied access to hardware for image and video capture. -->
   <string name="CameraXFragment_signal_needs_the_recording_permissions_to_capture_video">Signal 要攞「麥克風」權限，先可以拍片，但權限已被永久拒絕。請到呢個 app 嘅應用程式設定，揀選「權限」，然後啟用「麥克風」同「相機」。</string>
+
+  <!-- Displayed when there is an error capturing video -->
+  <string name="MediaSendViewModel__error_recording_video">錄片嗰陣出錯</string>
+  <!-- Displayed when there is an error capturing image -->
+  <string name="MediaSendViewModel__error_taking_photo">影相嗰陣出錯</string>
+
+  <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_title">搵到 %1$s</string>
+  <!-- The body of a dialog notifying that a user was found matching a scanned QR code, prompting the user to start a chat with them. The placeholder is a username. Usernames are always latin characters. -->
+  <string name="UsernameScannedDialog__username_dialog_body">開始同「 %1$s 」聊天</string>
+  <!-- The label of a dialog asking the user if they would like to start a chat with a specific user. -->
+  <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">跳去聊天</string>
+
+  <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">係咪要連結裝置？</string>
+  <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">你似乎嘗試緊連結一部裝咗 Signal 嘅裝置。㩒一下繼續，然後㩒一下「連結新裝置」再掃描二維碼。</string>
+  <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">繼續</string>
 </resources>

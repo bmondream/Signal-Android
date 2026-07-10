@@ -22,12 +22,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,13 +51,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -69,9 +72,11 @@ import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.Scaffolds
 import org.signal.core.ui.compose.SignalIcons
 import org.signal.registration.R
+import org.signal.registration.screens.PinVisualTransformation
 import org.signal.registration.screens.RegistrationScaffold
 import org.signal.registration.screens.TwoPaneRegistrationScaffold
 import org.signal.registration.screens.attachDebugLogHelper
+import org.signal.registration.test.TestTags
 import org.signal.core.ui.R as CoreR
 
 private const val STEP_TRANSITION_DURATION = 250
@@ -88,9 +93,36 @@ fun PinCreationScreen(
 ) {
   val activePin = remember { mutableStateOf("") }
   val canSubmitPin = activePin.value.length >= 4
+  val resources = LocalResources.current
+  var errorMessage: String? by remember { mutableStateOf(null) }
 
   BackHandler(enabled = state.isConfirmEnabled) {
     onEvent(PinCreationScreenEvents.BackToPinEntry)
+  }
+
+  LaunchedEffect(state.oneTimeEvent) {
+    val event = state.oneTimeEvent ?: return@LaunchedEffect
+    onEvent(PinCreationScreenEvents.ConsumeOneTimeEvent)
+    errorMessage = when (event) {
+      is PinCreationState.OneTimeEvent.ServiceError -> {
+        resources.getString(R.string.PinCreationScreen__service_error)
+      }
+      is PinCreationState.OneTimeEvent.NetworkError -> {
+        if (event.retryAfter != null) {
+          resources.getString(R.string.PinCreationScreen__network_error_try_again_in_s, event.retryAfter.toString())
+        } else {
+          resources.getString(R.string.PinCreationScreen__network_error)
+        }
+      }
+    }
+  }
+
+  errorMessage?.let { message ->
+    Dialogs.SimpleMessageDialog(
+      message = message,
+      dismiss = stringResource(android.R.string.ok),
+      onDismiss = { errorMessage = null }
+    )
   }
 
   when (val params = RegistrationScaffold.rememberLayoutParams()) {
@@ -128,7 +160,9 @@ private fun OnePaneLayout(
   val topBarScrollBehavior = RegistrationScaffold.rememberTopBarScrollBehavior()
 
   RegistrationScaffold(
-    modifier = modifier.fillMaxSize(),
+    modifier = modifier
+      .fillMaxSize()
+      .testTag(TestTags.PIN_CREATION_SCREEN),
     topBar = {
       PinCreationTopBar(
         scrollBehavior = topBarScrollBehavior,
@@ -167,6 +201,7 @@ private fun OnePaneLayout(
         params = params,
         canSubmitPin = canSubmitPin,
         isElevated = scrollState.canScrollForward,
+        loading = state.loading,
         onNext = { onEvent(PinCreationScreenEvents.PinSubmitted(activePin.value)) }
       )
     }
@@ -188,7 +223,9 @@ private fun TwoPaneLayout(
   val topBarScrollBehavior = RegistrationScaffold.rememberTopBarScrollBehavior()
 
   TwoPaneRegistrationScaffold(
-    modifier = modifier.fillMaxSize(),
+    modifier = modifier
+      .fillMaxSize()
+      .testTag(TestTags.PIN_CREATION_SCREEN),
     params = params,
     topBar = {
       PinCreationTopBar(
@@ -237,6 +274,7 @@ private fun TwoPaneLayout(
         params = params,
         canSubmitPin = canSubmitPin,
         isElevated = firstPaneScrollState.canScrollForward || secondPaneScrollState.canScrollForward,
+        loading = state.loading,
         onNext = { onEvent(PinCreationScreenEvents.PinSubmitted(activePin.value)) }
       )
     }
@@ -387,7 +425,9 @@ private fun PinInputField(
   TextField(
     value = pin,
     onValueChange = onPinChanged,
-    modifier = modifier.focusRequester(focusRequester),
+    modifier = modifier
+      .testTag(TestTags.PIN_CREATION_INPUT)
+      .focusRequester(focusRequester),
     textStyle = MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center),
     singleLine = true,
     keyboardOptions = KeyboardOptions(
@@ -395,7 +435,7 @@ private fun PinInputField(
       imeAction = ImeAction.Done
     ),
     keyboardActions = KeyboardActions(onDone = { if (canSubmitPin) onSubmit() }),
-    visualTransformation = PasswordVisualTransformation()
+    visualTransformation = PinVisualTransformation
   )
 }
 
@@ -428,7 +468,9 @@ private fun KeyboardToggleButton(
 ) {
   TextButton(
     onClick = onToggleKeyboard,
-    modifier = modifier.fillMaxWidth()
+    modifier = modifier
+      .fillMaxWidth()
+      .testTag(TestTags.PIN_CREATION_TOGGLE_KEYBOARD_BUTTON)
   ) {
     Icon(
       painter = SignalIcons.Keyboard.painter,
@@ -515,6 +557,7 @@ private fun NextButton(
   params: RegistrationScaffold.Params,
   canSubmitPin: Boolean,
   isElevated: Boolean,
+  loading: Boolean,
   onNext: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -528,12 +571,21 @@ private fun NextButton(
     ) {
       Buttons.LargeTonal(
         onClick = onNext,
-        enabled = canSubmitPin,
+        enabled = canSubmitPin && !loading,
         modifier = Modifier
           .widthIn(max = params.maxButtonWidth)
           .padding(params.footerPadding)
+          .testTag(TestTags.PIN_CREATION_NEXT_BUTTON)
       ) {
-        Text(stringResource(R.string.PinCreationScreen__next))
+        if (loading) {
+          CircularProgressIndicator(
+            modifier = Modifier.size(24.dp),
+            strokeWidth = 3.dp,
+            color = MaterialTheme.colorScheme.primary
+          )
+        } else {
+          Text(stringResource(R.string.PinCreationScreen__next))
+        }
       }
     }
   }
@@ -582,6 +634,17 @@ private fun PinCreationScreenMismatchPreview() {
   Previews.Preview {
     PinCreationScreen(
       state = PinCreationState(pinMismatch = true),
+      onEvent = {}
+    )
+  }
+}
+
+@AllDevicePreviews
+@Composable
+private fun PinCreationScreenLoadingPreview() {
+  Previews.Preview {
+    PinCreationScreen(
+      state = PinCreationState(isConfirmEnabled = true, loading = true),
       onEvent = {}
     )
   }

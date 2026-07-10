@@ -49,6 +49,8 @@ import org.thoughtcrime.securesms.util.RemoteConfig
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -148,7 +150,7 @@ object MediaSendV3Repository : MediaSendRepository {
     }
   }
 
-  override suspend fun checkUntrustedIdentities(contactIds: Set<Long>, since: Long): List<Long> = withContext(Dispatchers.IO) {
+  override suspend fun checkUntrustedIdentities(contactIds: Set<Long>, since: Long): List<Long> = withContext(Dispatchers.Default) {
     if (contactIds.isEmpty()) return@withContext emptyList<Long>()
 
     val recipients: List<Recipient> = contactIds
@@ -194,6 +196,12 @@ object MediaSendV3Repository : MediaSendRepository {
   override fun isMixedModeAvailable(): Boolean {
     return !RemoteConfig.cameraXMixedModelBlocklist.asListContains(Build.MODEL)
   }
+
+  override fun getMediaConstraints(): MediaConstraints {
+    return PushMediaConstraints(null)
+  }
+
+  override var storyMaxVideoDuration: Duration = Stories.MAX_VIDEO_DURATION_MILLIS.milliseconds
 
   private fun resolveSendType(sendType: Int): MessageSendType {
     return when (sendType) {

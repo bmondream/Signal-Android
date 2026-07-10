@@ -5,7 +5,13 @@
 
 package org.signal.registration.screens.devicetransfer.complete
 
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
+import assertk.assertions.isNull
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +24,7 @@ import org.junit.Before
 import org.junit.Test
 import org.signal.registration.RegistrationFlowEvent
 import org.signal.registration.RegistrationRepository
-import org.signal.registration.proto.RestoreDecision
+import org.signal.registration.RestoreDecision
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DeviceTransferCompleteViewModelTest {
@@ -49,7 +55,7 @@ class DeviceTransferCompleteViewModelTest {
   }
 
   @Test
-  fun `ContinueClicked hands off to finishRegistrationOrCreateProfile`() = runTest {
+  fun `ContinueClicked restores account record and completes registration`() = runTest {
     viewModel.applyEvent(
       DeviceTransferCompleteState(),
       DeviceTransferCompleteScreenEvents.ContinueClicked,
@@ -59,6 +65,62 @@ class DeviceTransferCompleteViewModelTest {
     )
 
     coVerify { mockRepository.setRestoreDecision(RestoreDecision.COMPLETED) }
-    coVerify { mockRepository.finishRegistrationOrCreateProfile(parentEventEmitter, any()) }
+    coVerify { mockRepository.restoreAccountRecord(any()) }
+    assertThat(emittedEvents).contains(RegistrationFlowEvent.RegistrationComplete)
+  }
+
+  @Test
+  fun `ContinueClicked records the restore decision before finishing registration`() = runTest {
+    viewModel.applyEvent(
+      DeviceTransferCompleteState(),
+      DeviceTransferCompleteScreenEvents.ContinueClicked,
+      parentEventEmitter,
+      mockRepository,
+      stateEmitter
+    )
+
+    coVerifyOrder {
+      mockRepository.setRestoreDecision(RestoreDecision.COMPLETED)
+      mockRepository.restoreAccountRecord(any())
+    }
+  }
+
+  @Test
+  fun `ContinueClicked does not emit any state itself`() = runTest {
+    viewModel.applyEvent(
+      DeviceTransferCompleteState(),
+      DeviceTransferCompleteScreenEvents.ContinueClicked,
+      parentEventEmitter,
+      mockRepository,
+      stateEmitter
+    )
+
+    assertThat(emittedStates).isEmpty()
+  }
+
+  @Test
+  fun `ConsumeOneTimeEvent clears the one-time event without touching the repository`() = runTest {
+    viewModel.applyEvent(
+      DeviceTransferCompleteState(),
+      DeviceTransferCompleteScreenEvents.ConsumeOneTimeEvent,
+      parentEventEmitter,
+      mockRepository,
+      stateEmitter
+    )
+
+    assertThat(emittedStates).hasSize(1)
+    assertThat(emittedStates.last().oneTimeEvent).isNull()
+    coVerify(exactly = 0) { mockRepository.setRestoreDecision(any()) }
+    coVerify(exactly = 0) { mockRepository.restoreAccountRecord(any()) }
+  }
+
+  @Test
+  fun `ContinueClicked through the real event channel hands off to the repository`() = runTest {
+    viewModel.onEvent(DeviceTransferCompleteScreenEvents.ContinueClicked)
+    testDispatcher.scheduler.advanceUntilIdle()
+
+    coVerify { mockRepository.setRestoreDecision(RestoreDecision.COMPLETED) }
+    coVerify { mockRepository.restoreAccountRecord(any()) }
+    assertThat(emittedEvents).contains(RegistrationFlowEvent.RegistrationComplete)
   }
 }

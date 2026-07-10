@@ -615,6 +615,8 @@
     <string name="ConversationFragment__update_build">Signal اپ ڈیٹ کریں</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signal کو دوبارہ رجسٹر کریں</string>
+    <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
+    <string name="ConversationFragment__relink_signal">دوبارہ لنک کریں</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">دوبارہ نیویگیٹ کریں۔</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -665,11 +667,11 @@
     <!-- Snackbar toast message shown when a profile cannot be downloaded and to try again. -->
     <string name="ConversationFragment_photo_failed">تصویر ڈاؤن لوڈ ہونے سے قاصر۔ دوبارہ کوشش کریں۔</string>
     <!-- Title of the dialog shown when re-requesting an expired attachment from your primary device fails -->
-    <string name="ConversationFragment_attachment_backfill_failed_title">Can\'t download media</string>
+    <string name="ConversationFragment_attachment_backfill_failed_title">میڈیا ڈاؤن لوڈ نہیں ہو سکتا</string>
     <!-- Body of the dialog shown when your phone didn\'t respond to a request to re-send an expired attachment -->
-    <string name="ConversationFragment_attachment_backfill_timeout">Check this device and your phone\'s internet connection. Open Signal on your phone, then try downloading again.</string>
+    <string name="ConversationFragment_attachment_backfill_timeout">یہ ڈیوائس اور اپنے فون کا انٹرنیٹ کنکشن چیک کریں۔ اپنے فون پر Signal کھولیں، پھر دوبارہ ڈاؤن لوڈ کرنے کی کوشش کریں۔</string>
     <!-- Body of the dialog shown when your phone no longer has the attachment you tried to download -->
-    <string name="ConversationFragment_attachment_backfill_not_found">This media is no longer available on your phone and can\'t be downloaded.</string>
+    <string name="ConversationFragment_attachment_backfill_not_found">یہ میڈیا آپ کے فون میں مزید دستیاب نہیں اور اسے ڈاؤن لوڈ نہیں کیا جا سکتا۔</string>
     <!-- Dialog for how to long to keep a messaged pinned for -->
     <string name="ConversationFragment__keep_pinned">پِن رکھیں برائے…</string>
     <!-- Dialog option to keep message pin for 24 hours -->
@@ -1451,9 +1453,9 @@
     <string name="AddGroupDetailsFragment__sms_contact">ایس ایم ایس رابطہ</string>
     <string name="AddGroupDetailsFragment__remove_s_from_this_group">اس گروپ سے%1$s کو ہٹائیں؟</string>
     <!-- Title of the dialog shown when tapping an existing group while creating a new group, confirming the user wants to leave and discard their in-progress group -->
-    <string name="AddGroupDetailsFragment__discard_group">Discard group?</string>
+    <string name="AddGroupDetailsFragment__discard_group">گروپ ختم کریں؟</string>
     <!-- Body of the dialog shown when tapping an existing group while creating a new group. Placeholder is the name of the group being navigated to. -->
-    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">If you continue to the group \"%1$s\" your changes won\'t be saved.</string>
+    <string name="AddGroupDetailsFragment__if_you_continue_to_the_group_s_your_changes_wont_be_saved">اگر آپ \"%1$s\" گروپ پر آگے بڑھتے ہیں تو آپ کی تبدیلیاں محفوظ نہیں ہوں گی۔</string>
     <!-- Label for the button that confirms discarding the in-progress group and navigating to an existing group -->
     <string name="AddGroupDetailsFragment__discard">مسترد کیجئے</string>
     <!-- Info message shown in the middle of the screen, displayed when adding group details to an MMS Group -->
@@ -2885,6 +2887,8 @@
 
     <!-- Search -->
     <string name="SearchFragment_no_results">\'%1$s\' کے لیے کوئی نتیجہ نہیں ملا</string>
+    <!-- Text shown when no search results are found.   -->
+    <string name="SearchFragment_no_results_empty">کوئی نتیجہ نہیں</string>
 
     <!-- ShakeToReport -->
   <!-- Removed by excludeNonTranslatables <string name="ShakeToReport_shake_detected" translatable="false">Shake detected</string> -->
@@ -3414,11 +3418,11 @@
     <!-- Dialog title shown when attempting to save media that has been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_media">میڈیا محفوظ نہیں کیا جا سکتا</string>
     <!-- Dialog message explaining that media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__media_offloaded_message">یہ میڈیا آپ کی ڈیوائس سے آف لوڈ کر دیا گیا ہے کیونکہ \"آن ڈیوائس اسٹوریج کو بہتر بنائیں\" آن ہے۔ آپ آئٹمز کو ایک ایک کر کے ڈاؤن لوڈ کر سکتے ہیں، یا \"آن ڈیوائس اسٹوریج کو بہتر بنائیں\" کو آف کر کے تمام میڈیا کو اپنی ڈیوائس پر ڈاؤن لوڈ کر سکتے ہیں۔</string>
+    <string name="AttachmentSaver__media_offloaded_message">یہ میڈیا آپ کی ڈیوائس سے آف لوڈ کر دیا گیا ہے کیونکہ \"Signal کی اسٹوریج کو بہتر بنائیں\" فعال ہے۔ آپ آئٹمز کو ایک ایک کر کے ڈاؤن لوڈ کر سکتے ہیں، یا \"Signal کی اسٹوریج کو بہتر بنائیں\" کو غیر فعال کر کے تمام میڈیا کو اپنی ڈیوائس پر ڈاؤن لوڈ کر سکتے ہیں۔</string>
     <!-- Dialog title shown when attempting to save multiple media items, some of which have been offloaded from the device by the storage optimization feature. -->
     <string name="AttachmentSaver__cant_save_all_items">تمام آئٹمز محفوظ نہیں کیے جا سکتے</string>
     <!-- Dialog message explaining that some selected media cannot be saved because it has been offloaded from the device by the storage optimization feature. -->
-    <string name="AttachmentSaver__some_media_offloaded_message">آپ کا منتخب کردہ کچھ میڈیا آپ کی ڈیوائس سے آف لوڈ کر دیا گیا ہے کیونکہ \"آن ڈیوائس اسٹوریج کو بہتر بنائیں\" آن ہے۔ آپ آئٹمز کو ایک ایک کر کے محفوظ کر سکتے ہیں، یا \"آن ڈیوائس اسٹوریج کو بہتر بنائیں\" کو آف کر کے تمام میڈیا کو اپنی ڈیوائس پر ڈاؤن لوڈ کر سکتے ہیں۔</string>
+    <string name="AttachmentSaver__some_media_offloaded_message">آپ کا منتخب کردہ کچھ میڈیا آپ کی ڈیوائس سے آف لوڈ کر دیا گیا ہے کیونکہ \"Signal کی اسٹوریج کو بہتر بنائیں\" فعال ہے۔ آپ آئٹمز کو ایک ایک کر کے محفوظ کر سکتے ہیں، یا \"Signal کی اسٹوریج کو بہتر بنائیں\" کو غیر فعال کر کے تمام میڈیا کو اپنی ڈیوائس پر ڈاؤن لوڈ کر سکتے ہیں۔</string>
     <!-- Button label in the offloaded media dialog that navigates to the storage settings screen. -->
     <string name="AttachmentSaver__view_storage_settings">اسٹوریج سیٹنگز دیکھیں</string>
 
@@ -3487,6 +3491,10 @@
     <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">یہ ڈیوائس اب مزید رجسٹر شدہ نہیں ہے۔ ایسا ہو سکتا ہے کیونکہ آپ نے ایک مختلف ڈیوائس پر اپنا فون نمبر Signal میں رجسٹر کیا تھا۔</string>
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">ڈیوائس کو دوبارہ رجسٹر کریں</string>
+    <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">یہ ڈیوائس مزید لنک شدہ نہیں ہے۔ میسجنگ جاری رکھنے کے لیے Signal کو اپنے فون کے ساتھ دوبارہ لنک کریں۔</string>
+    <!-- Action in reminder banner that will take the user to re-link this device -->
+    <string name="UnauthorizedReminder_relink_action">ڈیوائس کو دوبارہ لنک کریں</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">آپ اس ڈیوائس پر Signal سے لاگ آؤٹ ہو چکے ہیں۔</string>
@@ -5122,7 +5130,7 @@
     <string name="NewDeviceTransferInstructions__first_bullet">1.</string>
     <string name="NewDeviceTransferInstructions__tap_on_your_profile_photo_in_the_top_left_to_open_settings">ترتیبات کو کھولنے کے لئے بائیں طرف اوپر اپنے پروفائل فوٹو پر ٹیپ کریں</string>
     <string name="NewDeviceTransferInstructions__second_bullet">2.</string>
-    <string name="NewDeviceTransferInstructions__tap_on_account">"\'اکاؤنٹ\' پر ٹیپ کریں"</string>
+    <string name="NewDeviceTransferInstructions__tap_on_account">"'اکاؤنٹ' پر ٹیپ کریں"</string>
     <string name="NewDeviceTransferInstructions__third_bullet">3.</string>
     <string name="NewDeviceTransferInstructions__tap_transfer_account_and_then_continue_on_both_devices">"\"ٹرانسفر اکاؤنٹ\" پر ٹیپ کریں اور پھر دونوں ڈیوائسز پر \"جاری رکھیں\""</string>
 
@@ -8237,6 +8245,12 @@
 
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"بیک اپ کو ری اسٹور کرنے کے لیے، Signal کی نئی کاپی انسٹال کریں۔ ایپ کھولیں اور بیک اپ ری اسٹور کریں پر ٹیپ کریں، اس کے بعد بیک اپ فائل تلاش کریں۔"</string>
+    <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
+    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">اپنی ریکوری کیی کی تصدیق کریں</string>
@@ -8613,13 +8627,19 @@
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">اہل ہونے پر، چیٹ کی حدود آپ کی لنک کردہ ڈیوائسز سے میسجز کو بھی حذف کر دیں گی۔</string>
     <!-- Setting section title header for storage optimization -->
-    <string name="ManageStorageSettingsFragment__on_device_storage">آن-ڈیوائس اسٹوریج</string>
+    <string name="ManageStorageSettingsFragment__on_device_storage">Signal کی اسٹوریج</string>
     <!-- Setting row title for storage optimization -->
-    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">آن-ڈیوائس اسٹوریج کو بہتر کریں</string>
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Signal کی اسٹوریج کو بہتر کریں</string>
     <!-- Setting row explanation for storage optimization -->
     <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">غیر استعمال شدہ میڈیا کو آف لوڈ کر دیا جائے گا، لیکن آپ کے بیک اپ سے کسی بھی وقت ڈاؤن لوڈ کیا جا سکتا ہے۔</string>
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">اسٹوریج کی کارکردگی کو صرف Signal کے محفوظ بیک اپس کے ادا شدہ درجے کے ساتھ ہی استعمال کیا جا سکتا ہے۔ آپ کی بیک اپس کی سبسکرپشن ابھی بھی زیرِ عمل ہے اور ابھی فعال نہیں ہوئی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔</string>
+    <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
+    <string name="ManageStorageSettingsFragment__turn_on">آن کریں</string>
 
     <!-- UpgradeToEnableOptimizedStorageSheet -->
     <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
@@ -9096,13 +9116,13 @@
     <!-- Dialog title for confirming you need to disable optimized storage and download media to rotate AEP key -->
     <string name="MessageBackupsKeyRecordScreen__download_media">میڈیا ڈاؤن لوڈ کریں</string>
     <!-- Dialog body for confirming you need to disable optimized storage and download media to rotate AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">نئی ریکوری کیی تخلیق کرنے کے لیے، آپ کو \"اسٹوریج کو بہتر بنائیں\" کو لازمی بند کرنا ہو گا اور اس وقت تک انتظار کرنا ہو گا جب تک آپ کا تمام میڈیا ڈاؤن لوڈ نہ ہو جائے۔ ڈاؤن لوڈ مکمل ہونے پر، آپ نئی کیی تخلیق کر سکتے ہیں۔</string>
+    <string name="MessageBackupsKeyRecordScreen__to_create_a_new_backup_key">نئی بحالی کی کیی تخلیق کرنے کے لیے، آپ کو \"Signal کی اسٹوریج کو بہتر بنائیں\" کو لازمی طور پر غیر فعال کرنا اور انتظار کرنا ہو گا جب تک کہ آپ کا میڈیا ڈاؤن لوڈ نہ ہو جائے۔ ڈاؤن لوڈ مکمل ہونے پر، آپ نئی کیی تخلیق کر سکتے ہیں۔</string>
     <!-- Action label to turn off optimized storage and download media -->
     <string name="MessageBackupsKeyRecordScreen__turn_off_and_download">آف کریں اور ڈاؤن لوڈ کریں</string>
     <!-- Bottom Sheet title for creating a new AEP key -->
     <string name="MessageBackupsKeyRecordScreen__create_a_new_backup_key">نئی ریکوری کیی تخلیق کریں</string>
     <!-- Bottom Sheet body for creating a new AEP key -->
-    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">نئی کیی تخلیق کرنا صرف اس صورت میں ضروری ہے جب کوئی اور آپ کی کیی کے متعلق جانتا ہو۔ آپ کو میڈیا سمیت، اپنے بیک اپ کو دوبارہ اپ لوڈ کرنا ہو گا۔ اگر آپ \"اسٹوریج کو بہتر بنائیں\" کا استعمال کر رہے ہیں تو آپ کو پہلے آف لوڈ کردہ میڈیا ڈاؤن لوڈ کرنا ہو گا۔</string>
+    <string name="MessageBackupsKeyRecordScreen__creating_a_new_key_is_only_necessary">نئی کیی تخلیق کرنا صرف اس صورت میں ضروری ہے جب کوئی اور آپ کی کیی جانتا ہو۔ آپ کو میڈیا سمیت، اپنے بیک اپ کو دوبارہ اپ لوڈ کرنا ہو گا۔ اگر آپ \"Signal کی اسٹوریج کو بہتر بنائیں\" کا استعمال کر رہے ہیں تو آپ کو پہلے آف لوڈ کردہ میڈیا ڈاؤن لوڈ کرنا ہو گا۔</string>
     <!-- Dialog title shown when user attempts to exit backup setup before completion -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup">بیک اپ کا سیٹ اپ بند کریں؟</string>
     <!-- Dialog body warning user that backup setup is incomplete -->
@@ -9110,23 +9130,23 @@
     <!-- Dialog confirmation button to exit backup setup -->
     <string name="MessageBackupsKeyRecordScreen__exit_backup_setup_confirm">بیک اپ کا سیٹ اپ بند کریں</string>
     <!-- Screen title when saving your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">Save your recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__save_your_recovery_key">اپنی بحالی کی کیی محفوظ کریں</string>
     <!-- Screen subtitle for the recovery key screen -->
-    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">Your recovery key is a 64-character code that lets you restore your backup. If you forget your key, you will not be able to recover your account.</string>
+    <string name="MessageBackupsKeyRecordScreen__your_recovery_key">آپ کی بحالی کی کیی 64 ہندسوں پر مشتمل ایک کوڈ ہے جس سے آپ اپنا بیک اپ ری اسٹور کر سکتے ہیں۔ اگر آپ اپنی کیی بھول جاتے ہیں، تو آپ اپنا اکاؤنٹ بحال نہیں کر سکیں گے۔</string>
     <!-- Hint text to see the full recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__see_full_key">See full key</string>
+    <string name="MessageBackupsKeyRecordScreen__see_full_key">مکمل کیی دیکھیں</string>
     <!-- Bottom sheet caption to confirm your recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">Confirm that your recovery key was recorded correctly. You will be prompted to fill your saved password in the next step.</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_that_your_recovery">تصدیق کریں کہ آپ کی بحالی کی کیی درستگی سے ریکارڈ ہو گئی تھی۔ اگلے مرحلے میں آپ کو محفوظ شدہ پاس ورڈ درج کرنے کے لیے کہا جائے گا۔</string>
     <!-- Button to confirm the recovery key -->
-    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">Confirm recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__confirm_recovery">بحالی کی کیی کی تصدیق کریں</string>
     <!-- Toast shown when the key is confirmed -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">Recovery key confirmed</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_confirmed">بحالی کی کیی کی تصدیق ہو گئی ہے</string>
     <!-- Dialog title shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error">Error confirming recovery key</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error">بحالی کی کیی کی تصدیق کے دوران خرابی واقع ہوئی ہے</string>
     <!-- Dialog body shown when the recovery key fails to confirm -->
-    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">Your recovery key could not be confirmed. Make sure you’ve saved it in your password manager, or save it manually.</string>
+    <string name="MessageBackupsKeyRecordScreen__recover_key_error_body">آپ کی بحالی کی کیی کی تصدیق نہیں ہو سکی۔ یقینی بنائیں کہ آپ نے اسے اپنے پاس ورڈ مینیجر میں محفوظ کیا ہے، یا اسے دستی طور پر محفوظ کیا ہے۔</string>
     <!-- Button option to save the key manually -->
-    <string name="MessageBackupsKeyRecordScreen__save_key_manually">Save key manually</string>
+    <string name="MessageBackupsKeyRecordScreen__save_key_manually">کیی کو دستی طور پر محفوظ کریں</string>
 
     <!-- BackupKeyDisplayFragment -->
     <!-- Dialog title when exiting before confirming new key -->
@@ -9861,9 +9881,26 @@
 
     <!-- Header for the section shown when creating a group that lists existing groups with the exact same members. Includes the number of such groups. -->
     <plurals name="AddGroupDetailsFragment__d_groups_with_same_members">
-        <item quantity="one">%1$d group with the same members</item>
-        <item quantity="other">%1$d groups with the same members</item>
+        <item quantity="one">انہی ممبرز کے ساتھ %1$d گروپ</item>
+        <item quantity="other">انہی ممبرز کے ساتھ %1$d گروپس</item>
     </plurals>
+
+    <!-- Header for a section showing all group member -->
+    <string name="MemberSearchFragment__search_members">ممبرز تلاش کریں</string>
+    <!-- Header for a section showing all group members who are contacts -->
+    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <!-- Header for a section showing all group member who are admins -->
+    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <!-- Dialog title to filter search by -->
+    <string name="MemberSearchFragment__filter">Filter by</string>
+    <!-- Dialog option for all group members -->
+    <string name="MemberSearchFragment__filter_all_members">تمام ممبران</string>
+    <!-- Dialog option for group admins -->
+    <string name="MemberSearchFragment__filter_admins">ایڈمنز</string>
+    <!-- Dialog option for your contacts -->
+    <string name="MemberSearchFragment__filter_contacts">رابطے</string>
+    <!-- Button to invite members via a group link -->
+    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">بیک اپ کو بحال نہیں کیا جا سکتا</string>

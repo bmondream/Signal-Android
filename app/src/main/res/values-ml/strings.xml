@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: AGPL-3.0-only
   -->
 <!-- smartling.instruction_comments_enabled = on -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
@@ -294,6 +294,16 @@
     <string name="ClientDeprecatedActivity_warning">മുന്നറിയിപ്പ്</string>
     <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">നിങ്ങളുടെ Signal പതിപ്പ് കാലഹരണപ്പെട്ടിരിക്കുന്നു. നിങ്ങളുടെ സന്ദേശ ചരിത്രം നിങ്ങൾക്ക് കാണാൻ കഴിയും, പക്ഷേ നിങ്ങൾ അപ്‌ഡേറ്റ് ചെയ്യുന്നതുവരെ നിങ്ങൾക്ക് സന്ദേശങ്ങൾ അയയ്‌ക്കാനോ സ്വീകരിക്കാനോ കഴിയില്ല.</string>
 
+    <!-- ClockSkewActivity -->
+    <!-- Title of the full-screen dialog shown when the device clock is too far off from the real time -->
+    <string name="ClockSkewActivity__title">തീയതി കൃത്യമല്ല</string>
+    <!-- Body text explaining that the device clock is wrong and needs to be fixed -->
+    <string name="ClockSkewActivity__date_inaccurate_description">നിങ്ങളുടെ ഉപകരണത്തിലെ തീയതി കൃത്യമല്ല.\nനിങ്ങളുടെ ക്ലോക്ക് ക്രമീകരിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
+    <!-- Shows the user the current, inaccurate date and time reported by their device. Placeholder is the formatted date, time, and time zone. -->
+    <string name="ClockSkewActivity__time_prefix">നിങ്ങളുടെ ഉപകരണത്തിലെ തീയതിയും സമയവും:\n %1$s</string>
+    <!-- Button that opens the system date and time settings -->
+    <string name="ClockSkewActivity__adjust_date_button">തീയതി ക്രമീകരിക്കുക</string>
+
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">വെബ്‌ബ്രൗസറൊന്നും കണ്ടെത്തിയില്ല.</string>
     <string name="CommunicationActions_send_email">ഇമെയിൽ അയയ്ക്കുക</string>
@@ -388,6 +398,8 @@
     <!-- Conversation message shown when someone deletes their own message. Placeholder is the name of the person. -->
     <string name="ConversationItem_s_deleted_this_message">%1$s ഈ സന്ദേശം ഇല്ലാതാക്കി</string>
     <string name="ConversationItem_you_deleted_this_message">നിങ്ങൾ ഈ സന്ദേശം ഇല്ലാതാക്കി</string>
+    <!-- Tappable text shown on a locally-deleted message tombstone, prompting the user to promote it to a delete-for-everyone -->
+    <string name="ConversationItem_delete_for_everyone_question">എല്ലാവർക്കും ഇല്ലാതാക്കണോ?</string>
     <!-- Conversation message when a message has been deleted by an admin. The placeholder is the admin\'s name. -->
     <string name="ConversationItem_admin_s_deleted_this_message">അഡ്മിൻ %1$s ഈ സന്ദേശം ഇല്ലാതാക്കി</string>
     <!-- Dialog error message shown when user can\'t download a message from someone else due to a permanent failure (e.g., unable to decrypt), placeholder is other\'s name -->
@@ -579,7 +591,7 @@
     <string name="ConversationFragment_delete">ഇല്ലാതാക്കൂ</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">എല്ലായിടത്തും ഇല്ലാതാക്കുക</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">സംഭാഷണത്തിലെ എല്ലാവർ‌ക്കും അവർ‌ Signal-ന്റെ സമീപകാല പതിപ്പിലാണെങ്കിൽ‌ ഈ സന്ദേശം ഇല്ലാതാക്കും. നിങ്ങൾ ഒരു സന്ദേശം ഇല്ലാതാക്കിയത് അവർക്ക് കാണാൻ കഴിയും.</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">ചാറ്റിലുള്ള എല്ലാവർക്കും വേണ്ടി ഈ സന്ദേശം ഇല്ലാതാക്കപ്പെടും. നിങ്ങൾ ഒരു സന്ദേശം ഇല്ലാതാക്കി എന്ന് അവർക്ക് കാണാൻ സാധിക്കും.</string>
     <string name="ConversationFragment_quoted_message_not_found">യഥാർത്ഥ സന്ദേശം കണ്ടെത്തിയില്ല</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">യഥാർത്ഥ സന്ദേശം മേലിൽ ലഭ്യമല്ല</string>
     <string name="ConversationFragment_failed_to_open_message">സന്ദേശം തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു</string>
@@ -616,7 +628,7 @@
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signal വീണ്ടും രജിസ്റ്റർ ചെയ്യുക</string>
     <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
-    <string name="ConversationFragment__relink_signal">Re-link</string>
+    <string name="ConversationFragment__relink_signal">വീണ്ടും ലിങ്ക് ചെയ്യുക</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">തിരികെ നാവിഗേറ്റ് ചെയ്യുക.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -758,17 +770,28 @@
     <!-- Notice on chat list when no unread chats are available, centered on display -->
     <string name="ConversationListFragment__no_unread_chats">വായിക്കാത്ത ചാറ്റുകൾ ഒന്നുമില്ല</string>
     <plurals name="ConversationListFragment_delete_selected_conversations">
-        <item quantity="one">തിരഞ്ഞെടുത്ത ചാറ്റ് ഇല്ലാതാക്കണോ?</item>
-        <item quantity="other">തിരഞ്ഞെടുത്ത ചാറ്റുകൾ ഇല്ലാതാക്കണോ?</item>
+        <item quantity="one">സന്ദേശ ചരിത്രം ഇല്ലാതാക്കണോ?</item>
+        <item quantity="other">സന്ദേശ ചരിത്രങ്ങൾ ഇല്ലാതാക്കണോ?</item>
     </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations">
-        <item quantity="one">ഇത് തിരഞ്ഞെടുത്ത ചാറ്റിനെ ശാശ്വതമായി ഇല്ലാതാക്കും.</item>
-        <item quantity="other">ഇത് തിരഞ്ഞെടുത്ത %1$d ചാറ്റുകളും ശാശ്വതമായി ഇല്ലാതാക്കും.</item>
+        <item quantity="one">ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും ഇല്ലാതാക്കപ്പെടും.</item>
+        <item quantity="other">ഈ ചാറ്റുകളിലെ എല്ലാ സന്ദേശങ്ങളും ഇല്ലാതാക്കപ്പെടും.</item>
     </plurals>
-    <!-- Dialog message shown when deleting one to many conversations from the chat list and the user has a linked device -->
+    <!-- Dialog message shown when deleting chats, with at least one group -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_group">
+        <item quantity="one">ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും ഇല്ലാതാക്കപ്പെടും. നിങ്ങൾ തുടർന്നും ഈ ഗ്രൂപ്പിൽ അംഗമായിരിക്കും.</item>
+        <item quantity="other">ഈ ചാറ്റുകളിലെ എല്ലാ സന്ദേശങ്ങളും ഇല്ലാതാക്കപ്പെടും. നിങ്ങൾ ഇതുവരെ പുറത്തുപോകാത്ത ഏതൊരു ഗ്രൂപ്പിലും തുടർന്നും അംഗമായിരിക്കും.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups, and the user has a linked device -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device">
-        <item quantity="one">ഇത് നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും തിരഞ്ഞെടുത്ത ചാറ്റ് ശാശ്വതമായി ഇല്ലാതാക്കും.</item>
-        <item quantity="other">ഇത് നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും തിരഞ്ഞെടുത്ത %1$d എല്ലാ ചാറ്റുകളും ശാശ്വതമായി ഇല്ലാതാക്കും.</item>
+        <item quantity="one">ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും.</item>
+        <item quantity="other">ഈ ചാറ്റുകളിലെ എല്ലാ സന്ദേശങ്ങളും നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats with at least one group, and the user has a linked device -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device_group">
+        <item quantity="one">ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും. നിങ്ങൾ തുടർന്നും ഈ ഗ്രൂപ്പിൽ അംഗമായിരിക്കും.</item>
+        <item quantity="other">ഈ ചാറ്റുകളിലെ എല്ലാ സന്ദേശങ്ങളും നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും. നിങ്ങൾ ഇതുവരെ പുറത്തുപോകാത്ത ഏതൊരു ഗ്രൂപ്പിലും തുടർന്നും അംഗമായിരിക്കും.</item>
     </plurals>
     <string name="ConversationListFragment_deleting">ഇല്ലാതാക്കുന്നു</string>
     <plurals name="ConversationListFragment_deleting_selected_conversations">
@@ -1118,6 +1141,8 @@
     <string name="LinkDeviceFragment__edit_name">പേര് എഡിറ്റ് ചെയ്യുക</string>
     <!-- Toast shown when the process of linking a device has been cancelled -->
     <string name="LinkDeviceFragment__linking_cancelled">ലിങ്കിംഗ് റദ്ദാക്കി</string>
+    <!-- Snackbar shown when the user tries to link a new device but has already reached the maximum number of linked devices. Placeholder is the maximum count. -->
+    <string name="LinkDeviceFragment__you_can_only_have_d_linked_devices">നിങ്ങൾക്ക് %1$d ലിങ്ക് ചെയ്‌ത ഉപകരണങ്ങൾ മാത്രമേ ഉണ്ടാകാൻ പാടുള്ളൂ.</string>
     <!-- Message shown in progress dialog telling users to avoid closing the app while messages are being synced -->
     <string name="LinkDeviceFragment__do_not_close">ആപ്പ് അടയ്ക്കരുത്</string>
     <!-- Dialog title shown when a device is unlinked -->
@@ -3070,6 +3095,7 @@
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_challenge_received" translatable="false">Challenge Received:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_registered" translatable="false">Registered:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_backups" translatable="false">Backups:</string> -->
 
     <!-- ThreadRecord -->
     <string name="ThreadRecord_group_updated">ഗ്രൂപ്പ് പുതുക്കി</string>
@@ -3492,9 +3518,9 @@
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">ഡിവൈസ് വീണ്ടും രജിസ്റ്റർ ചെയ്യുക</string>
     <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
-    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">This device is no longer linked. Re-link Signal with your phone to continue messaging.</string>
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">ഈ ഉപകരണം ഇപ്പോൾ ലിങ്ക് ചെയ്തിട്ടില്ല. സന്ദേശങ്ങൾ അയക്കുന്നത് തുടരാൻ നിങ്ങളുടെ ഫോണുമായി Signal വീണ്ടും ലിങ്ക് ചെയ്യുക.</string>
     <!-- Action in reminder banner that will take the user to re-link this device -->
-    <string name="UnauthorizedReminder_relink_action">Re-link device</string>
+    <string name="UnauthorizedReminder_relink_action">ഉപകരണം വീണ്ടും ലിങ്ക് ചെയ്യുക</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">ഈ ഉപകരണത്തിലെ Signal-ൽ നിന്ന് നിങ്ങൾ ലോഗൗട്ട് ചെയ്‌തു.</string>
@@ -5107,6 +5133,32 @@
     <!-- Error message shown when we fail to delete the data for some unknown reason -->
     <string name="preferences_account_delete_all_data_failed">ഡാറ്റ ഇല്ലാതാക്കാനായില്ല</string>
 
+    <!-- LinkedDeviceAccountSettingsFragment -->
+    <!-- Title of an informational card shown on the account settings screen of a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_is_a_linked_device">ഇത് ഒരു ലിങ്ക് ചെയ്ത ഉപകരണമാണ്</string>
+    <!-- Body of an informational card explaining that account settings must be managed from the primary device -->
+    <string name="LinkedDeviceAccountSettingsFragment__to_manage_your_account_settings">നിങ്ങളുടെ അക്കൗണ്ട് ക്രമീകരണങ്ങൾ നിയന്ത്രിക്കാൻ പ്രൈമറി ഉപകരണത്തിൽ Signal തുറക്കുക.</string>
+    <!-- Title of a settings row that deletes all Signal data from this linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data">ആപ്പ് ഡാറ്റ ഇല്ലാതാക്കുക</string>
+    <!-- Subtitle of the delete app data row explaining what it does -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_remove_all_data">ഇത് ഈ ഉപകരണത്തിലെ Signal ആപ്പിൽ നിന്നുള്ള എല്ലാ വിവരങ്ങളും നീക്കം ചെയ്യും.</string>
+    <!-- Title of the confirmation dialog shown when deleting app data from a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data_question">ആപ്പ് ഡാറ്റ ഇല്ലാതാക്കണോ?</string>
+    <!-- Message of the confirmation dialog explaining that only this device\'s data is deleted, not the account -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_delete_all_data_and_messages">ഇത്, ഈ ഉപകരണത്തിലെ Signal ആപ്പിൽ നിന്നുള്ള എല്ലാ വിവരങ്ങളും സന്ദേശങ്ങളും ഇല്ലാതാക്കും. നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിലെയോ മറ്റ് ലിങ്ക് ചെയ്ത ഉപകരണങ്ങളിലെയോ Signal അക്കൗണ്ടും വിവരങ്ങളും ഇല്ലാതാകില്ല. ഈ പ്രോസസ് പൂർത്തിയായതിന് ശേഷം ആപ്പ് അടയ്ക്കും.</string>
+
+    <!-- LinkedDeviceAccountLearnMoreBottomSheet -->
+    <!-- Emphasized lead-in phrase shown in bold at the start of the learn more sheet body. Must appear verbatim within LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices">ലിങ്ക് ചെയ്തിട്ടുള്ള ഡിവൈസുകൾ</string>
+    <!-- Body text of the linked devices learn more sheet. The leading \"Linked Devices\" is shown in bold. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access">നിങ്ങളുടെ മറ്റ് ഉപകരണങ്ങളിൽ സുരക്ഷിതമായി Signal അക്കൗണ്ടും സന്ദേശങ്ങളും ഉപയോഗിക്കാൻ ലിങ്ക് ചെയ്ത ഉപകരണങ്ങൾ സഹായിക്കുന്നു.</string>
+    <!-- Bullet point describing what devices can be linked -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__you_can_link_a_desktop">നിങ്ങൾക്ക് ഒരു ഡെസ്ക്ടോപ്പ്, ടാബ്‌ലെറ്റ് അല്ലെങ്കിൽ മറ്റൊരു ഫോൺ ലിങ്ക് ചെയ്യാം</string>
+    <!-- Bullet point describing that the primary device manages linked devices -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__your_primary_device_manages">നിങ്ങളുടെ പ്രൈമറി ഉപകരണമാണ് ലിങ്ക് ചെയ്തവ നിയന്ത്രിക്കുന്നത്, നിങ്ങൾക്ക് 5 ഉപകരണങ്ങൾ വരെ ലിങ്ക് ചെയ്യാം.</string>
+    <!-- Bullet point describing that some settings are only available on the primary device -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__some_account_settings">അക്കൗണ്ട് ക്രമീകരണങ്ങളും ബാക്കപ്പുകളും ഉൾപ്പെടെയുള്ള ചില അക്കൗണ്ട് ക്രമീകരണങ്ങൾ നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിൽ മാത്രമേ നിയന്ത്രിക്കാനാകൂ.</string>
+
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">അക്കൗണ്ട് കൈമാറുകയോ പുനസ്ഥാപിക്കുകയോ ചെയ്യുക</string>
     <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">നിങ്ങൾ മുമ്പ് ഒരു സിഗ്നൽ അക്കൗണ്ട് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ടെങ്കിൽ, നിങ്ങളുടെ അക്കൌണ്ടും സന്ദേശങ്ങളും മാറ്റിസ്ഥാപിക്കാനോ പുനസ്ഥാപിക്കാനോ കഴിയും</string>
@@ -6357,6 +6409,7 @@
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">ഒന്നോ അതിലധികമോ ഇനങ്ങൾ വളരെ വലുതായിരുന്നു</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">ഒന്നോ അതിലധികമോ ഇനങ്ങൾ അസാധുവാണ്</string>
     <string name="MediaReviewFragment__too_many_items_selected">വളരെയധികം ഇനങ്ങൾ തിരഞ്ഞെടുത്തു</string>
+    <string name="MediaReviewFragment__video_trimmed_to_fit">വലിപ്പപരിധിയിൽ ഉൾക്കൊള്ളിക്കുന്നതിനായി നിങ്ങളുടെ വീഡിയോ ദൈർഘ്യം കുറച്ചു</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
     <string name="MediaReviewFragment__video_set_to_view_once">വീഡിയോ ഒരിക്കൽ കാണാൻ സജ്ജമാക്കി</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
@@ -6909,7 +6962,7 @@
     <!-- Donation receipts amount title -->
     <string name="DonationReceiptDetailsFragment__amount">തുക</string>
     <!-- Donation receipts thanks -->
-    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting">Signal-നെ പിന്തുണയ്ക്കുന്നതിന് നന്ദി. സംഭാഷണ സ്വാതന്ത്ര്യത്തെ സംരക്ഷിക്കുന്ന ഓപ്പൺ സോഴ്‌സ് സ്വകാര്യതാ സാങ്കേതികവിദ്യ വികസിപ്പിക്കാനും ലോകമെമ്പാടുമുള്ള ദശലക്ഷക്കണക്കിന് ആളുകൾക്ക് സുരക്ഷിതമായ ആഗോള ആശയവിനിമയം സാധ്യമാക്കാനും നിങ്ങളുടെ സംഭാവന സഹായിക്കുന്നു. നിങ്ങൾ യുണൈറ്റ് സ്റ്റേറ്റ്സിൽ താമസിക്കുന്ന ആളാണെങ്കിൽ ഈ രസീത് നിങ്ങളുടെ നികുതി രേഖകൾക്കായി സൂക്ഷിച്ചു വെയ്ക്കുക. Signal ടെക്നോളജി ഫൗണ്ടേഷൻ യുണൈറ്റഡ് സ്റ്റേറ്റ്സിലെ ഇന്‍റേണൽ റെവന്യൂ കോഡിന് കീഴിൽ വരുന്ന സെക്ഷൻ 501സി3 പ്രകാരം നികുതിയില്ലാത്ത ലാഭേതര സ്ഥാപനമാണ്. ഞങ്ങളുടെ ഫെഡറൽ നികുതി ഐഡി 82–4506840 ആണ്.</string>
+    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting" tools:ignore="TypographyDashes">Signal-നെ പിന്തുണച്ചതിന് നന്ദി. സ്വതന്ത്രമായ അഭിപ്രായപ്രകടനം സംരക്ഷിക്കുന്നതിനും ലോകമെമ്പാടുമുള്ള ദശലക്ഷക്കണക്കിന് ആളുകൾക്ക് ഓപ്പൺ സോഴ്‌സ് സ്വകാര്യതാ സാങ്കേതികവിദ്യയിലൂടെ സുരക്ഷിതമായ ആഗോള ആശയവിനിമയം സാധ്യമാക്കുന്നതിനുമുള്ള ദൗത്യത്തിന് നിങ്ങളുടെ സംഭാവന ഇന്ധനം പകരുന്നു. നിങ്ങൾ യുണൈറ്റഡ് സ്റ്റേറ്റ്സിൽ താമസിക്കുന്ന ആളാണെങ്കിൽ, നിങ്ങളുടെ നികുതി രേഖകൾക്കായി ഈ രസീത് സൂക്ഷിക്കുക. Signal ടെക്നോളജി ഫൗണ്ടേഷൻ, ഇന്റേണൽ റവന്യൂ കോഡിന്റെ സെക്ഷൻ 501c3 പ്രകാരം യുണൈറ്റഡ് സ്റ്റേറ്റ്സിലെ നികുതി ഇളവ് ലഭിച്ച ഒരു ലാഭേച്ഛയില്ലാത്ത സ്ഥാപനമാണ്. ഞങ്ങളുടെ ഫെഡറൽ ടാക്സ് ഐഡി 82-4506840 ആണ്. ഈ സംഭാവനയ്ക്ക് പകരമായി Signal യാതൊരു സാധനങ്ങളോ സേവനങ്ങളോ നൽകിയിട്ടില്ല.</string>
     <!-- Donation reciepts screen empty state title -->
     <string name="DonationReceiptListFragment__no_receipts">രസീതുകളൊന്നുമില്ല</string>
 
@@ -8246,11 +8299,11 @@
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"ഒരു ബാക്കപ്പ് പുനഃസ്ഥാപിക്കാൻ, Signal-ന്റെ ഒരു പുതിയ പകർപ്പ് ഇൻസ്റ്റാൾ ചെയ്യുക. ആപ്പ് തുറന്ന് ബാക്കപ്പ് പുനഃസ്ഥാപിക്കുക ടാപ്പ് ചെയ്യുക, തുടർന്ന് ഒരു ബാക്കപ്പ് ഫയൽ കണ്ടെത്തുക."</string>
     <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
-    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">നിങ്ങൾ \"Signal സംഭരണം ഒപ്റ്റിമൈസ് ചെയ്യുക\" ഓൺ ആക്കിയിട്ടുണ്ട്. നിങ്ങളുടെ ഉപകരണത്തിലെ ബാക്കപ്പിൽ എല്ലാ മീഡിയയും ഉൾപ്പെടുത്താൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ, ഈ ക്രമീകരണം ഓഫ് ചെയ്യുക.</string>
     <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
-    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <string name="OnDeviceBackupsScreen__view_setting">ക്രമീകരണങ്ങൾ കാണുക</string>
     <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
-    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">ഓഫ് ചെയ്യാതെ തുടരുക</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">നിങ്ങളുടെ വീണ്ടെടുക്കൽ കീ പരിശോധിച്ചുറപ്പിക്കുക</string>
@@ -8635,9 +8688,9 @@
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">പണമടച്ചുള്ള Signal സുരക്ഷിത ബാക്കപ്പുകളുടെ ശ്രേണിയിൽ മാത്രമേ സ്റ്റോറേജ് ഒപ്റ്റിമൈസേഷൻ ഉപയോഗിക്കാൻ കഴിയൂ. നിങ്ങളുടെ ബാക്കപ്പ് സബ്സ്ക്രിപ്ഷൻ ഇപ്പോഴും പ്രോസസ്സ് ചെയ്യുകയാണ്, ഇതുവരെ സജീവമായിട്ടില്ല. പിന്നീട് വീണ്ടും ശ്രമിക്കൂ.</string>
     <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">നിങ്ങളുടെ ഉപകരണത്തിലെ ബാക്കപ്പിൽ നിന്ന് മീഡിയ നീക്കം ചെയ്യപ്പെടും</string>
     <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">\"Signal സംഭരണം ഒപ്റ്റിമൈസ് ചെയ്യുക\" ഓൺ ചെയ്യുന്നത് നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്നുള്ള പഴയ മീഡിയ ഓഫ് ലോഡ് ചെയ്യാൻ ഇടയാക്കും. നിങ്ങൾക്ക് ഇത് എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ഡൗൺലോഡ് ചെയ്യാം. ഇത് നിങ്ങളുടെ ഉപകരണത്തിലെ ബാക്കപ്പിൽ നിന്നും പഴയ മീഡിയയും നീക്കം ചെയ്യും.</string>
     <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
     <string name="ManageStorageSettingsFragment__turn_on">ഓൺ ചെയ്യുക</string>
 
@@ -8722,6 +8775,8 @@
     <string name="BackupsSettingsFragment__subscription_canceled">സബ്സ്ക്രിപ്ഷൻ റദ്ദാക്കി</string>
     <!-- Subtitle for row for no backup ever created -->
     <string name="BackupsSettingsFragment_automatic_backups_with_signals">Signal-ൻ്റെ സുരക്ഷിതമായ എൻഡ്-ടു-എൻഡ് എൻക്രിപ്റ്റഡ് സ്റ്റോറേജ് സേവനത്തോടുകൂടിയ സ്വയമേവയുള്ള ബാക്കപ്പുകൾ.</string>
+    <!-- Subtitle shown on a linked device when backups are off, directing the user to set them up on their phone -->
+    <string name="BackupsSettingsFragment__automatic_backups_get_started_on_your_phone">Signal-ൻ്റെ സുരക്ഷിതമായ എൻഡ്-ടു-എൻഡ് എൻക്രിപ്റ്റഡ് സ്റ്റോറേജ് സേവനത്തോടുകൂടിയ സ്വയമേവയുള്ള ബാക്കപ്പുകൾ. നിങ്ങളുടെ ഫോണിൽ ആരംഭിക്കുക.</string>
     <!-- Subtitle for row for backups that are active but subscription not found -->
     <string name="BackupsSettingsFragment_subscription_not_found_on_this_device">"ഈ ഉപകരണത്തിൽ സബ്സ്ക്രിപ്ഷൻ കണ്ടെത്തിയില്ല."</string>
     <!-- Action button label to set up backups -->
@@ -8825,6 +8880,16 @@
     <string name="RemoteBackupsSettingsFragment__s_at_s">%2$s %1$s-ന്</string>
     <!-- Subtext describing when a backup has never taken place. -->
     <string name="RemoteBackupsSettingsFragment__never">ഒരിക്കലും വേണ്ട</string>
+    <!-- Subtext on a linked device describing when the primary device last backed up. Placeholder is the formatted date and time. -->
+    <string name="RemoteBackupsSettingsFragment__your_phone_s">നിങ്ങളുടെ ഫോൺ · %1$s</string>
+    <!-- Message shown on a linked device with a free backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_your_subscription_on_your_primary_device">നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിൽ Signal സുരക്ഷിത ബാക്കപ്പ് സബ്സ്ക്രിപ്ഷൻ നിയന്ത്രിക്കാനോ അപ്‌ഗ്രേഡ് ചെയ്യാനോ കഴിയും.</string>
+    <!-- Message shown on a linked device with a paid backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_cancel_your_subscription_on_your_primary_device">നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിൽ Signal സുരക്ഷിത ബാക്കപ്പ് സബ്‌സ്‌ക്രിപ്ഷൻ നിയന്ത്രിക്കാനോ റദ്ദാക്കാനോ കഴിയും.</string>
+    <!-- Message shown on a linked device with a canceled backup subscription explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_renew_your_subscription_on_your_primary_device">നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിൽ Signal സുരക്ഷിത ബാക്കപ്പ് സബ്‌സ്‌ക്രിപ്ഷൻ നിയന്ത്രിക്കാനോ പുതുക്കാനോ കഴിയും.</string>
+    <!-- Message shown on a linked device when backups are off or the subscription was not found, explaining that backups are managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_backups_on_your_primary_device">നിങ്ങളുടെ പ്രൈമറി ഉപകരണത്തിൽ Signal സുരക്ഷിത ബാക്കപ്പ് നിയന്ത്രിക്കാനോ അപ്‌ഗ്രേഡ് ചെയ്യാനോ കഴിയും.</string>
     <!-- Button label to perform a backup immediately -->
     <string name="RemoteBackupsSettingsFragment__back_up_now">ഇപ്പോൾ ബാക്കപ്പ് ചെയ്യുക</string>
     <!-- Dialog title when confirming whether to turn off and deleting backups -->
@@ -9888,11 +9953,11 @@
     <!-- Header for a section showing all group member -->
     <string name="MemberSearchFragment__search_members">അംഗങ്ങളെ തിരയുക</string>
     <!-- Header for a section showing all group members who are contacts -->
-    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <string name="MemberSearchFragment__search_contacts">കോൺടാക്റ്റുകൾ തിരയുക</string>
     <!-- Header for a section showing all group member who are admins -->
-    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <string name="MemberSearchFragment__search_admins">അഡ്മിന്മാരെ തിരയുക</string>
     <!-- Dialog title to filter search by -->
-    <string name="MemberSearchFragment__filter">Filter by</string>
+    <string name="MemberSearchFragment__filter">ഇങ്ങനെ ഫിൽട്ടർ ചെയ്യുക:</string>
     <!-- Dialog option for all group members -->
     <string name="MemberSearchFragment__filter_all_members">എല്ലാ അംഗങ്ങളും</string>
     <!-- Dialog option for group admins -->
@@ -9900,7 +9965,7 @@
     <!-- Dialog option for your contacts -->
     <string name="MemberSearchFragment__filter_contacts">കോൺടാക്ടുകൾ</string>
     <!-- Button to invite members via a group link -->
-    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
+    <string name="MemberSearchFragment__invite_via">ഗ്രൂപ്പ് ലിങ്ക് വഴി ക്ഷണിക്കുക</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">ബാക്കപ്പ് പുനഃസ്ഥാപിക്കാൻ കഴിയില്ല</string>

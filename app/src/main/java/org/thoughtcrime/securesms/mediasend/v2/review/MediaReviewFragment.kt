@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -60,8 +61,10 @@ import org.thoughtcrime.securesms.mediasend.v2.MediaAnimations
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionNavigator
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionState
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionViewModel
+import org.thoughtcrime.securesms.mediasend.v2.UntrustedRecords
 import org.thoughtcrime.securesms.mediasend.v2.stories.StoriesMultiselectForwardActivity
 import org.thoughtcrime.securesms.recipients.Recipient
+import org.thoughtcrime.securesms.safety.SafetyNumberBottomSheet
 import org.thoughtcrime.securesms.scribbles.ImageEditorFragment
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SystemWindowInsetsSetter
@@ -69,17 +72,19 @@ import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.fragments.requireListener
 import org.thoughtcrime.securesms.util.views.TouchInterceptingFrameLayout
 import org.thoughtcrime.securesms.util.visible
+import org.thoughtcrime.securesms.video.TranscodingConfig
 import org.thoughtcrime.securesms.video.TranscodingQuality
 import java.io.IOException
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.microseconds
 import org.signal.core.ui.R as CoreUiR
 
 /**
  * Allows the user to view and edit selected media.
  */
-class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), ScheduleMessageTimePickerBottomSheet.ScheduleCallback, ScheduleMessageDialogCallback, VideoThumbnailsRangeSelectorView.RangeDragListener {
+class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), ScheduleMessageTimePickerBottomSheet.ScheduleCallback, ScheduleMessageDialogCallback, VideoThumbnailsRangeSelectorView.RangeDragListener, SafetyNumberBottomSheet.Callbacks {
 
   private val sharedViewModel: MediaSelectionViewModel by viewModels(
     ownerProducer = { requireActivity() }
@@ -122,7 +127,7 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), Schedul
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     postponeEnterTransition()
 
-    SystemWindowInsetsSetter.attach(view, viewLifecycleOwner)
+    SystemWindowInsetsSetter.attach(view, viewLifecycleOwner, WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
 
     disposables.bindTo(viewLifecycleOwner)
 
@@ -488,7 +493,15 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), Schedul
           readyToSend = true
         },
         { error ->
-          callback.onSendError(error)
+          if (error is UntrustedRecords.UntrustedRecordsException) {
+            Log.w(TAG, "Send failed due to untrusted identities.")
+            hideSendProgress()
+            SafetyNumberBottomSheet
+              .forIdentityRecordsAndDestinations(error.untrustedRecords, error.destinations.toList())
+              .show(childFragmentManager)
+          } else {
+            callback.onSendError(error)
+          }
           readyToSend = true
         },
         {
@@ -497,6 +510,22 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), Schedul
         }
       )
   }
+
+  private fun hideSendProgress() {
+    progressWrapper.animate().cancel()
+    progressWrapper.alpha = 0f
+    progressWrapper.visible = false
+  }
+
+  override fun sendAnywayAfterSafetyNumberChangedInBottomSheet(destinations: List<ContactSearchKey.RecipientSearchKey>) {
+    performSend(destinations)
+  }
+
+  override fun onMessageResentAfterSafetyNumberChangeInBottomSheet() {
+    error("Unsupported, we do not hand in a message id.")
+  }
+
+  override fun onCanceled() = Unit
 
   private fun presentAddMessageEntry(viewOnceState: MediaSelectionState.ViewOnceToggleState, message: CharSequence?) {
     when (viewOnceState) {
@@ -582,9 +611,9 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), Schedul
       videoTimeLine.unregisterDragListener()
     }
     val size: Long = tryGetUriSize(requireContext(), uri, Long.MAX_VALUE)
-    val maxSend = sharedViewModel.getMediaConstraints().getEditorVideoMaxSize()
+    val maxSend = sharedViewModel.getMediaConstraints().editorVideoMaxSize
     if (size > maxSend) {
-      videoTimeLine.setTimeLimit(state.transcodingPreset.calculateMaxVideoUploadDurationInSeconds(maxSend), TimeUnit.SECONDS)
+      videoTimeLine.setTimeLimit(TranscodingConfig.calculateMaxVideoUploadDurationInSeconds(state.transcodingConfigs, state.getOrCreateVideoTrimData(uri).totalInputDurationUs.microseconds), TimeUnit.SECONDS)
     }
 
     if (state.isTouchEnabled) {
@@ -602,7 +631,7 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment), Schedul
 
     videoSizeHint.text = if (state.isVideoTrimmingVisible) {
       val seconds = trimData.getDuration().inWholeSeconds
-      val bytes = TranscodingQuality.createFromPreset(state.transcodingPreset, trimData.getDuration().inWholeMilliseconds).byteCountEstimate
+      val bytes = TranscodingQuality.createFromQualityTiers(state.transcodingConfigs, trimData.getDuration().inWholeMilliseconds).byteCountEstimate
       String.format(Locale.getDefault(), "%d:%02d • %s", seconds / 60, seconds % 60, bytes.bytes.toUnitString())
     } else {
       null

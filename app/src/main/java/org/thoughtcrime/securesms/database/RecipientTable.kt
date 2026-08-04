@@ -1096,6 +1096,10 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
     groups.setVerifiedGroupNameHash(groupId, update.new.proto.verifiedNameHash.nullIfEmpty()?.toByteArray())
     threads.applyStorageSyncUpdate(recipient.id, update.new)
     AppDependencies.databaseObserver.notifyRecipientChanged(recipient.id)
+
+    if (update.old.proto.blocked && !update.new.proto.blocked) {
+      groups.clearGroupIfLeftAndDeleted(recipient.id)
+    }
   }
 
   fun applyStorageSyncAccountUpdate(update: StorageRecordUpdate<SignalAccountRecord>) {
@@ -3505,6 +3509,16 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
       .readToSingleBoolean()
   }
 
+  /** True if the recipient exists and is blocked, otherwise false. */
+  fun isBlocked(id: RecipientId): Boolean {
+    return readableDatabase
+      .select(BLOCKED)
+      .from(TABLE_NAME)
+      .where("$ID = ?", id)
+      .run()
+      .readToSingleBoolean()
+  }
+
   /** All e164's that are eligible for having a signal link added to their system contact entry. */
   fun getE164sForSystemContactLinks(): Set<String> {
     return readableDatabase
@@ -3881,9 +3895,26 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
   }
 
   fun applyBlockedUpdate(blockedE164s: List<String>, blockedAcis: List<ACI>, blockedGroupIds: List<ByteArray?>) {
+    val oldBlockedGV1: Set<GroupId> = readableDatabase
+      .select(GROUP_ID)
+      .from(TABLE_NAME)
+      .where("$BLOCKED = 1 AND $TYPE = ?", SqlUtil.buildArgs(RecipientType.GV1.id))
+      .run()
+      .readToList {
+        try {
+          GroupId.parseNullableOrThrow(it.requireString(GROUP_ID))
+        } catch (e: BadGroupIdException) {
+          Log.w(TAG, "[applyBlockedUpdate] Bad existing GV1 ID!")
+          null
+        }
+      }
+      .filterNotNull()
+      .toSet()
+
     writableDatabase.withinTransaction { db ->
-      db.updateAll(TABLE_NAME)
+      db.update(TABLE_NAME)
         .values(BLOCKED to 0)
+        .where("$TYPE != ?", RecipientType.GV2.id)
         .run()
 
       val blockValues = contentValuesOf(
@@ -3908,7 +3939,7 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
       }
 
       if (blockedGroupIds.isNotEmpty()) {
-        val groupIds: List<GroupId.V1> = blockedGroupIds.filterNotNull().mapNotNull { raw ->
+        val groupV1Ids: List<GroupId.V1> = blockedGroupIds.filterNotNull().mapNotNull { raw ->
           try {
             raw?.let { GroupId.v1(it) }
           } catch (e: BadGroupIdException) {
@@ -3917,11 +3948,17 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
           }
         }
 
-        val groupIdQuery = SqlUtil.buildFastCollectionQuery(GROUP_ID, groupIds.map { it.toString() })
-        db.update(TABLE_NAME)
-          .values(blockValues)
-          .where(groupIdQuery.where, groupIdQuery.whereArgs)
-          .run()
+        if (groupV1Ids.isNotEmpty()) {
+          val groupIdQuery = SqlUtil.buildFastCollectionQuery(GROUP_ID, groupV1Ids.map { it.toString() })
+          db.update(TABLE_NAME)
+            .values(blockValues)
+            .where(groupIdQuery.where, groupIdQuery.whereArgs)
+            .run()
+
+          for (groupId in oldBlockedGV1 - groupV1Ids.toSet()) {
+            groups.clearGroupIfLeftAndDeleted(groupId)
+          }
+        }
       }
     }
 
@@ -4207,12 +4244,12 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
   }
 
   fun clearSelfKeyTransparencyData() {
-    Log.i(TAG, "Clearing self key transparency data.")
-    writableDatabase
+    val updated = writableDatabase
       .update(TABLE_NAME)
       .values(KEY_TRANSPARENCY_DATA to null)
       .where("$ACI_COLUMN = ?", Recipient.self().requireAci().toString())
       .run()
+    Log.i(TAG, "Clearing self key transparency data $updated")
   }
 
   /**
@@ -4492,6 +4529,104 @@ open class RecipientTable(context: Context, databaseHelper: SignalDatabase) : Da
         put(AVATAR_COLOR, AvatarColorHash.forGroupId(groupId).serialize())
       }
     }
+  }
+
+  /**
+   * Blanks out every column for a group's recipient row except [ID], [GROUP_ID], [TYPE], [BLOCKED], and [STORAGE_SERVICE_ID].
+   */
+  fun clearGroupRecipient(recipientId: RecipientId, keepIdentifier: Boolean): Boolean {
+    val cleared = if (keepIdentifier) {
+      writableDatabase
+        .update(TABLE_NAME)
+        .values(buildClearedGroupRecipientValues())
+        .where("$ID = ?", recipientId)
+        .run()
+    } else {
+      writableDatabase
+        .delete(TABLE_NAME)
+        .where("$ID = ?", recipientId)
+        .run()
+    }
+
+    for (table in recipientIdDatabaseTables) {
+      table.onDeletedRecipient(recipientId)
+    }
+
+    Log.i(TAG, "Cleared group recipient data for $recipientId, cleared: $cleared")
+
+    return cleared > 0
+  }
+
+  /**
+   * The values written when clearing a group recipient while keeping its identifier. Every column must appear here except the
+   * ones intentionally preserved. See [RecipientTableTest] which enforces this.
+   */
+  @VisibleForTesting
+  fun buildClearedGroupRecipientValues(): ContentValues {
+    return contentValuesOf(
+      E164 to null,
+      ACI_COLUMN to null,
+      PNI_COLUMN to null,
+      USERNAME to null,
+      EMAIL to null,
+      DISTRIBUTION_LIST_ID to null,
+      CALL_LINK_ROOM_ID to null,
+      REGISTERED to RegisteredState.UNKNOWN.id,
+      UNREGISTERED_TIMESTAMP to 0,
+      HIDDEN to 0,
+      PROFILE_KEY to null,
+      EXPIRING_PROFILE_KEY_CREDENTIAL to null,
+      PROFILE_SHARING to 0,
+      PROFILE_GIVEN_NAME to null,
+      PROFILE_FAMILY_NAME to null,
+      PROFILE_JOINED_NAME to null,
+      PROFILE_AVATAR to null,
+      LAST_PROFILE_FETCH to 0,
+      SYSTEM_GIVEN_NAME to null,
+      SYSTEM_FAMILY_NAME to null,
+      SYSTEM_JOINED_NAME to null,
+      SYSTEM_NICKNAME to null,
+      SYSTEM_PHOTO_URI to null,
+      SYSTEM_PHONE_LABEL to null,
+      SYSTEM_PHONE_TYPE to -1,
+      SYSTEM_CONTACT_URI to null,
+      SYSTEM_INFO_PENDING to 0,
+      NOTIFICATION_CHANNEL to null,
+      MESSAGE_RINGTONE to null,
+      MESSAGE_VIBRATE to VibrateState.DEFAULT.id,
+      CALL_RINGTONE to null,
+      CALL_VIBRATE to VibrateState.DEFAULT.id,
+      MUTE_UNTIL to 0,
+      MESSAGE_EXPIRATION_TIME to 0,
+      MESSAGE_EXPIRATION_TIME_VERSION to 1,
+      SEALED_SENDER_MODE to 0,
+      STORAGE_SERVICE_PROTO to null,
+      MENTION_SETTING to NotificationSetting.ALWAYS_NOTIFY.id,
+      CALL_NOTIFICATION_SETTING to NotificationSetting.ALWAYS_NOTIFY.id,
+      REPLY_NOTIFICATION_SETTING to NotificationSetting.ALWAYS_NOTIFY.id,
+      CAPABILITIES to 0,
+      LAST_SESSION_RESET to null,
+      WALLPAPER to null,
+      WALLPAPER_URI to null,
+      ABOUT to null,
+      ABOUT_EMOJI to null,
+      EXTRAS to null,
+      GROUPS_IN_COMMON to 0,
+      AVATAR_COLOR to null,
+      CHAT_COLORS to null,
+      CUSTOM_CHAT_COLORS_ID to 0,
+      BADGES to null,
+      NEEDS_PNI_SIGNATURE to 0,
+      REPORTING_TOKEN to null,
+      PHONE_NUMBER_SHARING to PhoneNumberSharingState.UNKNOWN.id,
+      PHONE_NUMBER_DISCOVERABLE to PhoneNumberDiscoverableState.UNKNOWN.id,
+      PNI_SIGNATURE_VERIFIED to 0,
+      NICKNAME_GIVEN_NAME to null,
+      NICKNAME_FAMILY_NAME to null,
+      NICKNAME_JOINED_NAME to null,
+      NOTE to null,
+      KEY_TRANSPARENCY_DATA to null
+    )
   }
 
   /**

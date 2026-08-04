@@ -35,6 +35,7 @@ import org.thoughtcrime.securesms.conversation.MessageStyler
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.mediasend.MediaSendActivityResult
 import org.thoughtcrime.securesms.mms.PushMediaConstraints
+import org.thoughtcrime.securesms.mms.TranscodingConfigProvider
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.scribbles.ImageEditorFragment
 import org.thoughtcrime.securesms.stories.Stories
@@ -42,6 +43,7 @@ import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.livedata.Store
 import java.util.Collections
 import kotlin.math.max
+import kotlin.time.Duration.Companion.microseconds
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -79,6 +81,9 @@ class MediaSelectionViewModel(
 
   val mediaErrors: BehaviorSubject<MediaValidator.FilterError> = BehaviorSubject.createDefault(MediaValidator.FilterError.None)
   val hudCommands: Observable<HudCommand> = internalHudCommands
+
+  private val _videoTrimmedEvents = PublishSubject.create<Unit>()
+  val videoTrimmedEvents: Observable<Unit> = _videoTrimmedEvents
 
   private val disposables = CompositeDisposable()
 
@@ -165,19 +170,20 @@ class MediaSelectionViewModel(
         .populateAndFilterMedia(newSelectionList, getMediaConstraints(), store.state.maxSelection, store.state.isStory)
         .subscribe { filterResult ->
           if (filterResult.filteredMedia.isNotEmpty()) {
-            store.update {
-              val maxDuration = it.calculateMaxVideoDurationUs(getMediaConstraints().getEditorVideoMaxSize())
-              val initializedVideoEditorStates = filterResult.filteredMedia.filterNot { media -> it.editorStateMap.containsKey(media.uri) }
-                .filter { media -> MediaUtil.isNonGifVideo(media) }
-                .associate { video: Media ->
-                  val duration = video.duration.milliseconds.inWholeMicroseconds
-                  if (duration < maxDuration) {
-                    video.uri to VideoTrimData(false, duration, 0, duration)
-                  } else {
-                    video.uri to VideoTrimData(true, duration, 0, maxDuration)
-                  }
+            val existingState = store.state
+            val initializedVideoEditorStates = filterResult.filteredMedia.filterNot { media -> existingState.editorStateMap.containsKey(media.uri) }
+              .filter { media -> MediaUtil.isNonGifVideo(media) }
+              .associate { video: Media ->
+                val duration = video.duration.milliseconds.inWholeMicroseconds
+                val maxDuration = existingState.calculateMaxVideoDurationUs(video.duration.milliseconds)
+                if (MediaConstraints.isVideoTranscodeAvailable() && duration >= maxDuration) {
+                  video.uri to VideoTrimData(true, duration, 0, maxDuration)
+                } else {
+                  video.uri to VideoTrimData(false, duration, 0, duration)
                 }
+              }
 
+            store.update {
               val updatedCameraFirstCapture = if (it.cameraFirstCapture != null) {
                 filterResult.filteredMedia.find { filtered -> filtered.uri == it.cameraFirstCapture.uri }
               } else {
@@ -188,8 +194,12 @@ class MediaSelectionViewModel(
                 selectedMedia = filterResult.filteredMedia,
                 focusedMedia = it.focusedMedia ?: filterResult.filteredMedia.first(),
                 editorStateMap = it.editorStateMap + initializedVideoEditorStates,
-                cameraFirstCapture = updatedCameraFirstCapture ?: it.cameraFirstCapture
+                cameraFirstCapture = if (filterResult.filteredMedia.size > 1) null else updatedCameraFirstCapture ?: it.cameraFirstCapture
               )
+            }
+
+            if (initializedVideoEditorStates.any { (_, data) -> data.isDurationEdited }) {
+              _videoTrimmedEvents.onNext(Unit)
             }
 
             selectedMediaSubject.onNext(filterResult.filteredMedia)
@@ -255,11 +265,11 @@ class MediaSelectionViewModel(
     return store.state.selectedMedia.isEmpty()
   }
 
-  fun removeMedia(media: Media) {
-    removeMedia(setOf(media))
+  fun removeMedia(media: Media, suppressEmptyError: Boolean = store.state.suppressEmptyError) {
+    removeMedia(setOf(media), suppressEmptyError)
   }
 
-  fun removeMedia(media: Set<Media>) {
+  fun removeMedia(media: Set<Media>, suppressEmptyError: Boolean = store.state.suppressEmptyError) {
     val snapshot = store.state
     val newMediaList = snapshot.selectedMedia - media
     val newFocus = when {
@@ -302,7 +312,7 @@ class MediaSelectionViewModel(
     val cameraFirstCapture: Media? = store.state.cameraFirstCapture
     if (cameraFirstCapture != null) {
       setSuppressEmptyError(true)
-      removeMedia(cameraFirstCapture)
+      removeMedia(cameraFirstCapture, suppressEmptyError = true)
     }
   }
 
@@ -330,15 +340,24 @@ class MediaSelectionViewModel(
       return
     }
 
-    store.update { it.copy(quality = sentMediaQuality, isPreUploadEnabled = false) }
+    store.update { it.copy(quality = sentMediaQuality, isPreUploadEnabled = false, transcodingConfigs = TranscodingConfigProvider.getConfigsForMediaQuality(sentMediaQuality)) }
     repository.uploadRepository.cancelAllUploads()
 
+    var videoTrimmed = false
     store.state.selectedMedia.forEach { mediaItem ->
       if (MediaUtil.isVideoType(mediaItem.contentType) && MediaConstraints.isVideoTranscodeAvailable()) {
         val uri = mediaItem.uri
-        val data = store.state.getOrCreateVideoTrimData(uri)
-        onEditVideoDuration(totalDurationUs = data.totalInputDurationUs, startTimeUs = data.startTimeUs, endTimeUs = data.endTimeUs, touchEnabled = true, uri = uri)
+        val before = store.state.getOrCreateVideoTrimData(uri)
+        onEditVideoDuration(totalDurationUs = before.totalInputDurationUs, startTimeUs = before.startTimeUs, endTimeUs = before.endTimeUs, touchEnabled = true, uri = uri)
+        val after = store.state.getOrCreateVideoTrimData(uri)
+        if (after.getDuration() < before.getDuration()) {
+          videoTrimmed = true
+        }
       }
+    }
+
+    if (videoTrimmed) {
+      _videoTrimmedEvents.onNext(Unit)
     }
   }
 
@@ -360,7 +379,7 @@ class MediaSelectionViewModel(
       val durationEdited = clampedStartTime > 0 || endTimeUs < totalDurationUs
       val isEntireDuration = startTimeUs == 0L && endTimeUs == totalDurationUs
       val endMoved = !isEntireDuration && data.endTimeUs != endTimeUs
-      val maxVideoDurationUs: Long = it.calculateMaxVideoDurationUs(getMediaConstraints().getEditorVideoMaxSize())
+      val maxVideoDurationUs: Long = it.calculateMaxVideoDurationUs((endTimeUs - clampedStartTime).microseconds)
       val preserveStartTime = unedited || !endMoved
       val videoTrimData = VideoTrimData(durationEdited, totalDurationUs, clampedStartTime, endTimeUs)
       val updatedData = clampToMaxClipDuration(videoTrimData, maxVideoDurationUs, preserveStartTime)

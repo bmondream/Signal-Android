@@ -132,7 +132,7 @@ private val lightExtendedColors = ExtendedColors(
 private val darkExtendedColors = ExtendedColors(
   neutralSurface = Color(0x14FFFFFF),
   colorOnCustom = Color(0xFFFFFFFF),
-  colorOnCustomVariant = Color(0xB3FFFFFF),
+  colorOnCustomVariant = Color(0x18FFFFFF),
   colorSurface1 = Color(0xFF23242A),
   colorSurface2 = Color(0xFF272A31),
   colorSurface3 = Color(0xFF2C2F37),
@@ -211,6 +211,19 @@ fun SignalTheme(
         content = content
       )
     }
+  }
+}
+
+/**
+ * Applies the light color scheme to [content] regardless of the ambient theme, leaving typography and shapes untouched.
+ */
+@Composable
+fun ForceLightColors(content: @Composable () -> Unit) {
+  CompositionLocalProvider(LocalExtendedColors provides lightExtendedColors) {
+    MaterialTheme(
+      colorScheme = lightColorScheme,
+      content = content
+    )
   }
 }
 

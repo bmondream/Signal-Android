@@ -263,7 +263,8 @@ object SyncMessageProcessor {
         dataMessage.isMediaMessage -> threadId = handleSynchronizeSentMediaMessage(context, sent, envelope.clientTimestamp!!, senderRecipient)
         dataMessage.pollCreate != null -> threadId = handleSynchronizedPollCreate(envelope, dataMessage, sent, senderRecipient)
         dataMessage.pollVote != null -> {
-          DataMessageProcessor.handlePollVote(context, envelope, dataMessage, senderRecipient, earlyMessageCacheEntry)
+          val destination = getSyncMessageDestination(sent)
+          DataMessageProcessor.handlePollVote(context, envelope, dataMessage, senderRecipient, destination, earlyMessageCacheEntry)
           threadId = SignalDatabase.threads.getOrCreateThreadIdFor(getSyncMessageDestination(sent))
         }
         dataMessage.pollTerminate != null -> threadId = handleSynchronizedPollEnd(envelope, dataMessage, sent, senderRecipient, earlyMessageCacheEntry)
@@ -2026,8 +2027,8 @@ object SyncMessageProcessor {
     SignalDatabase.messages.markAsSent(messageId)
 
     if (expiresInMillis > 0) {
-      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: 0)
-      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: 0, expiresInMillis)
+      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: sent.timestamp!!)
+      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: sent.timestamp!!, expiresInMillis)
     }
 
     return threadId
@@ -2060,6 +2061,13 @@ object SyncMessageProcessor {
       }
       return -1
     }
+
+    val targetThreadId = SignalDatabase.threads.getRecipientIdForThreadId(targetMessage.threadId)
+    if (threadId != targetMessage.threadId) {
+      warn(envelope.clientTimestamp!!, "Target thread does not match. $threadId $targetThreadId")
+      return -1
+    }
+
     val poll = SignalDatabase.polls.getPoll(targetMessage.id)
     if (poll == null) {
       warn(envelope.clientTimestamp!!, "Unable to find poll for poll termination. Dropping.")
@@ -2086,8 +2094,8 @@ object SyncMessageProcessor {
     log(envelope.clientTimestamp!!, "Inserted sync poll end message as messageId $messageId")
 
     if (expiresInMillis > 0) {
-      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: 0)
-      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: 0, expiresInMillis)
+      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: sent.timestamp!!)
+      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: sent.timestamp!!, expiresInMillis)
     }
 
     return threadId
@@ -2153,8 +2161,8 @@ object SyncMessageProcessor {
     log(envelope.clientTimestamp!!, "Inserted sync pin message as messageId $messageId")
 
     if (expiresInMillis > 0) {
-      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: 0)
-      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: 0, expiresInMillis)
+      SignalDatabase.messages.markExpireStarted(messageId, sent.expirationStartTimestamp ?: sent.timestamp!!)
+      AppDependencies.expiringMessageManager.scheduleDeletion(messageId, recipient.isGroup, sent.expirationStartTimestamp ?: sent.timestamp!!, expiresInMillis)
     }
 
     return threadId
@@ -2193,7 +2201,7 @@ object SyncMessageProcessor {
   }
 
   private fun AddressableMessage.toSyncMessageId(envelopeTimestamp: Long): MessageTable.SyncMessageId? {
-    return if (this.sentTimestamp != null && Utils.anyNotNull(this.authorServiceId, this.authorServiceIdBinary) || this.authorE164 != null) {
+    return if (this.sentTimestamp != null && (Utils.anyNotNull(this.authorServiceId, this.authorServiceIdBinary) || this.authorE164 != null)) {
       val serviceId = ServiceId.parseOrNull(this.authorServiceId, this.authorServiceIdBinary)
       val id = if (serviceId != null) {
         SignalDatabase.recipients.getOrInsertFromServiceId(serviceId)

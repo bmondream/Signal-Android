@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.WindowManager;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,11 +63,8 @@ public class AvatarSelectionActivity extends AppCompatActivity implements Camera
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
+    EdgeToEdge.enable(this);
     super.onCreate(savedInstanceState);
-
-    getWindow().addFlags(
-        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-    );
 
     setContentView(R.layout.avatar_selection_activity);
 
@@ -128,8 +125,8 @@ public class AvatarSelectionActivity extends AppCompatActivity implements Camera
   }
 
   @Override
-  public void onCameraCountButtonClicked() {
-    throw new UnsupportedOperationException("Cannot select more than one photo");
+  public void onCameraCloseClicked() {
+    finish();
   }
 
   @Override

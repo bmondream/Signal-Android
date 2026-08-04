@@ -46,6 +46,7 @@ import org.thoughtcrime.securesms.scribbles.ImageEditorFragment
 import org.thoughtcrime.securesms.stories.Stories
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
+import org.thoughtcrime.securesms.video.TranscodingConfig
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
@@ -129,13 +130,9 @@ object MediaSendV3Repository : MediaSendRepository {
     }
   }
 
-  override fun getMaxVideoDurationUs(quality: SentMediaQuality, maxFileSizeBytes: Long): Long {
-    val preset = PushMediaConstraints(quality).videoTranscodingSettings
-    return preset.calculateMaxVideoUploadDurationInSeconds(maxFileSizeBytes).seconds.inWholeMicroseconds
-  }
-
-  override fun getVideoMaxSizeBytes(): Long {
-    return PushMediaConstraints(null).getEditorVideoMaxSize()
+  override fun getMaxVideoDurationUs(quality: SentMediaQuality, duration: Duration): Long {
+    val config = PushMediaConstraints(quality).videoTranscodingSettings
+    return TranscodingConfig.calculateMaxVideoUploadDurationInSeconds(config, duration).seconds.inWholeMicroseconds
   }
 
   override fun isVideoTranscodeAvailable(): Boolean {

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.media3.exoplayer.ExoPlayer;
 
+import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.signal.billing.BillingFactory;
 import org.signal.core.models.ServiceId.ACI;
@@ -41,6 +42,7 @@ import org.signal.network.api.MessageApiV2;
 import org.signal.network.api.PaymentsApi;
 import org.signal.network.api.ProvisioningApi;
 import org.signal.network.api.RateLimitChallengeApi;
+import org.signal.network.api.RegistrationApiV2;
 import org.signal.network.api.RemoteConfigApi;
 import org.signal.network.api.SvrBApi;
 import org.signal.network.api.UsernameApi;
@@ -139,7 +141,7 @@ import org.whispersystems.signalservice.api.util.CredentialsProvider;
 import org.whispersystems.signalservice.api.websocket.SignalWebSocket;
 import org.whispersystems.signalservice.api.websocket.WebSocketFactory;
 import org.whispersystems.signalservice.api.websocket.WebSocketUnavailableException;
-import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
+import org.signal.network.config.SignalServiceConfiguration;
 import org.whispersystems.signalservice.internal.push.PushServiceSocket;
 import org.whispersystems.signalservice.internal.websocket.LibSignalChatConnection;
 import org.whispersystems.signalservice.internal.websocket.LibSignalNetworkExtensions;
@@ -209,6 +211,7 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
                                                 protocolStore.aci(),
                                                 new SignalProtocolAddress(pushServiceSocket.getCredentialsProvider().getAci().getLibSignalServiceId(),
                                                                           pushServiceSocket.getCredentialsProvider().getDeviceId()),
+                                                ReentrantSessionLock.INSTANCE,
                                                 PreKeyBatcher.INSTANCE
                                               )
                                             );
@@ -542,6 +545,14 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
   }
 
   @Override
+  public @NonNull OkHttpClient provideOkHttpClient() {
+    return new OkHttpClient.Builder()
+        .addInterceptor(new StandardUserAgentInterceptor())
+        .dns(SignalServiceNetworkAccess.DNS)
+        .build();
+  }
+
+  @Override
   public @NonNull BillingApi provideBillingApi() {
     return BillingFactory.create(GooglePlayBillingDependencies.INSTANCE, Environment.Backups.supportsGooglePlayBilling());
   }
@@ -573,6 +584,11 @@ public class ApplicationDependencyProvider implements AppDependencies.Provider {
   @Override
   public @NonNull RegistrationApi provideRegistrationApi(@NonNull PushServiceSocket pushServiceSocket) {
     return new RegistrationApi(pushServiceSocket);
+  }
+
+  @Override
+  public @NonNull RegistrationApiV2 provideRegistrationApiV2(@NonNull SignalRestClient signalRestClient) {
+    return new RegistrationApiV2(signalRestClient);
   }
 
   @Override

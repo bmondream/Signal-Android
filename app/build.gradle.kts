@@ -32,8 +32,8 @@ plugins {
 val staticIps = Properties().apply { file("static-ips.properties").reader().use { load(it) } }
 staticIps.stringPropertyNames().forEach { rootProject.extra[it] = staticIps.getProperty(it) }
 
-val canonicalVersionCode = 1719
-val canonicalVersionName = "8.19.2"
+val canonicalVersionCode = 1729
+val canonicalVersionName = "8.21.4"
 val currentHotfixVersion = 0
 val maxHotfixVersions = 100
 
@@ -132,6 +132,17 @@ ktlint {
   version.set("1.5.0")
 }
 
+// ktlint only scans convention source dirs, so the shared dirs added to the compile tasks are
+// otherwise skipped. Add them to the base test/androidTest ktlint tasks so ktlintCheck/format cover them.
+tasks.withType(org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask::class.java).configureEach {
+  if (name.endsWith("OverTestSourceSet") || name.endsWith("OverAndroidTestSourceSet")) {
+    source("$projectDir/src/testShared")
+  }
+  if (name.endsWith("OverAndroidTestSourceSet")) {
+    source("$projectDir/src/benchmarkShared/java")
+  }
+}
+
 screenshotTests {
   // Fraction of differing pixels tolerated before a screenshot test fails (0.0001 = 0.01%).
   imageDifferenceThreshold = 0.0001f
@@ -143,7 +154,11 @@ android {
   experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
   buildToolsVersion = libs.versions.buildTools.get()
-  compileSdkVersion(libs.versions.compileSdk.get())
+
+  compileSdk {
+    version = release(libs.versions.compileSdk.get().toInt())
+  }
+
   ndkVersion = libs.versions.ndk.get()
 
   flavorDimensions += listOf("distribution", "environment")
@@ -180,12 +195,12 @@ android {
 
   sourceSets {
     getByName("test") {
-      java.srcDir("$projectDir/src/testShared")
+      java.directories += "$projectDir/src/testShared"
     }
 
     getByName("androidTest") {
-      java.srcDir("$projectDir/src/testShared")
-      java.srcDir("$projectDir/src/benchmarkShared/java")
+      java.directories += "$projectDir/src/testShared"
+      java.directories += "$projectDir/src/benchmarkShared/java"
     }
   }
 
@@ -400,6 +415,7 @@ android {
       isDefault = false
       isDebuggable = false
       isMinifyEnabled = true
+      isShrinkResources = true
       matchingFallbacks += "debug"
       buildConfigField("String", "BUILD_VARIANT_TYPE", "\"Benchmark\"")
       buildConfigField("boolean", "TRACING_ENABLED", "true")
@@ -510,18 +526,18 @@ android {
   android.buildTypes.configureEach {
     val path = if (name == "release") releaseDir else debugDir
     sourceSets.named(name) {
-      java.srcDir(path)
+      java.directories += path
     }
   }
 
   sourceSets {
     getByName("mocked") {
-      java.srcDir("$projectDir/src/benchmarkShared/java")
+      java.directories += "$projectDir/src/benchmarkShared/java"
       manifest.srcFile("$projectDir/src/benchmarkShared/AndroidManifest.xml")
     }
 
     getByName("benchmark") {
-      java.srcDir("$projectDir/src/benchmarkShared/java")
+      java.directories += "$projectDir/src/benchmarkShared/java"
       manifest.srcFile("$projectDir/src/benchmarkShared/AndroidManifest.xml")
     }
   }
@@ -687,6 +703,7 @@ dependencies {
   implementation(project(":core:ui"))
   implementation(project(":core:models"))
   implementation(project(":core:models-jvm"))
+  implementation(project(":core:serialization"))
   implementation(project(":feature:camera"))
   implementation(project(":feature:registration"))
   implementation(project(":lib:apng"))
@@ -831,6 +848,7 @@ dependencies {
 
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+  androidTestImplementation(libs.androidx.compose.ui.test.manifest)
   androidTestImplementation(testLibs.androidx.test.ext.junit)
   androidTestImplementation(testLibs.espresso.core)
   androidTestImplementation(testLibs.espresso.contrib) {

@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: AGPL-3.0-only
   -->
 <!-- smartling.instruction_comments_enabled = on -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
@@ -298,6 +298,16 @@
     <string name="ClientDeprecatedActivity_warning">Opozorilo</string>
     <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">Različica aplikacije Signal na vaši napravi je potekla. Še vedno lahko pregledujete zgodovino svojih sporočil, ne morete pa jih pošiljati ali prejemati dokler je ne posodobite.</string>
 
+    <!-- ClockSkewActivity -->
+    <!-- Title of the full-screen dialog shown when the device clock is too far off from the real time -->
+    <string name="ClockSkewActivity__title">Date is inaccurate</string>
+    <!-- Body text explaining that the device clock is wrong and needs to be fixed -->
+    <string name="ClockSkewActivity__date_inaccurate_description">Your device date is inaccurate.\nAdjust your clock and try again.</string>
+    <!-- Shows the user the current, inaccurate date and time reported by their device. Placeholder is the formatted date, time, and time zone. -->
+    <string name="ClockSkewActivity__time_prefix">Your device date and time is:\n%1$s</string>
+    <!-- Button that opens the system date and time settings -->
+    <string name="ClockSkewActivity__adjust_date_button">Adjust date</string>
+
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">Spletnega brskalnika ni bilo mogoče najti.</string>
     <string name="CommunicationActions_send_email">Pošlji e-pošto</string>
@@ -392,6 +402,8 @@
     <!-- Conversation message shown when someone deletes their own message. Placeholder is the name of the person. -->
     <string name="ConversationItem_s_deleted_this_message">%1$s je izbrisal_a sporočilo</string>
     <string name="ConversationItem_you_deleted_this_message">Izbrisali ste to sporočilo</string>
+    <!-- Tappable text shown on a locally-deleted message tombstone, prompting the user to promote it to a delete-for-everyone -->
+    <string name="ConversationItem_delete_for_everyone_question">Želite izbrisati za vse?</string>
     <!-- Conversation message when a message has been deleted by an admin. The placeholder is the admin\'s name. -->
     <string name="ConversationItem_admin_s_deleted_this_message">Administrator_ka %1$s je izbrisal_a to sporočilo</string>
     <!-- Dialog error message shown when user can\'t download a message from someone else due to a permanent failure (e.g., unable to decrypt), placeholder is other\'s name -->
@@ -603,7 +615,7 @@
     <string name="ConversationFragment_delete">Izbriši</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">Izbriši povsod</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">To sporočilo bo izbrisano za vse v tem klepetu, če uporabljajo novejšo različico Signala. Sodelujoči bodo lahko videli, da je bilo sporočilo izbrisano.</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">This message will be deleted for everyone in the chat. They will be able to see that you deleted a message.</string>
     <string name="ConversationFragment_quoted_message_not_found">Izvorno sporočilo ni bilo najdeno</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">Izvorno sporočilo ni več na voljo</string>
     <string name="ConversationFragment_failed_to_open_message">Odpiranje sporočila ni uspelo</string>
@@ -642,7 +654,7 @@
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Ponovno se prijavite v Signal</string>
     <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
-    <string name="ConversationFragment__relink_signal">Re-link</string>
+    <string name="ConversationFragment__relink_signal">Ponovno poveži</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Nazaj.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -786,23 +798,38 @@
     <!-- Notice on chat list when no unread chats are available, centered on display -->
     <string name="ConversationListFragment__no_unread_chats">Ni neprebranih klepetov</string>
     <plurals name="ConversationListFragment_delete_selected_conversations">
-        <item quantity="one">Izbrišem izbrani klepet?</item>
-        <item quantity="two">Izbrišem izbrana klepeta?</item>
-        <item quantity="few">Izbrišem izbrane klepete?</item>
-        <item quantity="other">Izbrišem izbrane klepete?</item>
+        <item quantity="one">Delete message history?</item>
+        <item quantity="two">Delete message histories?</item>
+        <item quantity="few">Delete message histories?</item>
+        <item quantity="other">Delete message histories?</item>
     </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations">
-        <item quantity="one">S tem boste trajno izbrisali izbrani klepet.</item>
-        <item quantity="two">S tem boste trajno izbrisali %1$d izbrana klepeta.</item>
-        <item quantity="few">S tem boste trajno izbrisali vse %1$d izbrane klepete.</item>
-        <item quantity="other">S tem boste trajno izbrisali vseh %1$d izbranih klepetov.</item>
+        <item quantity="one">All messages in this chat will be deleted.</item>
+        <item quantity="two">All messages in these chats will be deleted.</item>
+        <item quantity="few">All messages in these chats will be deleted.</item>
+        <item quantity="other">All messages in these chats will be deleted.</item>
     </plurals>
-    <!-- Dialog message shown when deleting one to many conversations from the chat list and the user has a linked device -->
+    <!-- Dialog message shown when deleting chats, with at least one group -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_group">
+        <item quantity="one">All messages in this chat will be deleted. You will still be a member of this group.</item>
+        <item quantity="two">All messages in these chats will be deleted. You will still be a member of any groups you have not left yet.</item>
+        <item quantity="few">All messages in these chats will be deleted. You will still be a member of any groups you have not left yet.</item>
+        <item quantity="other">All messages in these chats will be deleted. You will still be a member of any groups you have not left yet.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups, and the user has a linked device -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device">
-        <item quantity="one">S tem boste izbrani klepet trajno izbrisali iz vseh naprav.</item>
-        <item quantity="two">S tem boste %1$d izbrana klepeta trajno izbrisali iz vseh naprav.</item>
-        <item quantity="few">S tem boste vse %1$d izbrane klepete trajno izbrisali iz vseh naprav.</item>
-        <item quantity="other">S tem boste vseh %1$d izbranih klepetov trajno izbrisali iz vseh naprav.</item>
+        <item quantity="one">All messages in this chat will be deleted from all your devices.</item>
+        <item quantity="two">All messages in these chats will be deleted from all your devices.</item>
+        <item quantity="few">All messages in these chats will be deleted from all your devices.</item>
+        <item quantity="other">All messages in these chats will be deleted from all your devices.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats with at least one group, and the user has a linked device -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device_group">
+        <item quantity="one">All messages in this chat will be deleted from all your devices. You will still be a member of this group.</item>
+        <item quantity="two">All messages in these chats will be deleted from all your devices. You will still be a member of any groups you have not left yet.</item>
+        <item quantity="few">All messages in these chats will be deleted from all your devices. You will still be a member of any groups you have not left yet.</item>
+        <item quantity="other">All messages in these chats will be deleted from all your devices. You will still be a member of any groups you have not left yet.</item>
     </plurals>
     <string name="ConversationListFragment_deleting">Brisanje</string>
     <plurals name="ConversationListFragment_deleting_selected_conversations">
@@ -1172,6 +1199,8 @@
     <string name="LinkDeviceFragment__edit_name">Uredi ime</string>
     <!-- Toast shown when the process of linking a device has been cancelled -->
     <string name="LinkDeviceFragment__linking_cancelled">Povezovanje je preklicano</string>
+    <!-- Snackbar shown when the user tries to link a new device but has already reached the maximum number of linked devices. Placeholder is the maximum count. -->
+    <string name="LinkDeviceFragment__you_can_only_have_d_linked_devices">You can only have %1$d linked devices.</string>
     <!-- Message shown in progress dialog telling users to avoid closing the app while messages are being synced -->
     <string name="LinkDeviceFragment__do_not_close">Ne zapirajte aplikacije</string>
     <!-- Dialog title shown when a device is unlinked -->
@@ -3266,6 +3295,7 @@
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_challenge_received" translatable="false">Challenge Received:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_registered" translatable="false">Registered:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_backups" translatable="false">Backups:</string> -->
 
     <!-- ThreadRecord -->
     <string name="ThreadRecord_group_updated">Skupina je posodobljena</string>
@@ -3704,9 +3734,9 @@
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">Ponovno registrirajte napravo</string>
     <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
-    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">This device is no longer linked. Re-link Signal with your phone to continue messaging.</string>
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">Ta naprava ni več povezana. Za pošiljanje sporočil ponovno povežite Signal s svojim telefonom.</string>
     <!-- Action in reminder banner that will take the user to re-link this device -->
-    <string name="UnauthorizedReminder_relink_action">Re-link device</string>
+    <string name="UnauthorizedReminder_relink_action">Ponovno poveži napravo</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">V tej napravi ste bili odjavljeni iz Signala.</string>
@@ -5373,6 +5403,32 @@
     <!-- Error message shown when we fail to delete the data for some unknown reason -->
     <string name="preferences_account_delete_all_data_failed">Brisanje podatkov ni uspelo</string>
 
+    <!-- LinkedDeviceAccountSettingsFragment -->
+    <!-- Title of an informational card shown on the account settings screen of a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_is_a_linked_device">To je povezana naprava</string>
+    <!-- Body of an informational card explaining that account settings must be managed from the primary device -->
+    <string name="LinkedDeviceAccountSettingsFragment__to_manage_your_account_settings">Za upravljanje nastavitev računa odprite Signal v primarni napravi.</string>
+    <!-- Title of a settings row that deletes all Signal data from this linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data">Izbris podatkov aplikacije</string>
+    <!-- Subtitle of the delete app data row explaining what it does -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_remove_all_data">To bo odstranilo vse podatke iz aplikacije Signal v tej napravi.</string>
+    <!-- Title of the confirmation dialog shown when deleting app data from a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data_question">Želite izbrisati podatke aplikacije?</string>
+    <!-- Message of the confirmation dialog explaining that only this device\'s data is deleted, not the account -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_delete_all_data_and_messages">To bo izbrisalo vse podatke in sporočila iz aplikacije Signal v tej napravi. Vaš račun v Signalu in podatki v primarni napravi ali drugih povezanih napravah ne bodo izbrisani. Aplikacija se bo zaprla, ko bo postopek končan.</string>
+
+    <!-- LinkedDeviceAccountLearnMoreBottomSheet -->
+    <!-- Emphasized lead-in phrase shown in bold at the start of the learn more sheet body. Must appear verbatim within LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices">Povezane naprave</string>
+    <!-- Body text of the linked devices learn more sheet. The leading \"Linked Devices\" is shown in bold. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access">Preko povezanih naprav lahko varno dostopate do računa Signal in sporočil v katerikoli dodatni napravi.</string>
+    <!-- Bullet point describing what devices can be linked -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__you_can_link_a_desktop">Povežete lahko namizni računalnik, tablico ali dodatni telefon</string>
+    <!-- Bullet point describing that the primary device manages linked devices -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__your_primary_device_manages">Primarna naprava upravlja s povezanimi napravami, povežete pa jih lahko do 5.</string>
+    <!-- Bullet point describing that some settings are only available on the primary device -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__some_account_settings">Nekatere nastavitve računa lahko upravljate le v primarni napravi, vključno z nastavitvami računa in varnostnimi kopijami.</string>
+
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">Prenesi ali obnovi račun</string>
     <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">Če ste predhodno registrirali svoj račun Signal, ga lahko lahko prenesete na novo napravo ali obnovite svoja sporočila.</string>
@@ -6673,6 +6729,7 @@
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">En ali več predmetov je bilo prevelikih</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">En ali več predmetov je bilo neveljavnih</string>
     <string name="MediaReviewFragment__too_many_items_selected">Preveč izbranih predmetov</string>
+    <string name="MediaReviewFragment__video_trimmed_to_fit">Your video was trimmed to fit within the size limit</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
     <string name="MediaReviewFragment__video_set_to_view_once">Videoposnetek je nastavljen za enkratni ogled</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
@@ -7229,7 +7286,7 @@
     <!-- Donation receipts amount title -->
     <string name="DonationReceiptDetailsFragment__amount">Količina</string>
     <!-- Donation receipts thanks -->
-    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting">Hvala, ker podpirate Signal. S svojim prispevkom pomagate pri uresničevanju poslanstva razvoja odprtokodne tehnologije zasebnosti, ki varuje svobodo izražanja in omogoča varno globalno komunikacijo za milijone ljudi po vsem svetu. Če ste prebivalec Združenih držav Amerike, hranite to potrdilo za svojo davčno evidenco. Tehnološka fundacija Signal je neprofitna organizacija, ki je v Združenih državah Amerike oproščena plačila davkov v skladu z oddelkom 501c3 zakonika o notranjih prihodkih. Naša zvezna davčna številka je 82–4506840.</string>
+    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting" tools:ignore="TypographyDashes">Hvala, ker podpirate Signal. S svojim prispevkom prispevate k uresničevanju poslanstva zaščite svobode izražanja in omogočanja varne globalne komunikacije za milijone ljudi po vsem svetu z odprtokodno tehnologijo zasebnosti. Če prebivate v Združenih državah Amerike, to potrdilo shranite za davčno evidenco. Signal Technology Foundation je neprofitna organizacija v Združenih državah Amerike, ki je oproščena davka v skladu s členom 501c3 zakonika o notranjih prihodkih. Naša zvezna davčna številka je 82-4506840. Signal v zameno za ta prispevek ni zagotovil nobenega blaga ali storitev.</string>
     <!-- Donation reciepts screen empty state title -->
     <string name="DonationReceiptListFragment__no_receipts">Ni prejemnikov</string>
 
@@ -8622,11 +8679,11 @@
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Za obnovo varnostne kopije morate najprej namestiti novo kopijo Signala. Nato odprite aplikacijo, tapnite »Obnovi varnostno kopijo« in poiščite mapo varnostne kopije."</string>
     <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
-    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">Vklopljeno imate možnost »Optimiziraj pomnilnik Signal«. Če želite v varnostno kopijo na svoji napravi shraniti vse medije, izklopite to nastavitev.</string>
     <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
-    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <string name="OnDeviceBackupsScreen__view_setting">Prikaži nastavitve</string>
     <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
-    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Nadaljuj brez izklopa</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">Potrdite svoj obnovitveni ključ</string>
@@ -9017,9 +9074,9 @@
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">Optimizacijo shranjevanja je mogoče uporabljati samo s plačljivo ravnjo Varne varnostne kopije Signal. Vaša naročnina na varnostno kopiranje je še vedno v obdelavi in še ni aktivna. Poskusite pozneje.</string>
     <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Mediji bodo odstranjeni iz varnostne kopije v vaši napravi</string>
     <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Z vklopom možnosti »Optimiziraj pomnilnik Signal« bodo stari mediji odstranjeni iz vaše naprave. Kadarkoli je lahko ponovno prenesete. Prav tako bodo stari mediji odstranjeni iz varnostne kopije v vaši napravi.</string>
     <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
     <string name="ManageStorageSettingsFragment__turn_on">Vklopi</string>
 
@@ -9110,6 +9167,8 @@
     <string name="BackupsSettingsFragment__subscription_canceled">Naročnina je prekinjena</string>
     <!-- Subtitle for row for no backup ever created -->
     <string name="BackupsSettingsFragment_automatic_backups_with_signals">Samodejno varnostno kopiranje s Signalovo varno storitvijo šifriranega shranjevanja od konca do konca.</string>
+    <!-- Subtitle shown on a linked device when backups are off, directing the user to set them up on their phone -->
+    <string name="BackupsSettingsFragment__automatic_backups_get_started_on_your_phone">Samodejno varnostno kopiranje s Signalovo varno storitvijo šifriranega shranjevanja od konca do konca. Začnite v telefonu.</string>
     <!-- Subtitle for row for backups that are active but subscription not found -->
     <string name="BackupsSettingsFragment_subscription_not_found_on_this_device">"Naročnina ni bila najdena v tej napravi."</string>
     <!-- Action button label to set up backups -->
@@ -9215,6 +9274,16 @@
     <string name="RemoteBackupsSettingsFragment__s_at_s">%1$s ob %2$s</string>
     <!-- Subtext describing when a backup has never taken place. -->
     <string name="RemoteBackupsSettingsFragment__never">Nikoli</string>
+    <!-- Subtext on a linked device describing when the primary device last backed up. Placeholder is the formatted date and time. -->
+    <string name="RemoteBackupsSettingsFragment__your_phone_s">Vaš telefon · %1$s</string>
+    <!-- Message shown on a linked device with a free backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_your_subscription_on_your_primary_device">Naročnino na Varne varnostne kopije lahko upravljate ali nadgradite v primarni napravi.</string>
+    <!-- Message shown on a linked device with a paid backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_cancel_your_subscription_on_your_primary_device">V primarni napravi lahko upravljate ali prekličete naročnino na Varne varnostne kopije Signal.</string>
+    <!-- Message shown on a linked device with a canceled backup subscription explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_renew_your_subscription_on_your_primary_device">Naročnino na Varne varnostne kopije lahko upravljate ali obnovite v svoji primarni napravi.</string>
+    <!-- Message shown on a linked device when backups are off or the subscription was not found, explaining that backups are managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_backups_on_your_primary_device">Varne varnostne kopije lahko upravljate ali nadgradite v primarni napravi.</string>
     <!-- Button label to perform a backup immediately -->
     <string name="RemoteBackupsSettingsFragment__back_up_now">Izdelaj varnostno kopijo</string>
     <!-- Dialog title when confirming whether to turn off and deleting backups -->
@@ -10296,11 +10365,11 @@
     <!-- Header for a section showing all group member -->
     <string name="MemberSearchFragment__search_members">Iskanje članov</string>
     <!-- Header for a section showing all group members who are contacts -->
-    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <string name="MemberSearchFragment__search_contacts">Iskanje stikov</string>
     <!-- Header for a section showing all group member who are admins -->
-    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <string name="MemberSearchFragment__search_admins">Išči med administratorji</string>
     <!-- Dialog title to filter search by -->
-    <string name="MemberSearchFragment__filter">Filter by</string>
+    <string name="MemberSearchFragment__filter">Filtriraj glede na:</string>
     <!-- Dialog option for all group members -->
     <string name="MemberSearchFragment__filter_all_members">Vsi člani</string>
     <!-- Dialog option for group admins -->
@@ -10308,7 +10377,7 @@
     <!-- Dialog option for your contacts -->
     <string name="MemberSearchFragment__filter_contacts">Stiki</string>
     <!-- Button to invite members via a group link -->
-    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
+    <string name="MemberSearchFragment__invite_via">Povabi prek povezave skupine</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">Ne moremo obnoviti varnostne kopije</string>

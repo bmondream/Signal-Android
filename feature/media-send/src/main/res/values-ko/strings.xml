@@ -22,10 +22,16 @@
   <string name="MediaSelectScreen__gallery">갤러리</string>
   <!-- Accessibility description for the button that advances from media selection to the next step in the send flow. -->
   <string name="MediaSelectScreen__next">다음</string>
+
   <!-- Label for the button that switches the capture screen to the camera. -->
   <string name="MediaCaptureScreen__camera">카메라</string>
   <!-- Label for the button that switches the capture screen to the text story editor. -->
-  <string name="MediaCaptureScreen__text_story">텍스트 스토리</string>
+  <string name="MediaCaptureScreen__text">텍스트</string>
+    <!-- Label for the pill that displays the media count -->
+    <plurals name="MediaCaptureScreen_n_items">
+        <item quantity="other">항목 %1$d개</item>
+    </plurals>
+
   <!-- Video editor play button content description -->
   <string name="VideoEditorHud_play_video_description">동영상 재생</string>
 
@@ -90,6 +96,8 @@
   <string name="MediaSendViewModel__error_recording_video">동영상 촬영 오류</string>
   <!-- Displayed when there is an error capturing image -->
   <string name="MediaSendViewModel__error_taking_photo">사진 촬영 오류</string>
+  <!-- Displayed when a video was automatically trimmed so it fits within the size limit -->
+  <string name="MediaSendViewModel__video_trimmed_to_fit">Your video was trimmed to fit within the size limit</string>
 
   <!-- The title of a dialog notifying that a user was found matching a scanned QR code. The placeholder is a username. Usernames are always latin characters. -->
   <string name="UsernameScannedDialog__username_dialog_title">%1$s 님을 찾았습니다.</string>
@@ -99,9 +107,9 @@
   <string name="UsernameScannedDialog__username_dialog_go_to_chat_button">채팅으로 이동</string>
 
   <!-- The title of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">기기를 연결할까요?</string>
+  <string name="LinkedDeviceScannedDialog__device_link_dialog_title">기기를 연동할까요?</string>
   <!-- The body of a dialog notifying that the user scanned a QR code that could be used to link a Signal device. -->
-  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">Signal 기기를 연결하려는 것 같네요. 계속을 탭한 다음 \'새 기기 연결\'을 탭하고 QR 코드를 다시 스캔하세요.</string>
+  <string name="LinkedDeviceScannedDialog__it_looks_like_youre_trying">Signal 기기를 연동하려고 하시는 것 같네요. 계속을 탭한 다음 \'새 기기 연동\'을 탭하고 QR 코드를 다시 스캔하세요.</string>
   <!-- The label of a dialog asking the user if they would like to continue to the linked device settings screen. -->
   <string name="LinkedDeviceScannedDialog__device_link_dialog_continue">계속</string>
 </resources>

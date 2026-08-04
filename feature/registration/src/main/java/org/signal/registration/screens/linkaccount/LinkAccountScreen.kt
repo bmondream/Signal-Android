@@ -58,13 +58,16 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.delay
+import org.signal.core.ui.FormFactor
 import org.signal.core.ui.WindowBreakpoint
+import org.signal.core.ui.assumedFormFactor
 import org.signal.core.ui.compose.AllDevicePreviews
 import org.signal.core.ui.compose.Buttons
 import org.signal.core.ui.compose.Dialogs
@@ -75,6 +78,8 @@ import org.signal.core.ui.compose.Previews
 import org.signal.core.ui.compose.QrCode
 import org.signal.core.ui.compose.QrCodeData
 import org.signal.core.ui.compose.SignalIcons
+import org.signal.core.ui.fonts.SignalSymbols
+import org.signal.core.ui.fonts.SignalSymbols.SignalSymbol
 import org.signal.core.ui.rememberWindowBreakpoint
 import org.signal.registration.R
 import org.signal.registration.screens.OnePaneRegistrationScaffold
@@ -98,7 +103,7 @@ fun LinkAccountScreen(
   modifier: Modifier = Modifier
 ) {
   val layoutParams = RegistrationScaffold.rememberLayoutParams()
-  val isPhone = rememberWindowBreakpoint() is WindowBreakpoint.Small
+  val isPhone = rememberWindowBreakpoint().assumedFormFactor == FormFactor.PHONE
 
   // Sequence the expand button animation with the QR morph
   var expandButtonVisible by remember { mutableStateOf(!state.displayQrOverlay) }
@@ -272,17 +277,17 @@ private fun FirstPaneContent(
     modifier = modifier,
     verticalArrangement = spacedBy(32.dp)
   ) {
-    Title()
+    Title(twoPane = true)
 
     Steps(verticalArrangement = spacedBy(32.dp), centerGetHelp = false, onEvent = onEvent)
   }
 }
 
 @Composable
-private fun Title() {
+private fun Title(twoPane: Boolean = false) {
   Text(
     text = stringResource(R.string.LinkAccountScreen__scan_this_code_to_link_your_account),
-    style = MaterialTheme.typography.headlineMedium,
+    style = if (twoPane) MaterialTheme.typography.headlineLarge else MaterialTheme.typography.headlineMedium,
     modifier = Modifier
       .fillMaxWidth()
       .attachDebugLogHelper()
@@ -609,10 +614,7 @@ private fun OnePaneFooterContent(
         .fillMaxWidth()
         .padding(params.footerPadding)
     ) {
-      Row {
-        DontHaveSignal()
-      }
-      CreateAccount(onEvent)
+      DontHaveSignal(onEvent)
     }
   }
 }
@@ -633,8 +635,7 @@ private fun TwoPaneFooterContent(
     ) {
       Spacer(modifier = Modifier.weight(1f))
 
-      DontHaveSignal()
-      CreateAccount(onEvent)
+      DontHaveSignal(onEvent)
 
       Spacer(modifier = Modifier.weight(1f))
     }
@@ -642,29 +643,20 @@ private fun TwoPaneFooterContent(
 }
 
 @Composable
-private fun DontHaveSignal() {
-  Icon(
-    imageVector = SignalIcons.DevicePhone.imageVector,
-    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-    contentDescription = null
-  )
-
-  Text(
-    text = stringResource(R.string.LinkAccountScreen__dont_have_signal_on_another_device),
-    color = MaterialTheme.colorScheme.onSurfaceVariant
-  )
-}
-
-@Composable
-private fun CreateAccount(onEvent: (LinkAccountScreenEvent) -> Unit) {
+private fun DontHaveSignal(onEvent: (LinkAccountScreenEvent) -> Unit) {
   Text(
     text = buildAnnotatedString {
+      SignalSymbol(glyph = SignalSymbols.Glyph.DEVICE_PHONE)
+      append(' ')
+      append(stringResource(R.string.LinkAccountScreen__dont_have_signal_on_another_device))
+      append(' ')
+
       withLink(
         LinkAnnotation.Clickable(
           tag = "create-account",
           styles = TextLinkStyles(
             style = SpanStyle(
-              color = MaterialTheme.colorScheme.onSurface,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
               fontWeight = FontWeight.Bold,
               textDecoration = TextDecoration.Underline
             )
@@ -674,9 +666,12 @@ private fun CreateAccount(onEvent: (LinkAccountScreenEvent) -> Unit) {
           }
         )
       ) {
-        append(stringResource(R.string.LinkAccountScreen__create_account))
+        append(stringResource(R.string.LinkAccountScreen__create_account).replace(' ', '\u00A0'))
       }
     },
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    textAlign = TextAlign.Center,
+    style = MaterialTheme.typography.bodyMedium,
     modifier = Modifier.testTag(TestTags.LINK_ACCOUNT_CREATE_ACCOUNT_LINK)
   )
 }

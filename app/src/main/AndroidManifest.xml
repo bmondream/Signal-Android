@@ -469,18 +469,18 @@
         <activity
             android:name=".mediasend.v2.MediaSelectionActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize|uiMode"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/TextSecure.DarkNoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
 
         <activity
             android:name=".mediasend.v3.MediaSendV3Activity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize|uiMode"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/Signal.DayNight.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" />
 
@@ -888,6 +888,14 @@
         <activity
             android:name=".megaphone.ClientDeprecatedActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Signal.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".clockskew.ClockSkewActivity"
+            android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
+            android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Signal.DayNight.NoActionBar" />
@@ -1536,7 +1544,7 @@
         </receiver>
 
         <receiver
-            android:name="org.thoughtcrime.securesms.jobs.ForegroundServiceUtil$Receiver"
+            android:name="org.signal.core.util.ForegroundServiceUtil$Receiver"
             android:exported="false" />
 
         <receiver

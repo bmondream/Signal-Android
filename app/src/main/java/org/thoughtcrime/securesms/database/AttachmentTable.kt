@@ -1722,6 +1722,14 @@ class AttachmentTable(
       .run()
   }
 
+  fun resetRestorableAttachmentsInProgressToNeedsRestore(): Int {
+    return writableDatabase
+      .update(TABLE_NAME)
+      .values(TRANSFER_STATE to TRANSFER_NEEDS_RESTORE)
+      .where("$TRANSFER_STATE = ?", TRANSFER_RESTORE_IN_PROGRESS)
+      .run()
+  }
+
   fun setRestoreTransferState(attachmentId: AttachmentId, state: Int) {
     setRestoreTransferState(listOf(attachmentId), state)
   }
@@ -2499,7 +2507,7 @@ class AttachmentTable(
       WHERE
         $STICKER_PACK_ID NOT NULL AND
         $STICKER_PACK_KEY NOT NULL AND
-        $STICKER_PACK_ID NOT IN (SELECT DISTINCT ${StickerTable.PACK_ID} FROM ${StickerTable.TABLE_NAME})
+        $STICKER_PACK_ID NOT IN (SELECT DISTINCT ${StickerTables.Sticker.PACK_ID} FROM ${StickerTables.Sticker.TABLE_NAME})
     """
 
     return readableDatabase.rawQuery(query, null)

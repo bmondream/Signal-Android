@@ -70,6 +70,7 @@ import com.google.common.collect.Sets;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.signal.core.ui.fonts.SignalSymbols;
 import org.signal.core.ui.util.ThemeUtil;
 import org.signal.core.ui.view.Stub;
 import org.signal.core.util.BidiUtil;
@@ -113,13 +114,13 @@ import org.thoughtcrime.securesms.conversation.v2.items.SenderNameWithLabelView;
 import org.thoughtcrime.securesms.conversation.v2.items.V2ConversationItemUtils;
 import org.thoughtcrime.securesms.database.AttachmentTable;
 import org.thoughtcrime.securesms.database.MediaTable;
+import org.thoughtcrime.securesms.database.model.InMemoryMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
 import org.thoughtcrime.securesms.database.model.databaseprotos.MessageExtras;
 import org.thoughtcrime.securesms.dependencies.AppDependencies;
 import org.thoughtcrime.securesms.events.PartProgressEvent;
-import org.thoughtcrime.securesms.fonts.SignalSymbols;
 import org.thoughtcrime.securesms.giph.mp4.GiphyMp4PlaybackPolicy;
 import org.thoughtcrime.securesms.giph.mp4.GiphyMp4PlaybackPolicyEnforcer;
 import org.thoughtcrime.securesms.jobs.AttachmentDownloadJob;
@@ -1186,7 +1187,26 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
     bodyText.setOverflowText(null);
     bodyText.setMaxLength(-1);
 
-    if (RemoteConfig.receiveAdminDelete() && conversationMessage.getDeletedByRecipient() != null) {
+    if (messageRecord instanceof InMemoryMessageRecord.DeletedMessageTombstone) {
+      String          deletedMessage = context.getString(R.string.ConversationItem_delete_for_everyone_question);
+      SpannableString italics        = new SpannableString(deletedMessage);
+      italics.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, deletedMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      int textColor = hasWallpaper ? colorizer.getOutgoingDeleteTextColor(context)
+                                   : ContextCompat.getColor(context, R.color.signal_text_primary);
+      italics.setSpan(new ForegroundColorSpan(textColor),
+                      0,
+                      deletedMessage.length(),
+                      Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+      bodyText.setText(italics);
+      bodyText.setVisibility(View.VISIBLE);
+      bodyText.setOverflowText(null);
+      bodyText.setOnClickListener(v -> {
+        if (eventListener != null) {
+          eventListener.onInMemoryMessageClicked((InMemoryMessageRecord) messageRecord);
+        }
+      });
+    } else if (RemoteConfig.receiveAdminDelete() && conversationMessage.getDeletedByRecipient() != null) {
       bodyText.setText(getDeletedMessageText(conversationMessage, hasWallpaper));
       bodyText.setVisibility(View.VISIBLE);
       bodyText.setOverflowText(null);

@@ -142,6 +142,31 @@ class InternalSettingsViewModel(private val repository: InternalSettingsReposito
     refresh()
   }
 
+  fun setInternalCallingSetVideoConfig(enabled: Boolean) {
+    preferenceDataStore.putBoolean(InternalValues.CALLING_SET_VIDEO_CONFIG, enabled)
+    refresh()
+  }
+
+  fun setInternalCallingUseHardwareVp9Encode(enabled: Boolean) {
+    preferenceDataStore.putBoolean(InternalValues.CALLING_USE_HARDWARE_VP9_ENCODE, enabled)
+    refresh()
+  }
+
+  fun setInternalCallingUseHardwareVp9Decode(enabled: Boolean) {
+    preferenceDataStore.putBoolean(InternalValues.CALLING_USE_HARDWARE_VP9_DECODE, enabled)
+    refresh()
+  }
+
+  fun setInternalCallingUseSoftwareVp9Encode(enabled: Boolean) {
+    preferenceDataStore.putBoolean(InternalValues.CALLING_USE_SOFTWARE_VP9_ENCODE, enabled)
+    refresh()
+  }
+
+  fun setInternalCallingUseSoftwareVp9Decode(enabled: Boolean) {
+    preferenceDataStore.putBoolean(InternalValues.CALLING_USE_SOFTWARE_VP9_DECODE, enabled)
+    refresh()
+  }
+
   fun setUseConversationItemV2Media(enabled: Boolean) {
     SignalStore.internal.useConversationItemV2Media = enabled
     refresh()
@@ -149,11 +174,6 @@ class InternalSettingsViewModel(private val repository: InternalSettingsReposito
 
   fun setUseNewMediaActivity(enabled: Boolean) {
     SignalStore.internal.useNewMediaActivity = enabled
-    refresh()
-  }
-
-  fun setHevcEncoding(enabled: Boolean) {
-    SignalStore.internal.hevcEncoding = enabled
     refresh()
   }
 
@@ -233,6 +253,11 @@ class InternalSettingsViewModel(private val repository: InternalSettingsReposito
     callingUseSoftwareNs = SignalStore.internal.callingUseSoftwareNs,
     callingUseInputLowLatency = SignalStore.internal.callingUseInputLowLatency,
     callingUseInputVoiceComm = SignalStore.internal.callingUseInputVoiceComm,
+    callingSetVideoConfig = SignalStore.internal.callingSetVideoConfig,
+    callingUseHardwareVp9Encode = SignalStore.internal.callingUseHardwareVp9Encode,
+    callingUseHardwareVp9Decode = SignalStore.internal.callingUseHardwareVp9Decode,
+    callingUseSoftwareVp9Encode = SignalStore.internal.callingUseSoftwareVp9Encode,
+    callingUseSoftwareVp9Decode = SignalStore.internal.callingUseSoftwareVp9Decode,
     useBuiltInEmojiSet = SignalStore.internal.forceBuiltInEmoji,
     emojiVersion = null,
     removeSenderKeyMinimium = SignalStore.internal.removeSenderKeyMinimum,
@@ -242,7 +267,6 @@ class InternalSettingsViewModel(private val repository: InternalSettingsReposito
     pnpInitialized = SignalStore.misc.hasPniInitializedDevices,
     useConversationItemV2ForMedia = SignalStore.internal.useConversationItemV2Media,
     hasPendingOneTimeDonation = SignalStore.inAppPayments.getPendingOneTimeDonation() != null,
-    hevcEncoding = SignalStore.internal.hevcEncoding,
     forceSplitPane = SignalStore.internal.forceSplitPane,
     forceSinglePane = SignalStore.internal.forceSinglePane,
     useNewMediaActivity = SignalStore.internal.useNewMediaActivity,

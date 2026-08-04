@@ -44,6 +44,12 @@
     <!-- Hint text to select a country -->
     <string name="RegistrationActivity_select_a_country">ជ្រើសរើសប្រទេសមួយ</string>
     <string name="RegistrationActivity_phone_number_description">លេខទូរសព្ទ</string>
+    <!-- Error shown beneath the phone number field when the entered number is not valid -->
+    <string name="RegistrationActivity_not_a_valid_phone_number">មិនមែនជាលេខទូរសព្ទដែលត្រឹមត្រូវទេ</string>
+    <!-- Dialog title shown when the entered phone number is rejected as invalid -->
+    <string name="RegistrationActivity_invalid_phone_number">លេខទូរសព្ទមិនត្រឹមត្រូវ</string>
+    <!-- Dialog body shown when the entered phone number is rejected as invalid -->
+    <string name="RegistrationActivity_the_number_you_entered_is_not_valid">លេខដែលអ្នកបានបញ្ចូលហាក់ដូចជាមិនត្រឹមត្រូវទេ។ សូមពិនិត្យមើលលេខកូដប្រទេស និងលេខទូរសព្ទ ហើយព្យាយាមម្តងទៀត។</string>
     <string name="RegistrationActivity_next">បន្ទាប់</string>
     <!-- Dialog title to confirm phone number -->
     <string name="RegistrationActivity_is_the_phone_number">តើលេខទូរសព្ទខាងក្រោមត្រឹមត្រូវឬទេ?</string>
@@ -81,8 +87,8 @@
     <string name="VerificationCodeScreen__resend_code">ផ្ញើកូដម្តងទៀត</string>
     <!-- Button text for call me action -->
     <string name="VerificationCodeScreen__call_me_instead">ហៅទូរសព្ទមកខ្ញុំជំនួសវិញ</string>
-    <!-- Countdown text shown below the resend code button. Placeholders are minutes and seconds -->
-    <string name="VerificationCodeScreen__countdown_format">(%1$02d:%2$02d)</string>
+    <!-- Button text for resend SMS when countdown is active. Placeholders are minutes and seconds -->
+    <string name="VerificationCodeScreen__resend_code_available_in">ផ្ញើលេខកូដឡើងវិញ (%1$02d:%2$02d)</string>
     <!-- Button text for call me when countdown is active. Placeholders are minutes and seconds -->
     <string name="VerificationCodeScreen__call_me_available_in">ហៅមកខ្ញុំ (%1$02d:%2$02d)</string>
     <!-- Toast shown when the user enters an incorrect verification code -->
@@ -99,6 +105,10 @@
     <string name="VerificationCodeScreen__unable_to_send_sms">យើងមិនអាចផ្ញើសារ SMS ទៅលេខរបស់អ្នកបានទេ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេលពីរបីម៉ោង។</string>
     <!-- Snackbar shown when the selected transport (SMS/voice) is unavailable -->
     <string name="VerificationCodeScreen__could_not_send_code_via_selected_method">មិនអាចផ្ញើលេខកូដតាមវិធីដែលបានជ្រើសរើសទេ។ សូមសាកល្បងជម្រើសផ្សេងទៀត។</string>
+    <!-- Dialog shown when the provider rejected placing a verification phone call to the user\'s number -->
+    <string name="VerificationCodeScreen__could_not_call_provider_rejected">យើងមិនអាចហៅទូរសព្ទទៅអ្នកជាមួយលេខកូដផ្ទៀងផ្ទាត់បានទេ។ សូមព្យាយាមម្តងទៀត ឬស្នើសុំលេខកូដតាមរយៈសារ SMS វិញ។</string>
+    <!-- Dialog shown when the provider rejected sending a verification SMS to the user\'s number -->
+    <string name="VerificationCodeScreen__could_not_sms_provider_rejected">យើងមិនអាចផ្ញើសារ SMS ដែលមានលេខកូដផ្ទៀងផ្ទាត់ទៅអ្នកបានទេ។ សូមព្យាយាមម្តងទៀត ឬស្នើសុំលេខកូដតាមរយៈការហៅទូរសព្ទវិញ។</string>
     <!-- Snackbar shown for registration errors -->
     <string name="VerificationCodeScreen__registration_error">ការចុះឈ្មោះមិនបានជោគជ័យទេ។ សូមព្យាយាមម្តងទៀត។</string>
     <!-- Button text for having trouble with verification -->
@@ -108,13 +118,15 @@
     <!-- Bulleted list of suggestions shown in the having trouble bottom sheet -->
     <string name="VerificationCodeScreen__support_bottom_sheet_body_suggestions">• ត្រូវប្រាកដថាទូរសព្ទរបស់អ្នកមានសញ្ញាសេវាទូរសព្ទ ដើម្បីអាចទទួលសារជាអក្សរ ឬការហៅចូលបាន\n • ត្រូវបញ្ជាក់ថាអ្នកអាចទទួលការហៅចូលទៅលេខទូរសព្ទនោះបាន\n • ត្រូវពិនិត្យមើលថាអ្នកបានបញ្ចូលលេខទូរសព្ទរបស់អ្នកបានត្រឹមត្រូវហើយ។</string>
     <!-- A call to action for a user having trouble entering the verification code to seek further help. The first placeholder is VerificationCodeScreen__support_bottom_sheet_cta_troubleshooting_steps_substring, the second is VerificationCodeScreen__support_bottom_sheet_cta_contact_support_substring -->
-    <string name="VerificationCodeScreen__support_bottom_sheet_body_call_to_action">សម្រាប់ព័ត៌មានបន្ថែម សូមអនុវត្តតាម %1$s ឬ %2$s</string>
+    <string name="VerificationCodeScreen__support_bottom_sheet_body_call_to_action">សម្រាប់ព័ត៌មានបន្ថែម សូមអនុវត្តតាម%1$s ឬ%2$s</string>
     <!-- Clickable substring linking to troubleshooting steps within VerificationCodeScreen__support_bottom_sheet_body_call_to_action -->
     <string name="VerificationCodeScreen__support_bottom_sheet_cta_troubleshooting_steps_substring">ជំហានដោះស្រាយបញ្ហាទាំងនេះ</string>
     <!-- Clickable substring linking to contacting support within VerificationCodeScreen__support_bottom_sheet_body_call_to_action -->
     <string name="VerificationCodeScreen__support_bottom_sheet_cta_contact_support_substring">ទាក់ទងផ្នែកជំនួយ</string>
     <!-- Email subject used when contacting support from the verification code screen -->
-  <!-- Removed by excludeNonTranslatables <string name="VerificationCodeScreen__contact_support_email_subject" translatable="false">Signal Registration - Verification Code for Android</string> -->
+    <string name="VerificationCodeScreen__contact_support_email_subject">ការចុះឈ្មោះ Signal - លេខកូដផ្ទៀងផ្ទាត់សម្រាប់ Android</string>
+    <!-- Text placed in the body of the support email composed from the verification code screen. Used to route the request, so it is not translated. -->
+  <!-- Removed by excludeNonTranslatables <string name="VerificationCodeScreen__contact_support_email_filter" translatable="false">Signal Registration - Verification Code for Android</string> -->
     <!-- URL opened for troubleshooting steps from the verification code screen -->
   <!-- Removed by excludeNonTranslatables <string name="VerificationCodeScreen__support_center_url" translatable="false">https://support.signal.org/</string> -->
 
@@ -197,6 +209,8 @@
     <string name="LocalBackupRestoreScreen__enter_the_30_digit_passphrase">ឃ្លាសម្ងាត់បម្រុងទុកក្នុងឧបករណ៍របស់អ្នកគឺជាលេខកូដ 30 ខ្ទង់ដែលតម្រូវឱ្យមានដើម្បីស្តារយកគណនី និងទិន្នន័យរបស់អ្នកមកវិញ។</string>
     <!-- Label for the recovery key text field -->
     <string name="LocalBackupRestoreScreen__recovery_key">សោស្តារ</string>
+    <!-- Label for the backup passphrase text field -->
+    <string name="LocalBackupRestoreScreen__passphrase">ឃ្លាសម្ងាត់</string>
     <!-- Error text when passphrase is too long -->
     <string name="LocalBackupRestoreScreen__too_long">វែងពេក (%1$d/%2$d)</string>
     <!-- Link for users who don\'t have their passphrase -->
@@ -220,6 +234,12 @@
     <string name="EnterAepScreen__incorrect_recovery_key">សោស្តារមិនត្រឹមត្រូវ</string>
     <!-- Button that prompts the device password manager to fill in the recovery key -->
     <string name="EnterAepScreen__fill_from_password_manager">បំពេញពីកម្មវិធីគ្រប់គ្រងពាក្យសម្ងាត់</string>
+    <!-- Title of the dialog warning that the backup being restored was created with a different account -->
+    <string name="EnterAepScreen__restore_to_new_account">ស្តារទៅគណនីថ្មីឬ?</string>
+    <!-- Body of the dialog warning the user that the backup was created with a different account and they will lose group memberships -->
+    <string name="EnterAepScreen__restore_to_new_account_body">ការបម្រុងទុកដែលអ្នកកំពុងស្ដារឡើងវិញត្រូវបានបង្កើតឡើងដោយប្រើគណនី Signal ផ្សេង។ អ្នកអាចស្ដារការបម្រុងទុកនេះទៅគណនីថ្មីបាន ប៉ុន្តែអ្នកនឹងលែងជាសមាជិកនៃក្រុមណាមួយដែលត្រូវបានស្ដារឡើងវិញ។</string>
+    <!-- Confirm button label for the restore to new account dialog -->
+    <string name="EnterAepScreen__restore">ស្តារឡើងវិញ</string>
     <!-- Text shown while preparing the restore -->
     <string name="LocalBackupRestoreScreen__preparing_restore">កំពុងរៀបចំការស្ដារ…</string>
     <!-- Title shown while restore is in progress -->
@@ -236,6 +256,12 @@
     <string name="LocalBackupRestoreScreen__restore_failed_description">មានបញ្ហាកើតឡើងខណៈពេលកំពុងស្ដារការបម្រុងទុករបស់អ្នក។ សូមព្យាយាមម្តងទៀត។</string>
     <!-- Button to retry restore after failure -->
     <string name="LocalBackupRestoreScreen__try_again">ព្យាយាមម្តងទៀត</string>
+    <!-- Title shown when the entered passphrase cannot decrypt the selected backup -->
+    <string name="LocalBackupRestoreScreen__incorrect_passphrase">ឃ្លាសម្ងាត់មិនត្រឹមត្រូវ</string>
+    <!-- Title shown when the entered recovery key cannot decrypt the selected backup -->
+    <string name="LocalBackupRestoreScreen__incorrect_recovery_key">សោស្តារមិនត្រឹមត្រូវ</string>
+    <!-- Description shown when the entered passphrase or recovery key cannot decrypt the selected backup -->
+    <string name="LocalBackupRestoreScreen__incorrect_credential_description">ព័ត៌មានផ្ទៀងផ្ទាត់ដែលអ្នកបានបញ្ចូលមិនត្រូវគ្នានឹងការបម្រុងទុកនេះទេ។ សូមពិនិត្យមើលវា ហើយព្យាយាមម្តងទៀត។</string>
     <!-- Button to link an existing Signal account to this device -->
     <string name="WelcomeScreen__link_your_account">ភ្ជាប់គណនីរបស់អ្នក</string>
     <!-- Prompt shown to users who don\'t have a Signal account yet -->
@@ -284,8 +310,10 @@
     <string name="RemoteRestoreScreen__your_backup_is_not_recoverable">មានបញ្ហាកើតឡើងខណៈពេលកំពុងស្ដារការបម្រុងទុករបស់អ្នក។ ការបម្រុងទុករបស់អ្នកមិនអាចស្តារមកវិញបានទេ។ សូមទាក់ទងទៅកាន់ផ្នែកជំនួយដើម្បីទទួលបានជំនួយ។</string>
     <!-- Button to contact support -->
     <string name="RemoteRestoreScreen__contact_support">ទាក់ទងផ្នែកជំនួយ</string>
-    <!-- Subject line of the support email composed when the user contacts support about an unrecoverable backup. Also used to route the request, so it is not translated. -->
-  <!-- Removed by excludeNonTranslatables <string name="RemoteRestoreScreen__contact_support_email_subject" translatable="false">Signal Android Backup restore permanent failure</string> -->
+    <!-- Subject line of the support email composed when the user contacts support about an unrecoverable backup. -->
+    <string name="RemoteRestoreScreen__contact_support_email_subject">ការស្តារការបម្រុងទុក Signal Android បរាជ័យជាអចិន្ត្រៃយ៍</string>
+    <!-- Text placed in the body of the support email composed when the user contacts support about an unrecoverable backup. Used to route the request, so it is not translated. -->
+  <!-- Removed by excludeNonTranslatables <string name="RemoteRestoreScreen__contact_support_email_filter" translatable="false">Android SignalBackups Import Permanent Failure</string> -->
     <!-- Shown while downloading the backup from the server -->
     <string name="RemoteRestoreScreen__downloading_backup">កំពុងទាញយកការបម្រុងទុក…</string>
     <!-- Shown while restoring messages from the downloaded backup -->
@@ -352,6 +380,10 @@
     <string name="PinCreationScreen__reenter_pin">បញ្ចូលលេខកូដសម្ងាត់ឡើងវិញ</string>
     <!-- Error shown below the PIN field when the confirmation PIN does not match the one the user first entered. -->
     <string name="PinCreationScreen__pins_dont_match">លេខកូដសម្ងាត់មិនត្រូវគ្នា។ ព្យាយាមម្តងទៀត។</string>
+    <!-- Error shown below the PIN field when the user tries to create a PIN that is too easy to guess, such as one made of sequential or repeated digits. -->
+    <string name="PinCreationScreen__choose_a_stronger_pin">ជ្រើសរើសលេខកូដសម្ងាត់ខ្លាំងជាងនេះ</string>
+    <!-- Error shown below the PIN field when the user tries to create a PIN that matches the code used to verify their phone number. -->
+    <string name="PinCreationScreen__reentered_verification_code">អ្នកបានបញ្ចូលឡើងវិញនូវលេខកូដដែលត្រូវបានប្រើរួចហើយដើម្បីផ្ទៀងផ្ទាត់លេខទូរសព្ទរបស់អ្នក។ ជ្រើសរើសលេខកូដសម្ងាត់ Signal ថ្មី និងតែមួយគត់។</string>
     <!-- Overflow menu item that opens a help article about Signal PINs. -->
     <string name="PinCreationScreen__learn_more_about_pins">ស្វែងយល់បន្ថែមអំពីលេខកូដសម្ងាត់</string>
     <!-- Title of the dialog confirming that the user wants to disable their Signal PIN. -->
@@ -363,11 +395,11 @@
     <!-- Labels the button that cancels disabling the Signal PIN. -->
     <string name="PinCreationScreen__cancel">បោះបង់</string>
     <!-- Dialog message shown when the PIN could not be created because of a problem reaching the service. -->
-    <string name="PinCreationScreen__service_error">There was an issue connecting to the service.</string>
+    <string name="PinCreationScreen__service_error">មានបញ្ហាក្នុងការភ្ជាប់ជាមួយសេវាកម្ម។</string>
     <!-- Dialog message shown when the PIN could not be created because of a network error. -->
-    <string name="PinCreationScreen__network_error">បានជួបប្រទះកំហុសបណ្តាញ។</string>
+    <string name="PinCreationScreen__network_error">បានជួបប្រទះបញ្ហាបណ្តាញ។</string>
     <!-- Dialog message shown when the PIN could not be created because of a network error, and the user may retry after a delay. Placeholder is the wait duration. -->
-    <string name="PinCreationScreen__network_error_try_again_in_s">Encountered a network error. You can try again in %1$s.</string>
+    <string name="PinCreationScreen__network_error_try_again_in_s">បានជួបប្រទះបញ្ហាបណ្តាញ។ អ្នកអាចព្យាយាមម្តងទៀតក្នុងរយៈពេល %1$s ទៀត។</string>
 
     <!-- PIN entry screen title when registration lock is active. -->
     <string name="PinEntryScreen__registration_lock">ការចាក់សោការចុះឈ្មោះ</string>
@@ -375,6 +407,8 @@
     <string name="PinEntryScreen__enter_your_pin">បញ្ចូលលេខកូដសម្ងាត់របស់អ្នក</string>
     <!-- Describes the PIN that needs to be entered. -->
     <string name="PinEntryScreen__enter_the_pin_you_created">បញ្ចូលលេខកូដសម្ងាត់ដែលអ្នកបានបង្កើតនៅពេលអ្នកដំឡើង Signal ដំបូង</string>
+    <!-- Error shown when the user enters the code used to verify their phone number instead of their PIN, and it was not their actual PIN. -->
+    <string name="PinEntryScreen__reentered_verification_code">អ្នកបានបញ្ចូលឡើងវិញនូវលេខកូដដែលត្រូវបានប្រើរួចហើយដើម្បីផ្ទៀងផ្ទាត់លេខទូរសព្ទរបស់អ្នក។ បញ្ចូលេខកូដសម្ងាត់ Signal តែមួយគត់ដែលអ្នកបានជ្រើសរើសពីមុនសម្រាប់គណនីរបស់អ្នក។</string>
     <!-- Error shown when an incorrect PIN is entered. %1$d is the number of attempts remaining. -->
     <plurals name="PinEntryScreen__incorrect_pin">
         <item quantity="other">លេខកូដសម្ងាត់មិនត្រឹមត្រូវ។ អាចព្យាយាមបាន %1$d ដងទៀត។</item>
@@ -399,8 +433,10 @@
     <string name="PinEntryScreen__no_data_could_be_found">រកមិនឃើញទិន្នន័យដើម្បីស្ដារគណនីរបស់អ្នកទេ។ សូមបង្កើតលេខកូដសម្ងាត់ថ្មី។</string>
     <!-- Labels the button in the no-data-to-restore dialog that lets the user contact support. -->
     <string name="PinEntryScreen__contact_support">ទាក់ទងផ្នែកជំនួយ</string>
-    <!-- Subject line of the support email composed when the user contacts support about PIN entry. Also used to route the request, so it is not translated. -->
-  <!-- Removed by excludeNonTranslatables <string name="PinEntryScreen__contact_support_email_subject" translatable="false">Signal Registration - Need Help with PIN for Android</string> -->
+    <!-- Subject line of the support email composed when the user contacts support about PIN entry. -->
+    <string name="PinEntryScreen__contact_support_email_subject">ការចុះឈ្មោះ Signal - ត្រូវការជំនួយចំពោះលេខកូដសម្ងាត់សម្រាប់ Android</string>
+    <!-- Text placed in the body of the support email composed when the user contacts support about PIN entry. Used to route the request, so it is not translated. -->
+  <!-- Removed by excludeNonTranslatables <string name="PinEntryScreen__contact_support_email_filter" translatable="false">Signal Registration - Need Help with PIN for Android</string> -->
 
     <!-- Title for the screen asking the user to grant the notification permission -->
     <string name="AllowNotificationsScreen__allow_notifications">អនុញ្ញាតការជូនដំណឹង</string>
@@ -421,6 +457,8 @@
     <string name="MessageSyncScreen__preparing">កំពុងរៀបចំ…</string>
     <!-- Progress label shown under the sync progress bar while messages are being imported and the rest of the account is restored, after the download finishes -->
     <string name="MessageSyncScreen__finishing">កំពុងបញ្ចប់…</string>
+    <!-- Progress label shown while messages are being imported/restored from the downloaded backup -->
+    <string name="MessageSyncScreen__restoring">កំពុងស្ដារ…</string>
     <!-- Informational notice in the sync screen footer, indicating the sync is end-to-end encrypted. Precedes a separate "Learn more" link. -->
     <string name="MessageSyncScreen__messages_and_chat_info_are_protected_by_e2ee">សារ និងព័ត៌មានជជែកត្រូវបានការពារដោយការអ៊ីនគ្រីបទាំងសងខាង រាប់បញ្ចូលទាំងដំណើរការធ្វើសមកាលកម្មផងដែរ។</string>
     <!-- Inline link in the sync screen footer that opens documentation about end-to-end encryption during sync -->
@@ -428,13 +466,13 @@
     <!-- Button label that cancels the in-progress message sync -->
     <string name="MessageSyncScreen__cancel">បោះបង់</string>
     <!-- Title of the dialog shown when restoring messages from the other device fails -->
-    <string name="MessageSyncScreen__couldnt_restore_messages">Couldn\'t restore messages</string>
+    <string name="MessageSyncScreen__couldnt_restore_messages">មិនអាចស្តារសារបានទេ</string>
     <!-- Body of the dialog shown when restoring messages fails, offering to retry or continue without message history -->
-    <string name="MessageSyncScreen__your_messages_couldnt_be_transferred">Your messages couldn\'t be transferred from your other device. You can try again, or continue without your message history.</string>
+    <string name="MessageSyncScreen__your_messages_couldnt_be_transferred">មិនអាចផ្ទេរសាររបស់អ្នកពីឧបករណ៍ផ្សេងទៀតរបស់អ្នកបានទេ។ អ្នកអាចព្យាយាមម្តងទៀត ឬបន្តដោយគ្មានប្រវត្តិសាររបស់អ្នក។</string>
     <!-- Button that retries the failed message restore -->
     <string name="MessageSyncScreen__try_again">ព្យាយាមម្តងទៀត</string>
     <!-- Button that finishes linking without restoring message history after a failed restore -->
-    <string name="MessageSyncScreen__continue_without_messages">Continue without messages</string>
+    <string name="MessageSyncScreen__continue_without_messages">បន្តដោយគ្មានសារ</string>
 
     <!-- Title for the screen that shows a QR code the user scans with their existing primary device to link this device as a secondary -->
     <string name="LinkAccountScreen__scan_this_code_to_link_your_account">ស្គែនកូដនេះដើម្បីភ្ជាប់គណនីរបស់អ្នក</string>
@@ -465,11 +503,11 @@
     <!-- Error dialog message shown when linking this device fails -->
     <string name="LinkAccountScreen__error_linking_device">មានបញ្ហាកើតឡើងពេលកំពុងភ្ជាប់ឧបករណ៍នេះ</string>
     <!-- Title of the confirmation dialog shown when the scanned QR code belongs to a different account than the one this device is currently linked to -->
-    <string name="LinkAccountScreen__delete_app_data_question">Delete app data?</string>
+    <string name="LinkAccountScreen__delete_app_data_question">លុបទិន្នន័យកម្មវិធី?</string>
     <!-- Body of the confirmation dialog warning that continuing will erase all local data before relinking to a different account -->
-    <string name="LinkAccountScreen__you_are_attempting_to_link_a_different_account">You\'re attempting to link a different Signal account. If you continue, all Signal data currently on this device will be deleted.</string>
+    <string name="LinkAccountScreen__you_are_attempting_to_link_a_different_account">អ្នកកំពុងព្យាយាមភ្ជាប់គណនី Signal ផ្សេង។ ប្រសិនបើអ្នកបន្ត ទិន្នន័យ Signal ទាំងអស់ដែលកំពុងមាននៅលើឧបករណ៍នេះនឹងត្រូវបានលុប។</string>
     <!-- Destructive confirmation button that deletes all local data and restarts the app so it can be linked to a different account -->
-    <string name="LinkAccountScreen__delete_and_restart">Delete &amp; restart</string>
+    <string name="LinkAccountScreen__delete_and_restart">លុប ហើយចាប់ផ្ដើមឡើងវិញ</string>
     <!-- Content description for the button that closes the maximized QR code overlay -->
     <string name="LinkAccountScreen__close_qr_code">បិទកូដ QR</string>
 
@@ -559,4 +597,14 @@
     <string name="CaptchaScreen__failed_to_load_captcha">មិនអាចផ្ទុក captcha បានទេ</string>
     <!-- Button to cancel out of the captcha screen. -->
     <string name="CaptchaScreen__cancel">បោះបង់</string>
+
+    <!-- ContactSupportDialog -->
+    <!-- Title of the dialog asking the user whether they want to attach a debug log to their support request -->
+    <string name="ContactSupportDialog__submit_debug_log">ដាក់បញ្ជូនកំណត់ត្រាបញ្ហាទេ?</string>
+    <!-- Body of the dialog asking the user whether they want to attach a debug log to their support request -->
+    <string name="ContactSupportDialog__your_debug_logs">កំណត់ត្រាបញ្ហារបស់អ្នកនឹងជួយយើងដោះស្រាយបញ្ហារបស់អ្នកឱ្យបានកាន់តែលឿន។ អ្នកមានជម្រើសដាក់ឬមិនដាក់បញ្ជូនកំណត់ត្រារបស់អ្នក។</string>
+    <!-- Button that contacts support with a debug log attached -->
+    <string name="ContactSupportDialog__submit_with_debug_log">ដាក់បញ្ជូនដោយមានកំណត់ត្រាបញ្ហា</string>
+    <!-- Button that contacts support without attaching a debug log -->
+    <string name="ContactSupportDialog__submit_without_debug_log">ដាក់បញ្ជូនដោយគ្មានកំណត់ត្រាបញ្ហា</string>
 </resources>

@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: AGPL-3.0-only
   -->
 <!-- smartling.instruction_comments_enabled = on -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
@@ -294,6 +294,16 @@
     <string name="ClientDeprecatedActivity_warning">Babala</string>
     <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">Expired na ang iyong version ng Signal. Pwede mong makita ang iyong message history pero hindi ka na maaaring makapag-send o maka-receive ng messages hangga\'t hindi mo ito ina-update.</string>
 
+    <!-- ClockSkewActivity -->
+    <!-- Title of the full-screen dialog shown when the device clock is too far off from the real time -->
+    <string name="ClockSkewActivity__title">Mali ang petsa</string>
+    <!-- Body text explaining that the device clock is wrong and needs to be fixed -->
+    <string name="ClockSkewActivity__date_inaccurate_description">Mali ang petsa ng device mo.\nI-adjust ang clock at subukan ulit.</string>
+    <!-- Shows the user the current, inaccurate date and time reported by their device. Placeholder is the formatted date, time, and time zone. -->
+    <string name="ClockSkewActivity__time_prefix">Ang petsa at oras ng device mo ay:\n%1$s</string>
+    <!-- Button that opens the system date and time settings -->
+    <string name="ClockSkewActivity__adjust_date_button">I-adjust ang petsa</string>
+
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">Walang mahanap na web browser.</string>
     <string name="CommunicationActions_send_email">Mag-send ng email</string>
@@ -388,6 +398,8 @@
     <!-- Conversation message shown when someone deletes their own message. Placeholder is the name of the person. -->
     <string name="ConversationItem_s_deleted_this_message">Binura ni %1$s ang message na ito</string>
     <string name="ConversationItem_you_deleted_this_message">Binura mo ang message na ito</string>
+    <!-- Tappable text shown on a locally-deleted message tombstone, prompting the user to promote it to a delete-for-everyone -->
+    <string name="ConversationItem_delete_for_everyone_question">Burahin para sa lahat?</string>
     <!-- Conversation message when a message has been deleted by an admin. The placeholder is the admin\'s name. -->
     <string name="ConversationItem_admin_s_deleted_this_message">Binura ni admin %1$s ang message na ito</string>
     <!-- Dialog error message shown when user can\'t download a message from someone else due to a permanent failure (e.g., unable to decrypt), placeholder is other\'s name -->
@@ -579,7 +591,7 @@
     <string name="ConversationFragment_delete">Burahin</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">Burahin sa lahat ng devices</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">Mabubura ang message na ito sa lahat ng nasa chat kung sila\'y nasa recent version ng Signal. Makikita nilang nag-delete ka ng message.</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">Buburahin ang message na ito para sa lahat ng nasa chat. Makikita nila na nagbura ka ng message.</string>
     <string name="ConversationFragment_quoted_message_not_found">Ang orihinal na mensahe ay hindi mahanap</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">Ang orihinal na mensahe ay wala na</string>
     <string name="ConversationFragment_failed_to_open_message">Nabigong buksan ang mensahe</string>
@@ -616,7 +628,7 @@
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Mag-register ulit sa Signal</string>
     <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
-    <string name="ConversationFragment__relink_signal">Re-link</string>
+    <string name="ConversationFragment__relink_signal">I-link ulit</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Bumalik.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -758,17 +770,28 @@
     <!-- Notice on chat list when no unread chats are available, centered on display -->
     <string name="ConversationListFragment__no_unread_chats">Walang unread chats</string>
     <plurals name="ConversationListFragment_delete_selected_conversations">
-        <item quantity="one">Gusto mo bang burahin ang selected chat?</item>
-        <item quantity="other">Gusto mo bang burahin ang selected chats?</item>
+        <item quantity="one">Burahin ang message history?</item>
+        <item quantity="other">Burahin ang message histories?</item>
     </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations">
-        <item quantity="one">Permanente nitong buburahin ang selected chat.</item>
-        <item quantity="other">Permanente nitong buburahin ang %1$d selected chats.</item>
+        <item quantity="one">Buburahin ang lahat ng messages sa chat na ito.</item>
+        <item quantity="other">Buburahin ang lahat ng messages sa chats na ito.</item>
     </plurals>
-    <!-- Dialog message shown when deleting one to many conversations from the chat list and the user has a linked device -->
+    <!-- Dialog message shown when deleting chats, with at least one group -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_group">
+        <item quantity="one">Buburahin ang lahat ng messages sa chat na ito. Mananatili kang member ng group na ito.</item>
+        <item quantity="other">Buburahin ang lahat ng messages sa chats na ito. Mananatili kang member ng groups na hindi mo pa nililisan.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups, and the user has a linked device -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device">
-        <item quantity="one">Permanente nitong buburahin ang napiling chat mula sa lahat ng devices mo.</item>
-        <item quantity="other">Permanente nitong buburahin ang napiling %1$d chats mula sa lahat ng devices mo.</item>
+        <item quantity="one">Buburahin mula sa lahat ng devices mo ang lahat ng messages sa chat na ito.</item>
+        <item quantity="other">Buburahin mula sa lahat ng devices mo ang lahat ng messages sa chats na ito.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats with at least one group, and the user has a linked device -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device_group">
+        <item quantity="one">Buburahin mula sa lahat ng devices mo ang lahat ng messages sa chats na ito. Mananatili kang member ng group na ito.</item>
+        <item quantity="other">Buburahin mula sa lahat ng devices mo ang lahat ng messages sa chats na ito. Mananatili kang member ng groups na hindi mo pa nililisan.</item>
     </plurals>
     <string name="ConversationListFragment_deleting">Binubura</string>
     <plurals name="ConversationListFragment_deleting_selected_conversations">
@@ -1118,6 +1141,8 @@
     <string name="LinkDeviceFragment__edit_name">I-edit ang pangalan</string>
     <!-- Toast shown when the process of linking a device has been cancelled -->
     <string name="LinkDeviceFragment__linking_cancelled">Cancelled ang pag-link</string>
+    <!-- Snackbar shown when the user tries to link a new device but has already reached the maximum number of linked devices. Placeholder is the maximum count. -->
+    <string name="LinkDeviceFragment__you_can_only_have_d_linked_devices">Maaari ka lamang magkaroon ng %1$d linked devices.</string>
     <!-- Message shown in progress dialog telling users to avoid closing the app while messages are being synced -->
     <string name="LinkDeviceFragment__do_not_close">Huwag isara ang app</string>
     <!-- Dialog title shown when a device is unlinked -->
@@ -3070,6 +3095,7 @@
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_challenge_received" translatable="false">Challenge Received:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_registered" translatable="false">Registered:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_backups" translatable="false">Backups:</string> -->
 
     <!-- ThreadRecord -->
     <string name="ThreadRecord_group_updated">Updated na ang grupo</string>
@@ -3492,9 +3518,9 @@
     <!-- Action in reminder banner that will take user to re-register -->
     <string name="UnauthorizedReminder_reregister_action">Mag-register ulit ng device</string>
     <!-- Message shown in a reminder banner when this linked device is no longer linked to a primary device -->
-    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">This device is no longer linked. Re-link Signal with your phone to continue messaging.</string>
+    <string name="UnauthorizedReminder_this_device_is_no_longer_linked_relink_to_continue_messaging">Ang device na ito ay hindi na naka-link. I-link ulit ang Signal sa phone mo para ituloy ang pag-message.</string>
     <!-- Action in reminder banner that will take the user to re-link this device -->
-    <string name="UnauthorizedReminder_relink_action">Re-link device</string>
+    <string name="UnauthorizedReminder_relink_action">I-link ulit ang device</string>
 
     <!-- Push notification when the app is forcibly logged out by the server. -->
     <string name="LoggedOutNotification_you_have_been_logged_out">Na-log out ka sa Signal sa device na ito.</string>
@@ -5107,6 +5133,32 @@
     <!-- Error message shown when we fail to delete the data for some unknown reason -->
     <string name="preferences_account_delete_all_data_failed">Hindi mabura ang data</string>
 
+    <!-- LinkedDeviceAccountSettingsFragment -->
+    <!-- Title of an informational card shown on the account settings screen of a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_is_a_linked_device">Ito ay isang linked device</string>
+    <!-- Body of an informational card explaining that account settings must be managed from the primary device -->
+    <string name="LinkedDeviceAccountSettingsFragment__to_manage_your_account_settings">Para i-manage ang account settings mo, buksan ang Signal sa iyong primary device.</string>
+    <!-- Title of a settings row that deletes all Signal data from this linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data">Burahin ang app data</string>
+    <!-- Subtitle of the delete app data row explaining what it does -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_remove_all_data">Aalisin nito ang lahat ng data mula sa Signal app sa device na ito.</string>
+    <!-- Title of the confirmation dialog shown when deleting app data from a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data_question">Burahin ang app data?</string>
+    <!-- Message of the confirmation dialog explaining that only this device\'s data is deleted, not the account -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_delete_all_data_and_messages">Buburahin nito ang lahat ng data at messages mula sa Signal app sa device na ito. Hindi mabubura ang Signal account mo at ang data sa primary device mo o iba pang linked devices. Magsasara ang app kapag tapos na ang prosesong ito.</string>
+
+    <!-- LinkedDeviceAccountLearnMoreBottomSheet -->
+    <!-- Emphasized lead-in phrase shown in bold at the start of the learn more sheet body. Must appear verbatim within LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices">Mga naka-link na device</string>
+    <!-- Body text of the linked devices learn more sheet. The leading \"Linked Devices\" is shown in bold. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access">Tinutulungan ka ng Linked Devices na ligtas na i-access ang Signal account at messages mo sa anumang additional devices mo.</string>
+    <!-- Bullet point describing what devices can be linked -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__you_can_link_a_desktop">Maaari kang mag-link ng desktop, tablet o additional phone</string>
+    <!-- Bullet point describing that the primary device manages linked devices -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__your_primary_device_manages">Mina-manage ng primary device mo kung ano ang naka-link, at maaari kang mag-link ng hanggang 5 device.</string>
+    <!-- Bullet point describing that some settings are only available on the primary device -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__some_account_settings">Ang ilang account settings ay nama-manage lang sa primary device mo, kasama na ang account settings at backups.</string>
+
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">Transfer or restore account</string>
     <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">Kung nakapag-register ka na sa isang Signal account previously, pwede mong i-transfer o i-restore ang account at messages mo</string>
@@ -6357,6 +6409,7 @@
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">Ang isa o higit pang files were too large</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">Ang isa o higit pang files were invalid</string>
     <string name="MediaReviewFragment__too_many_items_selected">Too many items selected</string>
+    <string name="MediaReviewFragment__video_trimmed_to_fit">Pinaikli ang video mo para magkasya sa size limit</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
     <string name="MediaReviewFragment__video_set_to_view_once">Ang video ay naka-set sa view once</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
@@ -6909,7 +6962,7 @@
     <!-- Donation receipts amount title -->
     <string name="DonationReceiptDetailsFragment__amount">Amount</string>
     <!-- Donation receipts thanks -->
-    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting">Maraming salamat sa iyong suporta sa Signal. Ang iyong contribution ay nakatutulong para maipagpatuloy ang aming mission sa pag-develop ng open source privacy technology that protexts free expression and enables secure global communication for millions of people around the world. Kung ikaw ay isang resident ng United States, ingatan ang receipt na ito para sa tax records mo. Ang Signal Technology Foundation ay isang tax-exempt nonprofit organization sa United States under section 501c3 ng Internal Revenue Code. Ang aming Federal Tax ID ay 82-4506840.</string>
+    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting" tools:ignore="TypographyDashes">Maraming salamat sa pagsuporta sa Signal. Nakatutulong ang contribution mo para maipagpatuloy ang aming mission na protektahan ang free expression at magbigay ng secure global communication sa milyun-milyong tao sa buong mundo, sa pamamagitan ng open source privacy technology. Kung isa kang residente ng Estados Unidos, ingatan ang receipt na ito para sa tax records mo. Ang Signal Technology Foundation ay isang tax-exempt nonprofit organization sa Estados Unidos sa ilalim ng section 501c3 ng Internal Revenue Code. Ang aming Federal Tax ID ay 82-4506840. Hindi nagbigay ng anumang produkto o serbisyo ang Signal kapalit ng contribution na ito.</string>
     <!-- Donation reciepts screen empty state title -->
     <string name="DonationReceiptListFragment__no_receipts">Walang receipts</string>
 
@@ -8246,11 +8299,11 @@
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Para mag-restore ng backup, mag-install ng bagong kopya ng Signal. Buksan ang app at i-tap ang Restore backup, pagkatapos ay maghanap ng backup file."</string>
     <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
-    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">Naka-on ang \"I-optimize ang Signal storage\". Kung gusto mong isama ang lahat ng media sa iyong on-device backup, i-off ang setting.</string>
     <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
-    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <string name="OnDeviceBackupsScreen__view_setting">Tingnan ang setting</string>
     <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
-    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Magpatuloy nang hindi ino-off</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">I-verify ang recovery key mo</string>
@@ -8635,9 +8688,9 @@
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">Magagamit lamang ang storage optimization sa paid tier ng Signal Secure Backups. Pinoproseso pa ang backups subscription mo at hindi pa ito active. Subukan ulit mamaya.</string>
     <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Ang media ay tatanggalin mula sa on-device backup mo</string>
     <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Sa pag-on ng \"I-optimize ang Signal storage\", mao-offload ang lumang media mula sa device mo. Maaari mo itong i-download ulit anumang oras. Tatanggalin din nito ang lumang media mula sa on-device backup mo.</string>
     <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
     <string name="ManageStorageSettingsFragment__turn_on">I-on</string>
 
@@ -8722,6 +8775,8 @@
     <string name="BackupsSettingsFragment__subscription_canceled">Kinancel ang subscription</string>
     <!-- Subtitle for row for no backup ever created -->
     <string name="BackupsSettingsFragment_automatic_backups_with_signals">Automatic backups na may secure end-to-end encrypted storage service ng Signal.</string>
+    <!-- Subtitle shown on a linked device when backups are off, directing the user to set them up on their phone -->
+    <string name="BackupsSettingsFragment__automatic_backups_get_started_on_your_phone">Automatic backups na may secure end-to-end encrypted storage service ng Signal. Simulan sa phone mo.</string>
     <!-- Subtitle for row for backups that are active but subscription not found -->
     <string name="BackupsSettingsFragment_subscription_not_found_on_this_device">"Walang mahanap na subscription sa device na ito."</string>
     <!-- Action button label to set up backups -->
@@ -8825,6 +8880,16 @@
     <string name="RemoteBackupsSettingsFragment__s_at_s">%1$s nang %2$s</string>
     <!-- Subtext describing when a backup has never taken place. -->
     <string name="RemoteBackupsSettingsFragment__never">Hindi kailanman</string>
+    <!-- Subtext on a linked device describing when the primary device last backed up. Placeholder is the formatted date and time. -->
+    <string name="RemoteBackupsSettingsFragment__your_phone_s">Sa phone mo · %1$s</string>
+    <!-- Message shown on a linked device with a free backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_your_subscription_on_your_primary_device">Maaari mong i-manage o i-upgrade ang Secure Backups subscription mo sa iyong primary device.</string>
+    <!-- Message shown on a linked device with a paid backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_cancel_your_subscription_on_your_primary_device">Maaari mong i-manage o i-cancel ang Signal Secure Backups subscription mo sa iyong primary device.</string>
+    <!-- Message shown on a linked device with a canceled backup subscription explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_renew_your_subscription_on_your_primary_device">Maaari mong i-manage o i-renew ang Signal Secure Backups subscription mo sa iyong primary device.</string>
+    <!-- Message shown on a linked device when backups are off or the subscription was not found, explaining that backups are managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_backups_on_your_primary_device">Maaari mong i-manage o i-upgrade ang Signal Secure Backups sa iyong primary device.</string>
     <!-- Button label to perform a backup immediately -->
     <string name="RemoteBackupsSettingsFragment__back_up_now">Mag-back up na ngayon</string>
     <!-- Dialog title when confirming whether to turn off and deleting backups -->
@@ -9888,11 +9953,11 @@
     <!-- Header for a section showing all group member -->
     <string name="MemberSearchFragment__search_members">Mag-search ng members</string>
     <!-- Header for a section showing all group members who are contacts -->
-    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <string name="MemberSearchFragment__search_contacts">Mag-search ng contacts</string>
     <!-- Header for a section showing all group member who are admins -->
-    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <string name="MemberSearchFragment__search_admins">Mag-search ng admins</string>
     <!-- Dialog title to filter search by -->
-    <string name="MemberSearchFragment__filter">Filter by</string>
+    <string name="MemberSearchFragment__filter">I-filter ayon sa</string>
     <!-- Dialog option for all group members -->
     <string name="MemberSearchFragment__filter_all_members">All members</string>
     <!-- Dialog option for group admins -->
@@ -9900,7 +9965,7 @@
     <!-- Dialog option for your contacts -->
     <string name="MemberSearchFragment__filter_contacts">Contacts</string>
     <!-- Button to invite members via a group link -->
-    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
+    <string name="MemberSearchFragment__invite_via">Mag-invite gamit ang group link</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">Hindi ma-restore ang backup</string>

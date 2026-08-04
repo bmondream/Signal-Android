@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.dependencies
 
 import androidx.media3.exoplayer.ExoPlayer
 import io.mockk.mockk
+import okhttp3.OkHttpClient
 import org.signal.core.util.billing.BillingApi
 import org.signal.core.util.concurrent.DeadlockDetector
 import org.signal.core.util.contentproviders.BlobProvider
@@ -18,9 +19,11 @@ import org.signal.network.api.LinkDeviceApi
 import org.signal.network.api.PaymentsApi
 import org.signal.network.api.ProvisioningApi
 import org.signal.network.api.RateLimitChallengeApi
+import org.signal.network.api.RegistrationApiV2
 import org.signal.network.api.RemoteConfigApi
 import org.signal.network.api.SvrBApi
 import org.signal.network.api.UsernameApi
+import org.signal.network.config.SignalServiceConfiguration
 import org.signal.network.rest.SignalRestClient
 import org.signal.video.exo.ExoPlayerPool
 import org.thoughtcrime.securesms.components.TypingStatusRepository
@@ -65,7 +68,6 @@ import org.whispersystems.signalservice.api.services.DonationsService
 import org.whispersystems.signalservice.api.services.ProfileService
 import org.whispersystems.signalservice.api.storage.StorageServiceApi
 import org.whispersystems.signalservice.api.websocket.SignalWebSocket
-import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration
 import org.whispersystems.signalservice.internal.push.PushServiceSocket
 import java.util.function.Supplier
 
@@ -75,6 +77,10 @@ class MockApplicationDependencyProvider : AppDependencies.Provider {
   }
 
   override fun provideSignalRestClient(signalServiceConfiguration: SignalServiceConfiguration): SignalRestClient {
+    return mockk(relaxed = true)
+  }
+
+  override fun provideOkHttpClient(): OkHttpClient {
     return mockk(relaxed = true)
   }
 
@@ -272,6 +278,10 @@ class MockApplicationDependencyProvider : AppDependencies.Provider {
   }
 
   override fun provideRegistrationApi(pushServiceSocket: PushServiceSocket): RegistrationApi {
+    return mockk(relaxed = true)
+  }
+
+  override fun provideRegistrationApiV2(signalRestClient: SignalRestClient): RegistrationApiV2 {
     return mockk(relaxed = true)
   }
 

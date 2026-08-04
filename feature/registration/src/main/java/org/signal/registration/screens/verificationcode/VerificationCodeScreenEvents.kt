@@ -6,8 +6,12 @@
 package org.signal.registration.screens.verificationcode
 
 import org.signal.core.util.censor
+import org.signal.registration.RegistrationFlowState
 
 sealed class VerificationCodeScreenEvents {
+  /** The parent registration flow state changed and needs to be merged into this screen's state. */
+  data class ParentStateChanged(val parentState: RegistrationFlowState) : VerificationCodeScreenEvents()
+
   data class CodeEntered(val code: String) : VerificationCodeScreenEvents() {
     override fun toString(): String = "CodeEntered(code=${code.censor()})"
   }
@@ -41,7 +45,42 @@ sealed class VerificationCodeScreenEvents {
 
   data object DismissContactSupport : VerificationCodeScreenEvents()
 
-  data object ConsumeInnerOneTimeEvent : VerificationCodeScreenEvents()
+  data object ContactSupportDialog : VerificationCodeScreenEvents()
+
+  data object DismissContactSupportDialog : VerificationCodeScreenEvents()
+
+  /** The network error snackbar was shown and dismissed. */
+  data object NetworkErrorSnackbarDismissed : VerificationCodeScreenEvents()
+
+  /** The unknown error snackbar was shown and dismissed. */
+  data object UnknownErrorSnackbarDismissed : VerificationCodeScreenEvents()
+
+  /** The rate limited snackbar was shown and dismissed. */
+  data object RateLimitedSnackbarDismissed : VerificationCodeScreenEvents()
+
+  /** The network error dialog from requesting a code was dismissed. */
+  data object NetworkErrorDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The unknown error dialog from requesting a code was dismissed. */
+  data object UnknownErrorDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The rate limited dialog from requesting a code was dismissed. */
+  data object RateLimitedDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The unable-to-send-SMS dialog was dismissed. */
+  data object UnableToSendSmsDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The could-not-request-code-with-selected-transport dialog was dismissed. */
+  data object CouldNotRequestCodeWithSelectedTransportDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The delivery-provider-rejected dialog was dismissed. */
+  data object ProviderRejectedDialogDismissed : VerificationCodeScreenEvents()
+
+  /** The incorrect verification code snackbar was shown and dismissed. */
+  data object IncorrectVerificationCodeSnackbarDismissed : VerificationCodeScreenEvents()
+
+  /** The registration error snackbar was shown and dismissed. */
+  data object RegistrationErrorSnackbarDismissed : VerificationCodeScreenEvents()
 
   /**
    * Event to update countdown timers. Should be triggered periodically (e.g., every second).

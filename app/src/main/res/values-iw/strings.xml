@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: AGPL-3.0-only
   -->
 <!-- smartling.instruction_comments_enabled = on -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
@@ -298,6 +298,16 @@
     <string name="ClientDeprecatedActivity_warning">אזהרה</string>
     <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">גרסת Signal שלך כבר לא בתוקף. אפשר לצפות בהיסטוריית ההודעות שלך אבל לא תהיה לך אפשרות לשלוח או לקבל הודעות עד לעדכון האפליקציה.</string>
 
+    <!-- ClockSkewActivity -->
+    <!-- Title of the full-screen dialog shown when the device clock is too far off from the real time -->
+    <string name="ClockSkewActivity__title">התאריך לא מדויק</string>
+    <!-- Body text explaining that the device clock is wrong and needs to be fixed -->
+    <string name="ClockSkewActivity__date_inaccurate_description">התאריך במכשיר שלך לא מדויק.\nיש לעדכן אותו ולנסות שוב.</string>
+    <!-- Shows the user the current, inaccurate date and time reported by their device. Placeholder is the formatted date, time, and time zone. -->
+    <string name="ClockSkewActivity__time_prefix">התאריך והשעה במכשיר שלך הם:\n%1$s</string>
+    <!-- Button that opens the system date and time settings -->
+    <string name="ClockSkewActivity__adjust_date_button">עדכון תאריך</string>
+
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">דפדפן רשת לא נמצא.</string>
     <string name="CommunicationActions_send_email">שלח דוא״ל</string>
@@ -392,6 +402,8 @@
     <!-- Conversation message shown when someone deletes their own message. Placeholder is the name of the person. -->
     <string name="ConversationItem_s_deleted_this_message">ההודעה הזו נמחקה על ידי %1$s</string>
     <string name="ConversationItem_you_deleted_this_message">ההודעה הזו נמחקה על ידך</string>
+    <!-- Tappable text shown on a locally-deleted message tombstone, prompting the user to promote it to a delete-for-everyone -->
+    <string name="ConversationItem_delete_for_everyone_question">למחוק עבור כולם?</string>
     <!-- Conversation message when a message has been deleted by an admin. The placeholder is the admin\'s name. -->
     <string name="ConversationItem_admin_s_deleted_this_message">ההודעה הזו נמחקה על ידי מנהל/ת הקבוצה %1$s</string>
     <!-- Dialog error message shown when user can\'t download a message from someone else due to a permanent failure (e.g., unable to decrypt), placeholder is other\'s name -->
@@ -603,7 +615,7 @@
     <string name="ConversationFragment_delete">מחיקה</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">מחיקה בכל מקום</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">הודעה זו תימחק עבור כל מי שנמצא בצ\'אט אם הם משתמשים בגרסה עדכנית של Signal. הם יוכלו לראות שמחקת הודעה.</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">הודעה זו תימחק עבור כל מי שנמצא בצ׳אט. הם יוכלו לראות שמחקת הודעה.</string>
     <string name="ConversationFragment_quoted_message_not_found">הודעה מקורית לא נמצאה</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">ההודעה המקורית אינה זמינה יותר</string>
     <string name="ConversationFragment_failed_to_open_message">נכשל בפתיחת הודעה</string>
@@ -786,23 +798,38 @@
     <!-- Notice on chat list when no unread chats are available, centered on display -->
     <string name="ConversationListFragment__no_unread_chats">אין צ׳אטים שלא נקראו</string>
     <plurals name="ConversationListFragment_delete_selected_conversations">
-        <item quantity="one">למחוק את הצ׳אט שנבחר?</item>
-        <item quantity="two">למחוק את הצ׳אטים שנבחרו?</item>
-        <item quantity="many">למחוק את הצ׳אטים שנבחרו?</item>
-        <item quantity="other">למחוק את הצ׳אטים שנבחרו?</item>
+        <item quantity="one">למחוק היסטוריית הודעות?</item>
+        <item quantity="two">למחוק היסטוריות הודעות?</item>
+        <item quantity="many">למחוק היסטוריות הודעות?</item>
+        <item quantity="other">למחוק היסטוריות הודעות?</item>
     </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations">
-        <item quantity="one">זה ימחק לצמיתות את הצ׳אט שנבחר.</item>
-        <item quantity="two">זה ימחק לצמיתות את %1$d הצ׳אטים שנבחרו.</item>
-        <item quantity="many">זה ימחק לצמיתות את כל %1$d הצ׳אטים שנבחרו.</item>
-        <item quantity="other">זה ימחק לצמיתות את כל %1$d הצ׳אטים שנבחרו.</item>
+        <item quantity="one">כל ההודעות בצ׳אט הזה יימחקו.</item>
+        <item quantity="two">כל ההודעות בצ׳אטים האלה יימחקו.</item>
+        <item quantity="many">כל ההודעות בצ׳אטים האלה יימחקו.</item>
+        <item quantity="other">כל ההודעות בצ׳אטים האלה יימחקו.</item>
     </plurals>
-    <!-- Dialog message shown when deleting one to many conversations from the chat list and the user has a linked device -->
+    <!-- Dialog message shown when deleting chats, with at least one group -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_group">
+        <item quantity="one">כל ההודעות בצ׳אט הזה יימחקו. עדיין תישאר/י חבר/ה בקבוצה הזו.</item>
+        <item quantity="two">כל ההודעות בצ׳אטים האלה יימחקו. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
+        <item quantity="many">כל ההודעות בצ׳אטים האלה יימחקו. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
+        <item quantity="other">כל ההודעות בצ׳אטים האלה יימחקו. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups, and the user has a linked device -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device">
-        <item quantity="one">זה ימחק לצמיתות את הצ׳אט שנבחר מכל המכשירים שלך.</item>
-        <item quantity="two">זה ימחק לצמיתות את %1$d הצ׳אטים שנבחרו מכל המכשירים שלך.</item>
-        <item quantity="many">זה ימחק לצמיתות את %1$d הצ׳אטים שנבחרו מכל המכשירים שלך.</item>
-        <item quantity="other">זה ימחק לצמיתות את %1$d הצ׳אטים שנבחרו מכל המכשירים שלך.</item>
+        <item quantity="one">כל ההודעות בצ׳אט הזה יימחקו מכל המכשירים שלך.</item>
+        <item quantity="two">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך.</item>
+        <item quantity="many">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך.</item>
+        <item quantity="other">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats with at least one group, and the user has a linked device -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device_group">
+        <item quantity="one">כל ההודעות בצ׳אט הזה יימחקו מכל המכשירים שלך. עדיין תישאר/י חבר/ה בקבוצה הזו.</item>
+        <item quantity="two">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
+        <item quantity="many">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
+        <item quantity="other">כל ההודעות בצ׳אטים האלה יימחקו מכל המכשירים שלך. עדיין תישאר/י חבר/ה בקבוצות שלא עזבת.</item>
     </plurals>
     <string name="ConversationListFragment_deleting">מוחק</string>
     <plurals name="ConversationListFragment_deleting_selected_conversations">
@@ -1172,6 +1199,8 @@
     <string name="LinkDeviceFragment__edit_name">עריכת שם</string>
     <!-- Toast shown when the process of linking a device has been cancelled -->
     <string name="LinkDeviceFragment__linking_cancelled">הקישור בוטל</string>
+    <!-- Snackbar shown when the user tries to link a new device but has already reached the maximum number of linked devices. Placeholder is the maximum count. -->
+    <string name="LinkDeviceFragment__you_can_only_have_d_linked_devices">אפשר לקשר רק %1$d מכשירים.</string>
     <!-- Message shown in progress dialog telling users to avoid closing the app while messages are being synced -->
     <string name="LinkDeviceFragment__do_not_close">לא לסגור את האפליקציה</string>
     <!-- Dialog title shown when a device is unlinked -->
@@ -3266,6 +3295,7 @@
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_challenge_received" translatable="false">Challenge Received:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_registered" translatable="false">Registered:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_backups" translatable="false">Backups:</string> -->
 
     <!-- ThreadRecord -->
     <string name="ThreadRecord_group_updated">הקבוצה עודכנה</string>
@@ -5373,6 +5403,32 @@
     <!-- Error message shown when we fail to delete the data for some unknown reason -->
     <string name="preferences_account_delete_all_data_failed">מחיקת נתונים נכשלה</string>
 
+    <!-- LinkedDeviceAccountSettingsFragment -->
+    <!-- Title of an informational card shown on the account settings screen of a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_is_a_linked_device">זה מכשיר מקושר</string>
+    <!-- Body of an informational card explaining that account settings must be managed from the primary device -->
+    <string name="LinkedDeviceAccountSettingsFragment__to_manage_your_account_settings">כדי לנהל את הגדרות החשבון שלך, יש לפתוח את Signal במכשיר הראשי שלך.</string>
+    <!-- Title of a settings row that deletes all Signal data from this linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data">מחיקת נתוני אפליקציה</string>
+    <!-- Subtitle of the delete app data row explaining what it does -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_remove_all_data">זה יסיר את כל הנתונים מאפליקציית Signal במכשיר הזה.</string>
+    <!-- Title of the confirmation dialog shown when deleting app data from a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data_question">למחוק נתוני אפליקציה?</string>
+    <!-- Message of the confirmation dialog explaining that only this device\'s data is deleted, not the account -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_delete_all_data_and_messages">זה ימחק את כל הנתונים וההודעות מאפליקציית Signal במכשיר הזה. חשבון Signal שלך והנתונים במכשיר הראשי שלך או במכשירים מקושרים אחרים לא יימחקו. האפליקציה תיסגר לאחר השלמת התהליך.</string>
+
+    <!-- LinkedDeviceAccountLearnMoreBottomSheet -->
+    <!-- Emphasized lead-in phrase shown in bold at the start of the learn more sheet body. Must appear verbatim within LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices">מכשירים מקושרים</string>
+    <!-- Body text of the linked devices learn more sheet. The leading \"Linked Devices\" is shown in bold. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access">מכשירים מקושרים מאפשרים לך לגשת לחשבון Signal ולהודעות שלך באופן מאובטח בכל אחד מהמכשירים הנוספים שלך.</string>
+    <!-- Bullet point describing what devices can be linked -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__you_can_link_a_desktop">אפשר לקשר מחשב, טאבלט, או טלפון נוסף</string>
+    <!-- Bullet point describing that the primary device manages linked devices -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__your_primary_device_manages">המכשיר הראשי שלך מנהל את מה שמקושר, ואפשר לקשר עד 5 מכשירים.</string>
+    <!-- Bullet point describing that some settings are only available on the primary device -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__some_account_settings">הגדרות מסוימות מנוהלות אך ורק במכשיר הראשי שלך, כולל הגדרות חשבון וגיבויים.</string>
+
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">העבר או שחזר חשבון</string>
     <string name="TransferOrRestoreFragment__if_you_have_previously_registered_a_signal_account">במקרה שנרשמת קודם לכן אל חשבון Signal, אתה יכול להעביר או לשחזר את החשבון וההודעות שלך.</string>
@@ -6673,6 +6729,7 @@
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">פריט אחד או יותר היו יותר מדי גדולים</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">פריט אחד או יותר היו בלתי תקפים</string>
     <string name="MediaReviewFragment__too_many_items_selected">יותר מדי פריטים נבחרו</string>
+    <string name="MediaReviewFragment__video_trimmed_to_fit">הסרטון שלך קוצץ כדי להתאים למגבלת הגודל</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
     <string name="MediaReviewFragment__video_set_to_view_once">וידאו מוגדר לצפייה חד פעמית</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
@@ -7229,7 +7286,7 @@
     <!-- Donation receipts amount title -->
     <string name="DonationReceiptDetailsFragment__amount">סכום</string>
     <!-- Donation receipts thanks -->
-    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting">תודה לך על תמיכה ב־Signal. התרומה שלך עוזרת לתדלק את המשימה של פיתוח טכנולוגית פרטיות בקוד פתוח שמגינה על חופשי ביטוי ומאפשרת תקשורת עולמית מאובטחת עבור מיליוני אנשים ברחבי העולם. אם אתה תושב ארצות הברית, אנא שמור את הקבלה הזאת עבור רישומי המס שלך. הקרן של טכנולוגית Signal היא ארגון ללא מטרות רווח פטור ממס בארצות הברית תחת קטע 501c3 של קוד ההכנסה הפנימית. מספר זהות המס שלנו הוא 82–4506840.</string>
+    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting" tools:ignore="TypographyDashes">תודה על התמיכה ב–Signal. התרומה שלך עוזרת להמשיך לקדם את המשימה שלנו להגן על חופש הביטוי ולאפשר תקשורת גלובלית מאובטחת עבור מיליונים ברחבי העולם, באמצעות טכנולוגיית פרטיות בקוד פתוח. אם מקום המגורים שלך הוא ארה״ב, יש לשמור את הקבלה הזו לצורך רישומי המס שלך. Signal Technology Foundation היא עמותה ללא מטרות רווח פטורה ממס בארה״ב תחת סעיף 501c3 של קוד מס ההכנסה האמריקאי. מזהה המס הפדרלי שלנו הוא 82-4506840. Signal לא סיפקה כל מוצר או שירות בתמורה לתרומה זו.</string>
     <!-- Donation reciepts screen empty state title -->
     <string name="DonationReceiptListFragment__no_receipts">אין קבלות</string>
 
@@ -8622,11 +8679,11 @@
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"כדי לשחזר גיבוי, יש להתקין עותק חדש של Signal. צריך לפתוח את האפליקציה וללחוץ על ״שחזור גיבוי״, ואז לאתר את תיקיית הגיבוי."</string>
     <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
-    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">״אופטימיזציה של אחסון Signal״ מופעלת. אם ברצונך לכלול את כל המדיה שלך בגיבוי שבמכשיר, יש להשבית הגדרה זו.</string>
     <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
-    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <string name="OnDeviceBackupsScreen__view_setting">הצגת הגדרות</string>
     <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
-    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">להמשיך בלי להשבית</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">אימות מפתח השחזור שלך</string>
@@ -9017,9 +9074,9 @@
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">ניתן להשתמש באופטימיזציה של אחסון רק עם התכנית בתשלום של הגיבויים המאובטחים של Signal. מנוי הגיבויים שלך נמצא בעיבוד ואינו פעיל עדיין. נא לנסות שוב מאוחר יותר.</string>
     <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">מדיה תוסר מהגיבוי שבמכשיר שלך</string>
     <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">הפעלת ״אופטימיזציה של אחסון Signal״ תנקה מדיה ישנה מהמכשיר שלך. אפשר להוריד אותה שוב בכל עת. זה גם יסיר מדיה ישנה מהגיבוי שבמכשיר שלך.</string>
     <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
     <string name="ManageStorageSettingsFragment__turn_on">הפעלה</string>
 
@@ -9110,6 +9167,8 @@
     <string name="BackupsSettingsFragment__subscription_canceled">מנוי בוטל</string>
     <!-- Subtitle for row for no backup ever created -->
     <string name="BackupsSettingsFragment_automatic_backups_with_signals">גיבויים אוטומטיים עם שירות האחסון המאובטח והמוצפן מקצה לקצה של Signal.</string>
+    <!-- Subtitle shown on a linked device when backups are off, directing the user to set them up on their phone -->
+    <string name="BackupsSettingsFragment__automatic_backups_get_started_on_your_phone">גיבויים אוטומטיים עם שירות האחסון המאובטח והמוצפן מקצה לקצה של Signal. אפשר להתחיל כעת בטלפון שלך.</string>
     <!-- Subtitle for row for backups that are active but subscription not found -->
     <string name="BackupsSettingsFragment_subscription_not_found_on_this_device">"המנוי לא נמצא במכשיר זה."</string>
     <!-- Action button label to set up backups -->
@@ -9215,6 +9274,16 @@
     <string name="RemoteBackupsSettingsFragment__s_at_s">%1$s בשעה %2$s</string>
     <!-- Subtext describing when a backup has never taken place. -->
     <string name="RemoteBackupsSettingsFragment__never">אף פעם</string>
+    <!-- Subtext on a linked device describing when the primary device last backed up. Placeholder is the formatted date and time. -->
+    <string name="RemoteBackupsSettingsFragment__your_phone_s">הטלפון שלך · %1$s</string>
+    <!-- Message shown on a linked device with a free backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_your_subscription_on_your_primary_device">באפשרותך לנהל או לשדרג את מנוי גיבויי Signal המאובטחים שלך במכשיר הראשי שלך.</string>
+    <!-- Message shown on a linked device with a paid backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_cancel_your_subscription_on_your_primary_device">באפשרותך לנהל או לחדש את מנוי גיבויי Signal המאובטחים שלך במכשיר הראשי שלך.</string>
+    <!-- Message shown on a linked device with a canceled backup subscription explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_renew_your_subscription_on_your_primary_device">באפשרותך לנהל או לחדש את מנוי גיבויי Signal המאובטחים שלך במכשיר הראשי שלך.</string>
+    <!-- Message shown on a linked device when backups are off or the subscription was not found, explaining that backups are managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_backups_on_your_primary_device">באפשרותך לנהל או לשדרג את גיבויי Signal המאובטחים במכשיר הראשי שלך.</string>
     <!-- Button label to perform a backup immediately -->
     <string name="RemoteBackupsSettingsFragment__back_up_now">לגבות כעת</string>
     <!-- Dialog title when confirming whether to turn off and deleting backups -->
@@ -10296,11 +10365,11 @@
     <!-- Header for a section showing all group member -->
     <string name="MemberSearchFragment__search_members">חיפוש חברים</string>
     <!-- Header for a section showing all group members who are contacts -->
-    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <string name="MemberSearchFragment__search_contacts">חיפוש אנשי קשר</string>
     <!-- Header for a section showing all group member who are admins -->
-    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <string name="MemberSearchFragment__search_admins">חיפוש מנהלים</string>
     <!-- Dialog title to filter search by -->
-    <string name="MemberSearchFragment__filter">Filter by</string>
+    <string name="MemberSearchFragment__filter">סינון לפי</string>
     <!-- Dialog option for all group members -->
     <string name="MemberSearchFragment__filter_all_members">כל חברי הקבוצה</string>
     <!-- Dialog option for group admins -->
@@ -10308,7 +10377,7 @@
     <!-- Dialog option for your contacts -->
     <string name="MemberSearchFragment__filter_contacts">אנשי קשר</string>
     <!-- Button to invite members via a group link -->
-    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
+    <string name="MemberSearchFragment__invite_via">הזמנה באמצעות קישור קבוצה</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">לא ניתן לשחזר גיבוי</string>

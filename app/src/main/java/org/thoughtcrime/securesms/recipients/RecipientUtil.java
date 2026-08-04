@@ -203,6 +203,10 @@ public class RecipientUtil {
     insertUnblockedUpdate(recipient, SignalDatabase.threads().getOrCreateThreadIdFor(recipient));
     AppDependencies.getJobManager().add(new MultiDeviceBlockedUpdateJob());
     StorageSyncHelper.scheduleSyncForDataChange();
+
+    if (recipient.isGroup()) {
+      SignalDatabase.groups().clearGroupIfLeftAndDeleted(recipient.getId());
+    }
   }
 
   private static void insertBlockedUpdate(@NonNull Recipient recipient, long threadId) {
@@ -349,7 +353,7 @@ public class RecipientUtil {
       GroupTable groupDatabase = SignalDatabase.groups();
       return groupDatabase.getPushGroupsContainingMember(recipient.getId())
                           .stream()
-                          .filter(GroupRecord::isV2Group)
+                          .filter(GroupRecord::getHasV2GroupProperties)
                           .anyMatch(group -> group.memberLevel(Recipient.self()).isInGroup());
 
     }

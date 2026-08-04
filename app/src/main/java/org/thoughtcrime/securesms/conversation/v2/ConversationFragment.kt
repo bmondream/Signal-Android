@@ -57,7 +57,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutManagerCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
@@ -244,6 +243,7 @@ import org.thoughtcrime.securesms.conversation.ui.inlinequery.InlineQueryViewMod
 import org.thoughtcrime.securesms.conversation.v2.computed.ConversationMessageComputeWorkers
 import org.thoughtcrime.securesms.conversation.v2.data.AvatarDownloadStateCache
 import org.thoughtcrime.securesms.conversation.v2.data.ConversationMessageElement
+import org.thoughtcrime.securesms.conversation.v2.data.DeletedMessageTombstoneCache
 import org.thoughtcrime.securesms.conversation.v2.groups.ConversationGroupCallViewModel
 import org.thoughtcrime.securesms.conversation.v2.groups.ConversationGroupViewModel
 import org.thoughtcrime.securesms.conversation.v2.items.ChatColorsDrawable
@@ -367,6 +367,7 @@ import org.thoughtcrime.securesms.util.PlayStoreUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.SignalLocalMetrics
 import org.thoughtcrime.securesms.util.TextSecurePreferences
+import org.thoughtcrime.securesms.util.UriUtil
 import org.thoughtcrime.securesms.util.ViewUtil
 import org.thoughtcrime.securesms.util.atMidnight
 import org.thoughtcrime.securesms.util.atUTC
@@ -757,7 +758,11 @@ class ConversationFragment :
         }
         val uri = clip.getItemAt(0).uri
         if (uri != null) {
-          mediaListener.onMediaSelected(uri, mimeType)
+          if (UriUtil.isValidExternalUri(requireContext(), uri)) {
+            mediaListener.onMediaSelected(uri, mimeType)
+          } else {
+            Log.w(TAG, "Ignoring received content with a non-external URI.")
+          }
         }
       }
 
@@ -879,6 +884,7 @@ class ConversationFragment :
 
     if (!requireActivity().isChangingConfigurations) {
       (requireActivity().supportFragmentManager.findFragmentByTag(MESSAGE_DETAILS_TAG) as? DialogFragment)?.dismissAllowingStateLoss()
+      DeletedMessageTombstoneCache.clearThread(args.threadId)
     }
 
     super.onDestroyView()
@@ -2910,7 +2916,10 @@ class ConversationFragment :
         messageRequestViewModel
           .onReportSpam()
           .doOnSubscribe { disabledInput.showBusy() }
-          .doOnTerminate { disabledInput.hideBusy() }
+          .doOnTerminate {
+            disabledInput.hideBusy()
+            viewModel.refreshInputReadyState()
+          }
           .subscribeBy {
             Log.d(TAG, "report spam complete")
             toast(R.string.ConversationFragment_reported_as_spam)
@@ -2924,7 +2933,10 @@ class ConversationFragment :
           messageRequestViewModel
             .onBlockAndReportSpam()
             .doOnSubscribe { disabledInput.showBusy() }
-            .doOnTerminate { disabledInput.hideBusy() }
+            .doOnTerminate {
+              disabledInput.hideBusy()
+              viewModel.refreshInputReadyState()
+            }
             .subscribeBy { result ->
               when (result) {
                 is Result.Success -> {
@@ -3003,7 +3015,10 @@ class ConversationFragment :
   private fun Single<Result<Unit, GroupChangeFailureReason>>.subscribeWithShowProgress(logMessage: String): Disposable {
     val disabledInput = binding.conversationDisabledInput
     return doOnSubscribe { disabledInput.showBusy() }
-      .doOnTerminate { disabledInput.hideBusy() }
+      .doOnTerminate {
+        disabledInput.hideBusy()
+        viewModel.refreshInputReadyState()
+      }
       .subscribeBy { result ->
         when (result) {
           is Result.Success -> Log.d(TAG, "$logMessage complete")
@@ -5171,9 +5186,7 @@ class ConversationFragment :
 
   private object MediaKeyboardFragmentCreator : InputAwareConstraintLayout.FragmentCreator {
     override val id: Int = MEDIA_KEYBOARD_FRAGMENT_CREATOR_ID
-    override fun create(): Fragment = KeyboardPagerFragment().apply {
-      arguments = bundleOf(KeyboardPagerFragment.ARG_SET_NAV_COLOR to false)
-    }
+    override fun create(): Fragment = KeyboardPagerFragment()
   }
 
   private inner class KeyboardEvents :

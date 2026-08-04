@@ -5,8 +5,11 @@
 
 package org.whispersystems.signalservice.api.account
 
+import kotlinx.coroutines.runBlocking
 import org.signal.core.util.Base64
 import org.signal.core.util.Base64.encodeUrlSafeWithoutPadding
+import org.signal.libsignal.net.AuthDevicesService
+import org.signal.libsignal.net.AuthUsernamesService
 import org.signal.libsignal.net.RequestResult
 import org.signal.libsignal.usernames.BaseUsernameException
 import org.signal.libsignal.usernames.Username
@@ -21,7 +24,7 @@ import org.whispersystems.signalservice.api.push.UsernameLinkComponents
 import org.whispersystems.signalservice.api.websocket.SignalWebSocket
 import org.whispersystems.signalservice.internal.push.ConfirmUsernameRequest
 import org.whispersystems.signalservice.internal.push.ConfirmUsernameResponse
-import org.whispersystems.signalservice.internal.push.GcmRegistrationId
+import org.whispersystems.signalservice.internal.push.PhoneNumberDiscoverabilityRequest
 import org.whispersystems.signalservice.internal.push.PushServiceSocket
 import org.whispersystems.signalservice.internal.push.ReserveUsernameRequest
 import org.whispersystems.signalservice.internal.push.ReserveUsernameResponse
@@ -51,21 +54,24 @@ class AccountApi(private val authWebSocket: SignalWebSocket.AuthenticatedWebSock
   }
 
   /**
-   * PUT /v1/accounts/gcm
-   * - 200: Success
+   * Sets the FCM push token the server should use to notify this device of new messages.
    */
-  fun setFcmToken(fcmToken: String): NetworkResult<Unit> {
-    val request = WebSocketRequestMessage.put("/v1/accounts/gcm", GcmRegistrationId(fcmToken, true))
-    return NetworkResult.fromWebSocketRequest(authWebSocket, request)
+  fun setFcmToken(fcmToken: String): RequestResult<Unit, Nothing> {
+    return runBlocking {
+      authWebSocket.runCatchingWithChatConnection { connection ->
+        AuthDevicesService(connection).setPushToken(fcmToken)
+      }
+    }
   }
 
   /**
-   * DELETE /v1/account/gcm
-   * - 204: Success
+   * Removes any push tokens associated with this device. Afterwards, the server will assume this device
+   * polls for new messages over an open websocket.
    */
-  fun clearFcmToken(): NetworkResult<Unit> {
-    val request = WebSocketRequestMessage.delete("/v1/accounts/gcm")
-    return NetworkResult.fromWebSocketRequest(authWebSocket, request)
+  suspend fun clearFcmToken(): RequestResult<Unit, Nothing> {
+    return authWebSocket.runCatchingWithChatConnection { connection ->
+      AuthDevicesService(connection).clearPushToken()
+    }
   }
 
   /**
@@ -87,6 +93,18 @@ class AccountApi(private val authWebSocket: SignalWebSocket.AuthenticatedWebSock
    */
   fun setCapabilities(capabilities: AccountAttributes.Capabilities): RequestResult<Unit, RestStatusCodeError> {
     val request = WebSocketRequestMessage.put("/v1/devices/capabilities", capabilities)
+    return authWebSocket.fromWebSocketRequest(request, Unit::class)
+  }
+
+  /**
+   * Set whether this account is discoverable by phone number. Unlike [setAccountAttributes], this
+   * dedicated endpoint can be called from a linked device.
+   *
+   * PUT /v2/accounts/phone_number_discoverability
+   * - 204: Success
+   */
+  fun setPhoneNumberDiscoverability(discoverable: Boolean): RequestResult<Unit, RestStatusCodeError> {
+    val request = WebSocketRequestMessage.put("/v2/accounts/phone_number_discoverability", PhoneNumberDiscoverabilityRequest(discoverable))
     return authWebSocket.fromWebSocketRequest(request, Unit::class)
   }
 
@@ -198,12 +216,17 @@ class AccountApi(private val authWebSocket: SignalWebSocket.AuthenticatedWebSock
   }
 
   /**
-   * DELETE /v1/accounts/username_hash
-   * - 204: Success
+   * Clears the current username hash, ciphertext, and link for the authenticated account.
+   *
+   * This also succeeds if the account has no username set, so a caller retrying a deletion sees
+   * the same result as the original call.
    */
-  fun deleteUsername(): NetworkResult<Unit> {
-    val request = WebSocketRequestMessage.delete("/v1/accounts/username_hash")
-    return NetworkResult.fromWebSocketRequest(authWebSocket, request)
+  fun deleteUsernameHash(): RequestResult<Unit, Nothing> {
+    return runBlocking {
+      authWebSocket.runCatchingWithChatConnection { connection ->
+        AuthUsernamesService(connection).deleteUsernameHash()
+      }
+    }
   }
 
   /**

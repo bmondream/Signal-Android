@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: AGPL-3.0-only
   -->
 <!-- smartling.instruction_comments_enabled = on -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Removed by excludeNonTranslatables <string name="app_name" translatable="false">Signal</string> -->
 
   <!-- Removed by excludeNonTranslatables <string name="install_url" translatable="false">https://signal.org/install</string> -->
@@ -294,6 +294,16 @@
     <string name="ClientDeprecatedActivity_warning">Advertencia</string>
     <string name="ClientDeprecatedActivity_your_version_of_signal_has_expired_you_can_view_your_message_history">Esta versión de Signal ha caducado. Puedes ver tus mensajes, pero no podrás enviar ni recibir mensajes hasta que actualices la app.</string>
 
+    <!-- ClockSkewActivity -->
+    <!-- Title of the full-screen dialog shown when the device clock is too far off from the real time -->
+    <string name="ClockSkewActivity__title">Date is inaccurate</string>
+    <!-- Body text explaining that the device clock is wrong and needs to be fixed -->
+    <string name="ClockSkewActivity__date_inaccurate_description">Your device date is inaccurate.\nAdjust your clock and try again.</string>
+    <!-- Shows the user the current, inaccurate date and time reported by their device. Placeholder is the formatted date, time, and time zone. -->
+    <string name="ClockSkewActivity__time_prefix">Your device date and time is:\n%1$s</string>
+    <!-- Button that opens the system date and time settings -->
+    <string name="ClockSkewActivity__adjust_date_button">Adjust date</string>
+
     <!-- CommunicationActions -->
     <string name="CommunicationActions_no_browser_found">No se ha encontrado un navegador web.</string>
     <string name="CommunicationActions_send_email">Enviar correo electrónico</string>
@@ -388,6 +398,8 @@
     <!-- Conversation message shown when someone deletes their own message. Placeholder is the name of the person. -->
     <string name="ConversationItem_s_deleted_this_message">%1$s ha eliminado este mensaje</string>
     <string name="ConversationItem_you_deleted_this_message">Has eliminado este mensaje</string>
+    <!-- Tappable text shown on a locally-deleted message tombstone, prompting the user to promote it to a delete-for-everyone -->
+    <string name="ConversationItem_delete_for_everyone_question">¿Eliminar para todos?</string>
     <!-- Conversation message when a message has been deleted by an admin. The placeholder is the admin\'s name. -->
     <string name="ConversationItem_admin_s_deleted_this_message">%1$s (admin) ha eliminado este mensaje</string>
     <!-- Dialog error message shown when user can\'t download a message from someone else due to a permanent failure (e.g., unable to decrypt), placeholder is other\'s name -->
@@ -579,7 +591,7 @@
     <string name="ConversationFragment_delete">Eliminar</string>
     <!-- Dialog button for deleting one or more note-to-self messages on all linked devices. -->
     <string name="ConversationFragment_delete_everywhere">Eliminar en todos mis dispositivos</string>
-    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">Este mensaje se eliminará para todas las personas en el chat si usan una versión reciente de Signal. Podrán ver que has eliminado un mensaje.</string>
+    <string name="ConversationFragment_this_message_will_be_deleted_for_everyone_in_the_conversation">This message will be deleted for everyone in the chat. They will be able to see that you deleted a message.</string>
     <string name="ConversationFragment_quoted_message_not_found">No se ha encontrado el mensaje original</string>
     <string name="ConversationFragment_quoted_message_no_longer_available">El mensaje original ya no está disponible</string>
     <string name="ConversationFragment_failed_to_open_message">No se ha podido abrir el mensaje</string>
@@ -616,7 +628,7 @@
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Volver a registrarme en Signal</string>
     <!-- Action shown in the conversation input area to allow a user to re-link this device as it is no longer linked -->
-    <string name="ConversationFragment__relink_signal">Vuelve a vincularlo</string>
+    <string name="ConversationFragment__relink_signal">Volver a vincularlo</string>
     <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
     <string name="ConversationFragment__content_description_back_button">Volver</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
@@ -699,7 +711,7 @@
     <string name="SafetyTips_next_tip">Siguiente</string>
 
     <!-- Summary tip 0 title: Don\'t respond to chats from Signal -->
-    <string name="SafetyTips_summary_tip0_title">No respondas a los mensajes de Signal</string>
+    <string name="SafetyTips_summary_tip0_title">No respondas a los chats de Signal</string>
     <!-- Summary tip 0 message -->
     <string name="SafetyTips_summary_tip0_message">Signal nunca te enviará un mensaje para pedirte tu código de registro, PIN o clave de recuperación. Nunca respondas a un mensaje que diga ser de Signal.</string>
     <!-- Summary tip 1 title: Review names and photos -->
@@ -712,7 +724,7 @@
     <string name="SafetyTips_summary_tip2_message">Ignora los mensajes poco precisos que tratan de llamar tu atención para que respondas. Desconfía si recibes consejos financieros y enlaces web sospechosos.</string>
 
     <!-- Detail tip 0 title -->
-    <string name="SafetyTips_detail_tip0_title">No respondas a los mensajes de Signal</string>
+    <string name="SafetyTips_detail_tip0_title">No respondas a los chats de Signal</string>
     <!-- Detail tip 0 message -->
     <string name="SafetyTips_detail_tip0_message">Signal nunca te enviará un mensaje para pedirte tu código de registro, PIN o clave de recuperación. Nunca respondas a un mensaje que diga ser de Signal o del equipo de Asistencia de Signal. Los agentes maliciosos usan chats falsos para intentar tomar el control de tu cuenta.</string>
     <!-- Detail tip 1 title -->
@@ -758,17 +770,28 @@
     <!-- Notice on chat list when no unread chats are available, centered on display -->
     <string name="ConversationListFragment__no_unread_chats">No hay chats sin leer</string>
     <plurals name="ConversationListFragment_delete_selected_conversations">
-        <item quantity="one">¿Eliminar chat seleccionado?</item>
-        <item quantity="other">¿Eliminar chats seleccionados?</item>
+        <item quantity="one">Delete message history?</item>
+        <item quantity="other">Delete message histories?</item>
     </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations">
-        <item quantity="one">Se eliminará de forma permanente el chat seleccionado.</item>
-        <item quantity="other">Se eliminarán de forma permanente los %1$d chats seleccionados.</item>
+        <item quantity="one">All messages in this chat will be deleted.</item>
+        <item quantity="other">All messages in these chats will be deleted.</item>
     </plurals>
-    <!-- Dialog message shown when deleting one to many conversations from the chat list and the user has a linked device -->
+    <!-- Dialog message shown when deleting chats, with at least one group -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_group">
+        <item quantity="one">All messages in this chat will be deleted. You will still be a member of this group.</item>
+        <item quantity="other">All messages in these chats will be deleted. You will still be a member of any groups you have not left yet.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats, none of which are groups, and the user has a linked device -->
     <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device">
-        <item quantity="one">Se eliminará de forma permanente el chat seleccionado de todos tus dispositivos.</item>
-        <item quantity="other">Se eliminarán de forma permanente los %1$d chats seleccionados de todos tus dispositivos.</item>
+        <item quantity="one">All messages in this chat will be deleted from all your devices.</item>
+        <item quantity="other">All messages in these chats will be deleted from all your devices.</item>
+    </plurals>
+    <!-- Dialog message shown when deleting chats with at least one group, and the user has a linked device -->
+    <plurals name="ConversationListFragment_this_will_permanently_delete_all_n_selected_conversations_linked_device_group">
+        <item quantity="one">All messages in this chat will be deleted from all your devices. You will still be a member of this group.</item>
+        <item quantity="other">All messages in these chats will be deleted from all your devices. You will still be a member of any groups you have not left yet.</item>
     </plurals>
     <string name="ConversationListFragment_deleting">Eliminando</string>
     <plurals name="ConversationListFragment_deleting_selected_conversations">
@@ -865,7 +888,7 @@
 
     <!-- ProfileCreateFragment -->
     <!-- Displayed at the top of the screen and explains how profiles can be viewed. -->
-    <string name="ProfileCreateFragment__profiles_are_visible_to_contacts_and_people_you_message">Tu perfil es visible para las personas a las que les envías mensajes, tus contactos y tus grupos.</string>
+    <string name="ProfileCreateFragment__profiles_are_visible_to_contacts_and_people_you_message">Tu perfil es visible para tus contactos, tus grupos y las personas a las que envías mensajes.</string>
     <!-- Title of clickable row to select phone number privacy settings -->
     <string name="ProfileCreateFragment__who_can_find_me">¿Quién puede encontrarme con mi número?</string>
 
@@ -1118,6 +1141,8 @@
     <string name="LinkDeviceFragment__edit_name">Editar nombre</string>
     <!-- Toast shown when the process of linking a device has been cancelled -->
     <string name="LinkDeviceFragment__linking_cancelled">Vinculación cancelada</string>
+    <!-- Snackbar shown when the user tries to link a new device but has already reached the maximum number of linked devices. Placeholder is the maximum count. -->
+    <string name="LinkDeviceFragment__you_can_only_have_d_linked_devices">You can only have %1$d linked devices.</string>
     <!-- Message shown in progress dialog telling users to avoid closing the app while messages are being synced -->
     <string name="LinkDeviceFragment__do_not_close">No cierres Signal</string>
     <!-- Dialog title shown when a device is unlinked -->
@@ -2283,7 +2308,7 @@
     <!-- Alert dialog body to review the message request carefully -->
     <string name="MessageRequestBottomView_review_requests_carefully">Revisa detenidamente las solicitudes. Cada usuario elige su nombre de perfil y los nombres no se verifican.</string>
     <!-- Alert dialog body for accepting a message request. Contains bold substring placeholder -->
-    <string name="MessageRequestBottomView_accept_request_body">Acepta solamente las solicitudes de personas de tu confianza. %1$s te enviará un mensaje para pedirte tu código de registro, PIN o clave de recuperación.</string>
+    <string name="MessageRequestBottomView_accept_request_body">Acepta únicamente las solicitudes de personas de tu confianza. %1$s te enviará un mensaje para pedirte tu código de registro, PIN o clave de recuperación.</string>
     <!-- Bold substring used in accept request body: "Signal will never" -->
     <string name="MessageRequestBottomView_signal_will_never">Signal nunca</string>
     <!-- Alert dialog title to accept a message request to join a group -->
@@ -3070,6 +3095,7 @@
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_locale" translatable="false">Locale:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_challenge_received" translatable="false">Challenge Received:</string> -->
   <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_registered" translatable="false">Registered:</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="SupportEmailUtil_backups" translatable="false">Backups:</string> -->
 
     <!-- ThreadRecord -->
     <string name="ThreadRecord_group_updated">Grupo actualizado</string>
@@ -3368,7 +3394,7 @@
     <!-- Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing. -->
     <string name="NotificationChannel_call_status">Estado de la llamada</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
-    <string name="NotificationChannel_critical_app_alerts">Alertas críticas de apps</string>
+    <string name="NotificationChannel_critical_app_alerts">Alertas críticas de la app</string>
     <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_additional_message_notifications">Otras notificaciones de mensajes</string>
     <!-- Notification channel name for notifications sent when a device has been linked -->
@@ -3969,11 +3995,11 @@
     <!-- Bottom sheet title when encryption is auto-verified -->
     <string name="EncryptionVerifiedSheet__title_success">El cifrado para este chat se ha verificado automáticamente</string>
     <!-- Bottom sheet body when encryption is auto-verified -->
-    <string name="EncryptionVerifiedSheet__body_success">Para las personas con las que hayas iniciado la comunicación mediante un número de teléfono, Signal puede confirmar automáticamente si la conexión es segura usando un proceso llamado transparencia de claves. Para mayor seguridad, verifica el cifrado de extremo a extremo manualmente comparando los números en la pantalla anterior o escaneando el código que se muestra en el dispositivo de la otra persona.</string>
+    <string name="EncryptionVerifiedSheet__body_success">Si inicias un chat en Signal usando el número de teléfono de tu contacto, la aplicación puede confirmar automáticamente que la conexión es segura gracias a un proceso llamado transparencia de claves. Para mayor seguridad, verifica el cifrado de extremo a extremo manualmente comparando los números en la pantalla anterior o escaneando el código que se muestra en el dispositivo de la otra persona.</string>
     <!-- Bottom sheet title when encryption is no longer auto-verified -->
     <string name="EncryptionVerifiedSheet__title_no_longer_unavailable">La verificación automática no está disponible para este chat</string>
     <!-- Bottom sheet body when encryption is no longer auto-verified. Placeholder is the name of the person. -->
-    <string name="EncryptionVerifiedSheet__body_no_longer_unavailable">Signal no puede verificar automáticamente el cifrado de este chat. Es probable que %1$s haya cambiado su número de teléfono o sus ajustes de privacidad del número de teléfono. Verifica el cifrado de extremo a extremo manualmente comparando los números en la pantalla anterior o escaneando el código que se muestra en su dispositivo.</string>
+    <string name="EncryptionVerifiedSheet__body_no_longer_unavailable">Signal no puede verificar automáticamente el cifrado de este chat. Es probable que %1$s haya cambiado su número de teléfono o los ajustes de privacidad de su número de teléfono. Verifica el cifrado de extremo a extremo manualmente comparando los números en la pantalla anterior o escaneando el código que se muestra en su dispositivo.</string>
     <!-- Bottom sheet title when encryption cannot be auto-verified -->
     <string name="EncryptionVerifiedSheet__title_unavailable">La verificación automática no está disponible para este chat</string>
     <!-- Bottom sheet body when encryption cannot be auto-verified -->
@@ -5106,6 +5132,32 @@
     <string name="preferences_account_delete_all_data_confirmation_cancel">Cancelar</string>
     <!-- Error message shown when we fail to delete the data for some unknown reason -->
     <string name="preferences_account_delete_all_data_failed">No se han podido eliminar los datos</string>
+
+    <!-- LinkedDeviceAccountSettingsFragment -->
+    <!-- Title of an informational card shown on the account settings screen of a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_is_a_linked_device">Este es un dispositivo vinculado</string>
+    <!-- Body of an informational card explaining that account settings must be managed from the primary device -->
+    <string name="LinkedDeviceAccountSettingsFragment__to_manage_your_account_settings">Para gestionar los ajustes de tu cuenta, abre Signal en tu dispositivo principal.</string>
+    <!-- Title of a settings row that deletes all Signal data from this linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data">Eliminar los datos de la aplicación</string>
+    <!-- Subtitle of the delete app data row explaining what it does -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_remove_all_data">Se eliminarán todos los datos de la aplicación Signal en este dispositivo.</string>
+    <!-- Title of the confirmation dialog shown when deleting app data from a linked device -->
+    <string name="LinkedDeviceAccountSettingsFragment__delete_app_data_question">¿Eliminar los datos de la aplicación?</string>
+    <!-- Message of the confirmation dialog explaining that only this device\'s data is deleted, not the account -->
+    <string name="LinkedDeviceAccountSettingsFragment__this_will_delete_all_data_and_messages">Se eliminarán todos los datos y mensajes de la aplicación Signal en este dispositivo. No se eliminará tu cuenta de Signal ni los datos de tu dispositivo principal u otros dispositivos vinculados. Signal se cerrará después de que finalice este proceso.</string>
+
+    <!-- LinkedDeviceAccountLearnMoreBottomSheet -->
+    <!-- Emphasized lead-in phrase shown in bold at the start of the learn more sheet body. Must appear verbatim within LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices">Dispositivos vinculados</string>
+    <!-- Body text of the linked devices learn more sheet. The leading \"Linked Devices\" is shown in bold. -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__linked_devices_let_you_access">Los dispositivos vinculados te permiten acceder de forma segura a tu cuenta y mensajes de Signal desde cualquiera de tus dispositivos adicionales.</string>
+    <!-- Bullet point describing what devices can be linked -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__you_can_link_a_desktop">Puedes vincular un dispositivo de escritorio, una tablet o un teléfono adicional.</string>
+    <!-- Bullet point describing that the primary device manages linked devices -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__your_primary_device_manages">En tu dispositivo principal puedes vincular y gestionar hasta 5 dispositivos vinculados.</string>
+    <!-- Bullet point describing that some settings are only available on the primary device -->
+    <string name="LinkedDeviceAccountLearnMoreBottomSheet__some_account_settings">Algunos ajustes solo se pueden configurar en tu dispositivo principal, como los ajustes de tu cuenta y las copias de seguridad.</string>
 
     <!-- TransferOrRestoreFragment -->
     <string name="TransferOrRestoreFragment__transfer_or_restore_account">Transferir o restaurar cuenta</string>
@@ -6357,6 +6409,7 @@
     <string name="MediaReviewFragment__one_or_more_items_were_too_large">Uno o más elementos son demasiado grandes</string>
     <string name="MediaReviewFragment__one_or_more_items_were_invalid">Uno o más elementos no son válidos</string>
     <string name="MediaReviewFragment__too_many_items_selected">Hay demasiados elementos seleccionados</string>
+    <string name="MediaReviewFragment__video_trimmed_to_fit">Your video was trimmed to fit within the size limit</string>
     <!-- Small notification presented to the user when they set their video to view-once mode -->
     <string name="MediaReviewFragment__video_set_to_view_once">Vídeo configurado para ver solo una vez</string>
     <!-- Small notification presented to the user when they set their photo to view-once mode -->
@@ -6531,7 +6584,7 @@
     <!-- Subtitle shown when processing a donation transaction -->
     <string name="MySupportPreference__processing_transaction">Procesando transacción…</string>
     <!-- Displayed on "My Support" screen when user badge failed to be added to their account -->
-    <string name="MySupportPreference__couldnt_add_badge_s">No se ha podido añadir la insignia. %1$s</string>
+    <string name="MySupportPreference__couldnt_add_badge_s">No se ha podido añadir tu insignia. %1$s</string>
     <string name="MySupportPreference__please_contact_support">Contacta con el equipo de Asistencia.</string>
     <!-- Displayed as a subtitle on a row in the Manage Donations screen when payment for a donation is pending -->
     <string name="MySupportPreference__payment_pending">Pago pendiente</string>
@@ -6622,7 +6675,7 @@
     <string name="DonationsErrors__error_processing_payment_s">No se ha podido procesar tu donación. %1$s</string>
     <string name="DonationsErrors__your_payment">No se ha podido procesar tu donación y no se ha aplicado ningún cargo. Inténtalo de nuevo.</string>
     <string name="DonationsErrors__still_processing">Aún se está procesando</string>
-    <string name="DonationsErrors__couldnt_add_badge">No se ha podido añadir la insignia</string>
+    <string name="DonationsErrors__couldnt_add_badge">No se ha podido añadir tu insignia</string>
     <!-- Displayed when backup credential could not be redeemed. Dialog or notification title -->
     <string name="DonationsError__something_went_wrong">Se ha producido un error</string>
     <!-- Displayed when backup credential could not be redeemed. Dialog or notification body -->
@@ -6909,7 +6962,7 @@
     <!-- Donation receipts amount title -->
     <string name="DonationReceiptDetailsFragment__amount">Importe</string>
     <!-- Donation receipts thanks -->
-    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting">Gracias por apoyar a Signal. Con tu contribución, impulsas nuestra misión de desarrollar tecnología de código abierto centrada en la privacidad, que protege la libertad de expresión y permite una comunicación segura para millones de personas en todo el mundo. Si resides en Estados Unidos, guarda este recibo para tus declaraciones fiscales. Signal Technology Foundation es una organización sin ánimo de lucro exenta de impuestos en Estados Unidos bajo la sección 501(c)(3) del código tributario de EE. UU (Internal Revenue Code). Nuestro número de identificación fiscal es 82–4506840.</string>
+    <string name="DonationReceiptDetailsFragment__thank_you_for_supporting" tools:ignore="TypographyDashes">Gracias por apoyar a Signal. Con tu contribución, impulsas nuestra misión de proteger la libertad de expresión y permitir que millones de personas en todo el mundo se comuniquen de forma segura a través de tecnología de código abierto centrada en la privacidad. Si resides en Estados Unidos, guarda este recibo para tus declaraciones fiscales. Signal Technology Foundation es una organización sin ánimo de lucro exenta de impuestos en Estados Unidos bajo la sección 501(c)(3) del código tributario de EE. UU. (Internal Revenue Code). Nuestro número de identificación fiscal es 82-4506840. Signal no ha proporcionado bienes ni servicios a cambio de esta contribución.</string>
     <!-- Donation reciepts screen empty state title -->
     <string name="DonationReceiptListFragment__no_receipts">No hay recibos</string>
 
@@ -8246,11 +8299,11 @@
     <!-- Text describing how to restore a backup displayed on the on-device backups screen -->
     <string name="OnDeviceBackupsScreen__to_restore_a_backup">"Para restaurar una copia de seguridad, reinstala Signal. Abre la aplicación, toca \"Restaurar copia\" y busca el archivo de copia de seguridad."</string>
     <!-- Body of a dialog shown when turning on on-device backups while "Optimize Signal storage" is enabled, warning that optimized media won\'t be included -->
-    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">You have \"Optimize Signal storage\" on. If you want to include all media in your on-device backup, turn the setting off.</string>
+    <string name="OnDeviceBackupsScreen__you_have_optimize_signal_storage_on">Tienes activada la opción \"Optimizar el almacenamiento de Signal\". Desactívala si quieres incluir todos tus archivos multimedia en tu copia de seguridad local.</string>
     <!-- Dialog action that takes the user to the "Optimize Signal storage" setting -->
-    <string name="OnDeviceBackupsScreen__view_setting">View setting</string>
+    <string name="OnDeviceBackupsScreen__view_setting">Ver ajuste</string>
     <!-- Dialog action to proceed with turning on on-device backups without turning off "Optimize Signal storage" -->
-    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continue without turning off</string>
+    <string name="OnDeviceBackupsScreen__continue_without_turning_off">Continuar sin desactivar</string>
 
     <!-- Title of a megaphone shown to prompt the user to verify their recovery key -->
     <string name="VerifyBackupKey__title">Verifica tu clave de recuperación</string>
@@ -8635,9 +8688,9 @@
     <!-- Dialog message for paid tier pending dialog -->
     <string name="ManageStorageSettingsFragment__storage_optimization_can_only_be_used">La optimización de almacenamiento solo se puede usar con el nivel de pago de Copias Seguras de Signal. Tu suscripción a las copias de seguridad se está procesando y todavía no está activa. Inténtalo de nuevo más tarde.</string>
     <!-- Title of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Media will be removed from your on-device backup</string>
+    <string name="ManageStorageSettingsFragment__media_will_be_removed_from_your_on_device_backup">Se eliminarán los archivos multimedia de tu copia de seguridad local</string>
     <!-- Body of a dialog shown when turning on "Optimize Signal storage" while on-device backups are enabled -->
-    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Turning on \"Optimize Signal storage\" will offload old media from your device. You can download it again any time. It will also remove old media from your on-device backup.</string>
+    <string name="ManageStorageSettingsFragment__turning_on_optimize_signal_storage_will_offload">Activar la opción \"Optimizar el almacenamiento de Signal\" eliminará los archivos multimedia antiguos de tu dispositivo. Podrás volver a descargarlos en cualquier momento. También se eliminarán los archivos multimedia antiguos de tu copia de seguridad local.</string>
     <!-- Dialog action to confirm turning on "Optimize Signal storage" -->
     <string name="ManageStorageSettingsFragment__turn_on">Activar</string>
 
@@ -8722,6 +8775,8 @@
     <string name="BackupsSettingsFragment__subscription_canceled">Suscripción cancelada</string>
     <!-- Subtitle for row for no backup ever created -->
     <string name="BackupsSettingsFragment_automatic_backups_with_signals">Copias de seguridad automáticas con el servicio de almacenamiento seguro y cifrado de extremo a extremo de Signal.</string>
+    <!-- Subtitle shown on a linked device when backups are off, directing the user to set them up on their phone -->
+    <string name="BackupsSettingsFragment__automatic_backups_get_started_on_your_phone">Copias de seguridad automáticas con el servicio de almacenamiento seguro y cifrado de extremo a extremo de Signal. Configúralas en tu teléfono.</string>
     <!-- Subtitle for row for backups that are active but subscription not found -->
     <string name="BackupsSettingsFragment_subscription_not_found_on_this_device">"Suscripción no encontrada en este dispositivo."</string>
     <!-- Action button label to set up backups -->
@@ -8825,6 +8880,16 @@
     <string name="RemoteBackupsSettingsFragment__s_at_s">%2$s del %1$s</string>
     <!-- Subtext describing when a backup has never taken place. -->
     <string name="RemoteBackupsSettingsFragment__never">Nunca</string>
+    <!-- Subtext on a linked device describing when the primary device last backed up. Placeholder is the formatted date and time. -->
+    <string name="RemoteBackupsSettingsFragment__your_phone_s">Tu teléfono · %1$s</string>
+    <!-- Message shown on a linked device with a free backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_your_subscription_on_your_primary_device">Puedes gestionar o mejorar tu suscripción a Copias Seguras de Signal en tu dispositivo principal.</string>
+    <!-- Message shown on a linked device with a paid backup plan explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_cancel_your_subscription_on_your_primary_device">Puedes gestionar o cancelar tu suscripción a Copias Seguras de Signal en tu dispositivo principal.</string>
+    <!-- Message shown on a linked device with a canceled backup subscription explaining that the subscription is managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_renew_your_subscription_on_your_primary_device">Puedes gestionar o renovar tu suscripción a Copias Seguras de Signal desde tu dispositivo principal.</string>
+    <!-- Message shown on a linked device when backups are off or the subscription was not found, explaining that backups are managed on the primary device -->
+    <string name="RemoteBackupsSettingsFragment__you_can_manage_or_upgrade_backups_on_your_primary_device">Puedes gestionar o actualizar tu suscripción a Copias Seguras de Signal en tu dispositivo principal.</string>
     <!-- Button label to perform a backup immediately -->
     <string name="RemoteBackupsSettingsFragment__back_up_now">Iniciar copia</string>
     <!-- Dialog title when confirming whether to turn off and deleting backups -->
@@ -9888,11 +9953,11 @@
     <!-- Header for a section showing all group member -->
     <string name="MemberSearchFragment__search_members">Buscar participantes</string>
     <!-- Header for a section showing all group members who are contacts -->
-    <string name="MemberSearchFragment__search_contacts">Search contacts</string>
+    <string name="MemberSearchFragment__search_contacts">Buscar contactos</string>
     <!-- Header for a section showing all group member who are admins -->
-    <string name="MemberSearchFragment__search_admins">Search admins</string>
+    <string name="MemberSearchFragment__search_admins">Buscar admins</string>
     <!-- Dialog title to filter search by -->
-    <string name="MemberSearchFragment__filter">Filter by</string>
+    <string name="MemberSearchFragment__filter">Filtrar por</string>
     <!-- Dialog option for all group members -->
     <string name="MemberSearchFragment__filter_all_members">Cualquiera</string>
     <!-- Dialog option for group admins -->
@@ -9900,7 +9965,7 @@
     <!-- Dialog option for your contacts -->
     <string name="MemberSearchFragment__filter_contacts">Contactos</string>
     <!-- Button to invite members via a group link -->
-    <string name="MemberSearchFragment__invite_via">Invite via group link</string>
+    <string name="MemberSearchFragment__invite_via">Invitar mediante enlace al grupo</string>
 
     <!-- Title of the sheet shown when a local backup restore could not be completed -->
     <string name="CouldNotCompleteBackupRestoreSheet__title">No se puede restaurar la copia de seguridad</string>
@@ -9927,7 +9992,7 @@
     <!-- Title of the safety tips screen within the verification code requested sheet -->
     <string name="SafetyTipsBottomSheet__title">Consejos de seguridad</string>
     <!-- Title of the first safety tip: don\'t respond to chats claiming to be Signal -->
-    <string name="SafetyTipsBottomSheet__tip_1_title">No respondas a los mensajes de Signal</string>
+    <string name="SafetyTipsBottomSheet__tip_1_title">No respondas a los chats de Signal</string>
     <!-- Body of the first safety tip -->
     <string name="SafetyTipsBottomSheet__tip_1_body">Signal nunca te enviará un mensaje para pedirte tu código de registro, PIN o clave de recuperación. Nunca respondas a un mensaje que diga ser de Signal.</string>
     <!-- Title of the second safety tip: keep your verification code safe -->

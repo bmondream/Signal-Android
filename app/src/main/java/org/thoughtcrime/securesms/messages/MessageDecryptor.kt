@@ -38,6 +38,7 @@ import org.signal.libsignal.protocol.groups.state.SenderKeyStore
 import org.signal.libsignal.protocol.message.CiphertextMessage
 import org.signal.libsignal.protocol.message.DecryptionErrorMessage
 import org.signal.libsignal.protocol.message.SenderKeyDistributionMessage
+import org.signal.libsignal.zkgroup.InvalidInputException
 import org.signal.libsignal.zkgroup.groups.GroupMasterKey
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock
@@ -159,6 +160,8 @@ object MessageDecryptor {
       SignalTrace.endSection()
       val endTimeNanos = System.nanoTime()
 
+      val hadSealedSenderSource = Util.allAreNull(envelope.sourceServiceId, envelope.sourceServiceIdBinary)
+
       val envelope = if (cipherResult?.metadata?.sourceServiceId != null) {
         envelope.newBuilder()
           .sourceServiceIdBinary(cipherResult.metadata.sourceServiceId.toByteString())
@@ -173,7 +176,7 @@ object MessageDecryptor {
         return Result.Ignore(envelope, serverDeliveredTimestamp, followUpOperations.toUnmodifiableList())
       }
 
-      if (cipherResult.metadata.sourceServiceId is PNI && (envelope.sourceServiceId == null && envelope.sourceServiceIdBinary == null)) {
+      if (cipherResult.metadata.sourceServiceId is PNI && hadSealedSenderSource) {
         Log.w(TAG, "${logPrefix(envelope)} Invalid message! Sealed sender used for a PNI.")
         return Result.Ignore(envelope, serverDeliveredTimestamp, followUpOperations.toUnmodifiableList())
       }
@@ -561,13 +564,13 @@ object MessageDecryptor {
     return ErrorMetadata(
       sender = this.sender,
       senderDevice = this.senderDevice,
-      groupMasterKey = this.groupId.map(::GroupMasterKey).orNull()
+      groupMasterKey = this.groupId.map { it.toGroupMasterKeyOrNull() }.orNull()
     )
   }
 
   private fun SignalServiceCipherResult.toErrorMetadata(): ErrorMetadata {
     val groupMasterKey = if (this.content.dataMessage.hasGroupContext) {
-      GroupMasterKey(this.content.dataMessage!!.groupV2!!.masterKey!!.toByteArray())
+      this.content.dataMessage!!.groupV2!!.masterKey!!.toByteArray().toGroupMasterKeyOrNull()
     } else {
       null
     }
@@ -576,6 +579,15 @@ object MessageDecryptor {
       senderDevice = this.metadata.sourceDeviceId,
       groupMasterKey = groupMasterKey
     )
+  }
+
+  private fun ByteArray.toGroupMasterKeyOrNull(): GroupMasterKey? {
+    return try {
+      GroupMasterKey(this)
+    } catch (e: InvalidInputException) {
+      Log.w(TAG, "Malformed group master key while building error metadata. Dropping the group association.", e)
+      null
+    }
   }
 
   sealed interface Result {

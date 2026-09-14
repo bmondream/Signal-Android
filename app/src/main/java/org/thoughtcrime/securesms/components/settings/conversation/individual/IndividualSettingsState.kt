@@ -19,6 +19,7 @@ data class IndividualSettingsState(
   val recipientContentVersion: Int = 0,
   val threadId: Long = -1L,
   val storyViewState: StoryViewState = StoryViewState.NONE,
+  val messageCount: Int = 0,
   val isDeprecatedOrUnregistered: Boolean = false,
   val displayInternalRecipientDetails: Boolean = false,
   val starredMessagesEnabled: Boolean = false,

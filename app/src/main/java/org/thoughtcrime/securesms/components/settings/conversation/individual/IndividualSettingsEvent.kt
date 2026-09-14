@@ -140,6 +140,9 @@ sealed interface IndividualSettingsEvent {
   /** The recipient's thread id came back, or -1 if they don't have a thread yet. */
   data class ThreadIdLoaded(val threadId: Long) : IndividualSettingsEvent
 
+  /** The number of messages in this thread, including update messages. */
+  data class MessageCountLoaded(val messageCount: Int) : IndividualSettingsEvent
+
   /** The groups the user and this recipient are both in changed. */
   data class GroupsInCommonChanged(val groupsInCommon: List<Recipient>) : IndividualSettingsEvent {
     override fun toString(): String = "GroupsInCommonChanged(count=${groupsInCommon.size})"

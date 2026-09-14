@@ -20,6 +20,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.shared.Conver
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ConversationSettingsScaffold
 import org.thoughtcrime.securesms.components.settings.conversation.shared.DisappearingMessagesRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.InternalDetailsButton
+import org.thoughtcrime.securesms.components.settings.conversation.shared.MessageCountLabel
 import org.thoughtcrime.securesms.components.settings.conversation.shared.StarredMessagesRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.previewRecipient
 import org.thoughtcrime.securesms.components.settings.conversation.shared.sharedMediaSection
@@ -55,6 +56,10 @@ fun NoteToSelfSettingsScreen(
         onAvatarClick = { onEvent(IndividualSettingsEvent.AvatarClicked) },
         onAvatarViewCreated = onAvatarViewCreated
       )
+    }
+
+    item {
+      MessageCountLabel(messageCount = state.messageCount)
     }
 
     if (state.displayInternalRecipientDetails) {

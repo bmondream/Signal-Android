@@ -202,6 +202,17 @@ class ConversationSettingsRepository(
     }
   }
 
+  /** Includes update messages. Returns 0 when the thread does not exist yet. */
+  suspend fun getMessageCountForThread(threadId: Long): Int {
+    if (threadId <= 0) {
+      return 0
+    }
+
+    return withContext(SignalDispatchers.Default) {
+      SignalDatabase.messages.getMessageCountForThread(threadId)
+    }
+  }
+
   suspend fun hasGroups(): Boolean {
     return withContext(SignalDispatchers.Default) {
       SignalDatabase.groups.getActiveGroupCount() > 0

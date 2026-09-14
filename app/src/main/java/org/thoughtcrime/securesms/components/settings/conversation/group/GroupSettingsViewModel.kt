@@ -102,6 +102,7 @@ class GroupSettingsViewModel(
 
     viewModelScope.launch {
       onEvent(GroupSettingsEvent.ThreadIdLoaded(repository.getThreadId(groupId)))
+      onEvent(GroupSettingsEvent.MessageCountLoaded(repository.getMessageCountForThread(_state.value.threadId)))
     }
   }
 
@@ -310,6 +311,10 @@ class GroupSettingsViewModel(
       is GroupSettingsEvent.ThreadIdLoaded -> {
         _state.update { it.copy(threadId = event.threadId) }
         mediaRailPresenter.onEvent(RecentMediaRailEvents.SourceChanged(event.threadId))
+      }
+
+      is GroupSettingsEvent.MessageCountLoaded -> {
+        _state.update { it.copy(messageCount = event.messageCount) }
       }
 
       is GroupSettingsEvent.MediaRailEvent -> {

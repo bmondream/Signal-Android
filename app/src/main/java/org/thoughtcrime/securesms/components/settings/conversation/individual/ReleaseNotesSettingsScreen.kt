@@ -24,6 +24,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.shared.CallBa
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ConversationHeader
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ConversationSettingsScaffold
 import org.thoughtcrime.securesms.components.settings.conversation.shared.InternalDetailsButton
+import org.thoughtcrime.securesms.components.settings.conversation.shared.MessageCountLabel
 import org.thoughtcrime.securesms.components.settings.conversation.shared.SoundsAndNotificationsRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.UnmuteDialog
 import org.thoughtcrime.securesms.components.settings.conversation.shared.previewRecipient
@@ -61,6 +62,10 @@ fun ReleaseNotesSettingsScreen(
         onAvatarClick = { onEvent(IndividualSettingsEvent.AvatarClicked) },
         onAvatarViewCreated = onAvatarViewCreated
       )
+    }
+
+    item {
+      MessageCountLabel(messageCount = state.messageCount)
     }
 
     if (state.displayInternalRecipientDetails) {

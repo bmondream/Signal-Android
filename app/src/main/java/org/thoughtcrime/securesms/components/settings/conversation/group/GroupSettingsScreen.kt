@@ -55,6 +55,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.shared.GroupM
 import org.thoughtcrime.securesms.components.settings.conversation.shared.InternalDetailsButton
 import org.thoughtcrime.securesms.components.settings.conversation.shared.LargeIconRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.LegacyGroupState
+import org.thoughtcrime.securesms.components.settings.conversation.shared.MessageCountLabel
 import org.thoughtcrime.securesms.components.settings.conversation.shared.PREVIEW_GROUP_ID
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ROW_AVATAR_SIZE
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ReportSpamRow
@@ -121,6 +122,10 @@ fun GroupSettingsScreen(
           )
         }
       }
+    }
+
+    item {
+      MessageCountLabel(messageCount = state.messageCount)
     }
 
     if (state.groupId.isV2 && !state.isTerminated) {

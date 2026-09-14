@@ -165,6 +165,9 @@ sealed interface GroupSettingsEvent {
   /** The group's thread id came back, or -1 if it doesn't have a thread yet. */
   data class ThreadIdLoaded(val threadId: Long) : GroupSettingsEvent
 
+  /** The number of messages in this thread, including update messages. */
+  data class MessageCountLoaded(val messageCount: Int) : GroupSettingsEvent
+
   /** Received an event from the media rail that we want to forward */
   data class MediaRailEvent(val event: RecentMediaRailEvents) : GroupSettingsEvent
 

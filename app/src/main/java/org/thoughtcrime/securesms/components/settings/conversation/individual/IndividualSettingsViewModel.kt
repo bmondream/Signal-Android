@@ -103,6 +103,7 @@ class IndividualSettingsViewModel(
 
     viewModelScope.launch {
       onEvent(IndividualSettingsEvent.ThreadIdLoaded(repository.getThreadId(recipientId)))
+      onEvent(IndividualSettingsEvent.MessageCountLoaded(repository.getMessageCountForThread(_state.value.threadId)))
     }
 
     // Neither note to self nor the release notes chat shows groups in common or a safety number, so don't go looking.
@@ -254,6 +255,9 @@ class IndividualSettingsViewModel(
         if (showsSharedMedia) {
           mediaRailPresenter.onEvent(RecentMediaRailEvents.SourceChanged(event.threadId))
         }
+      }
+      is IndividualSettingsEvent.MessageCountLoaded -> {
+        _state.update { it.copy(messageCount = event.messageCount) }
       }
       is IndividualSettingsEvent.GroupsInCommonChanged -> {
         _state.update { it.copy(allGroupsInCommon = event.groupsInCommon) }

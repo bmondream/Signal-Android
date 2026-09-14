@@ -6177,6 +6177,8 @@
     <!-- Label for the starred messages option in conversation settings -->
     <string name="ConversationSettingsFragment__starred_messages" translatable="false">Starred messages</string>
     <string name="ConversationSettingsFragment__internal_details" translatable="false">Internal details</string>
+    <!-- Conversation message count visible in chat preferences -->
+    <string name="ConversationSettingsFragment__s_messages">Messages: %1$d</string>
     <string name="ConversationSettingsFragment__contact_details">Phone contact info</string>
     <string name="ConversationSettingsFragment__view_safety_number">View safety number</string>
     <string name="ConversationSettingsFragment__block">Block</string>

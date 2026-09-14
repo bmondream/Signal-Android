@@ -43,6 +43,7 @@ import org.thoughtcrime.securesms.components.settings.conversation.shared.Conver
 import org.thoughtcrime.securesms.components.settings.conversation.shared.DisappearingMessagesRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.InternalDetailsButton
 import org.thoughtcrime.securesms.components.settings.conversation.shared.LargeIconRow
+import org.thoughtcrime.securesms.components.settings.conversation.shared.MessageCountLabel
 import org.thoughtcrime.securesms.components.settings.conversation.shared.RecipientRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.ReportSpamRow
 import org.thoughtcrime.securesms.components.settings.conversation.shared.SoundsAndNotificationsRow
@@ -94,6 +95,10 @@ fun IndividualSettingsScreen(
         onNameClick = { onEvent(IndividualSettingsEvent.HeadlineClicked) },
         onAvatarViewCreated = onAvatarViewCreated
       )
+    }
+
+    item {
+      MessageCountLabel(messageCount = state.messageCount)
     }
 
     if (state.displayInternalRecipientDetails) {
